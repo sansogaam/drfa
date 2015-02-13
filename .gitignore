@@ -10,3 +10,23 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/libraries/Maven__junit_junit_4_11.xml
+.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml
+.idea/libraries/Maven__org_javassist_javassist_3_18_2_GA.xml
+.idea/libraries/Maven__org_mockito_mockito_all_1_10_8.xml
+.idea/libraries/Maven__org_objenesis_objenesis_2_1.xml
+.idea/libraries/Maven__org_powermock_powermock_api_mockito_1_6_1.xml
+.idea/libraries/Maven__org_powermock_powermock_api_support_1_6_1.xml
+.idea/libraries/Maven__org_powermock_powermock_core_1_6_1.xml
+.idea/libraries/Maven__org_powermock_powermock_reflect_1_6_1.xml
+.idea/uiDesigner.xml
+target/MANIFEST.MF
