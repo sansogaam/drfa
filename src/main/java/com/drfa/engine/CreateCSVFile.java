@@ -18,8 +18,8 @@ public class CreateCSVFile {
         Charset charset = Charset.forName("US-ASCII");
         String s = "T1|T2|T3|T4|T5";
         try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
-            for(int i=100000; i<10100000; i++){
-                s = "T"+i+"|"+"T"+(i+1)+"|"+"T"+(i+2)+"|"+"T"+(i+3)+"\n";
+            for(int i=0; i<1000; i++){
+                s = "T" + i + "|" + "T" + (i + 1) + "|" + "T" + (i + 2) + "|" + "T" + (i + 3) + "\n";
                 writer.write(s, 0, s.length());
             }
         } catch (IOException x) {

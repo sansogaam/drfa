@@ -19,7 +19,7 @@ public class ScanFile {
         Scanner scanner = new Scanner(fileToBeScanned);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-//            System.out.println(String.format("This line is for thread %s with content %s",threadName,line));
+            ///System.out.println(String.format("This line is for thread %s with content %s",threadName,line));
             String splitLine[] = line.split(Pattern.quote("|"));
             String doesKeyExist = storageMap.get(splitLine[primaryKeyIndex]);
             if (doesKeyExist == null) {

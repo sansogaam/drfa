@@ -8,6 +8,9 @@ import java.util.Map;
  */
 public class ReconciliationContext {
 
+    private List<String> columnNames;
+
+
     private List<String> columnsToBeIgnored;
 
     private Map<String, String> columnTypeAttributeMapping;
@@ -37,4 +40,12 @@ public class ReconciliationContext {
     public void setColumnReconciliationRules(Map<String, String> columnReconciliationRules) {
         this.columnReconciliationRules = columnReconciliationRules;
     }
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
+    public void setColumnNames(List<String> columnNames) {
+        this.columnNames = columnNames;
+    }
+
 }

@@ -47,6 +47,4 @@ public class MessageDecoratorTest {
         List<String> matchedColumn = mapOfBreaks.get("C1");
         assertEquals("MATCHED", matchedColumn.get(2));
     }
-
-
 }

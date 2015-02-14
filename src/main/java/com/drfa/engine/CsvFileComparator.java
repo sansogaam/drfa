@@ -10,7 +10,11 @@ import java.util.concurrent.*;
  */
 public class CsvFileComparator implements Comparator {
 
+    ReconciliationContext context;
 
+    public CsvFileComparator(ReconciliationContext context){
+        this.context = context;
+    }
 
     @Override
     public void compare(final int primaryKeyIndex, final File base, final File target) {
@@ -49,6 +53,7 @@ public class CsvFileComparator implements Comparator {
         });
         executorServiceTarget.shutdown();
 
+        final MessageProcessor messageProcessor = new MessageProcessor(context);
         ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();
         executorServiceComparator.execute(new Runnable(){
             public void run(){
@@ -61,12 +66,11 @@ public class CsvFileComparator implements Comparator {
                             System.out.println("Exit message recieved.." + message);
                             continueConsumingMessage = false;
                         }else {
-                            if(message.startsWith("TARGET:")) {
-                                System.out.println("Taking the value from queue: " + message);
-                            }
+                                System.out.println(String.format("Take the message %s from the queue", message));
+                                messageProcessor.processMessage(message);
                         }
                     }
-                    System.out.println("Consumption is completed...");
+                    System.out.println("Consumption is completed..." + messageProcessor.getMapOfBreaks().size());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
