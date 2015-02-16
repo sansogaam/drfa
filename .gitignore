@@ -30,3 +30,5 @@ hs_err_pid*
 .idea/libraries/Maven__org_powermock_powermock_reflect_1_6_1.xml
 .idea/uiDesigner.xml
 target/MANIFEST.MF
+target/
+.idea/

@@ -1,0 +1,9 @@
+#Fri Mar 21 13:35:40 CET 2008
+plugins = plugins
+connection = src/main/resources/mysql.cfg
+query = select * from employee
+key = 1
+dataFile = data/bonus.csv
+outputFile = output/bonus.sorted.csv
+metadata = meta/bonus.fmt
+sortKey = Contract_nr
