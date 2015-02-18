@@ -1,5 +1,7 @@
 package com.drfa.engine;
 
+import com.drfa.cli.Answer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,23 @@ import java.util.List;
  */
 public class ReconciliationEngine {
 
+    Answer answer;
+
+
+    public ReconciliationEngine(Answer answer){
+        this.answer = answer;
+
+    }
+
+    public void reconcile(){
+        MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile());
+        List<String> columnNames = dataParser.getMetaDataColumnNames();
+        ReconciliationContext context = new ReconciliationContext();
+        context.setColumnNames(columnNames);
+        Comparator comparator = new CsvFileComparator(context);
+        comparator.compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()));
+        System.out.println("Reconciliation is completed...");
+    }
     public static void main(String args[]){
         System.out.println("This is a test of reconciliation...");
         ReconciliationContext context = new ReconciliationContext();

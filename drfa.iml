@@ -72,5 +72,6 @@
     <orderEntry type="library" name="Maven: de.schlichtherle.truezip:truezip-path:7.7.5" level="project" />
     <orderEntry type="library" name="Maven: de.schlichtherle.truezip:truezip-swing:7.7.5" level="project" />
     <orderEntry type="library" name="Maven: org.javolution:javolution:5.2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.fusesource.jansi:jansi:1.11" level="project" />
   </component>
 </module>
