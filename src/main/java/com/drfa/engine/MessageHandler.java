@@ -1,5 +1,7 @@
 package com.drfa.engine;
 
+import java.util.Map;
+
 /**
  * Created by Sanjiv on 2/19/2015.
  */
@@ -33,7 +35,19 @@ public class MessageHandler {
             messageProcessor.processMessage(message);
             return true;
         }
-
-
+    }
+    public void enrichBreakReport(final Map<String, String> storageMap){
+        int baseOneSidedBreak = 0;
+        int targetOneSidedBreak = 0;
+        for(String key: storageMap.keySet()) {
+            System.out.println("Key:" + key);
+            if(key.startsWith("BASE")){
+                baseOneSidedBreak++;
+            }else if(key.startsWith("TARGET")){
+                targetOneSidedBreak++;
+            }
+        }
+        report.setBaseOneSidedBreaks(baseOneSidedBreak);
+        report.setTargetOneSidedBreaks(targetOneSidedBreak);
     }
 }

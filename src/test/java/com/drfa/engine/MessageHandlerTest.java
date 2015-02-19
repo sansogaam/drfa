@@ -2,6 +2,10 @@ package com.drfa.engine;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -41,4 +45,18 @@ public class MessageHandlerTest {
         assertEquals(25, breakReport.getTargetTotalRecords());
     }
 
+    @Test
+    public void testEnrichBreakReport()throws  Exception{
+        Map<String, String> storageMap = new HashMap<String, String>();
+        storageMap.put("BASE:C1", "Exist");
+        storageMap.put("BASE:C2", "Exist");
+        storageMap.put("TARGET:C1", "Exist");
+        BreakReport breakReport = new BreakReport();
+        MessageProcessor processor = mock(MessageProcessor.class);
+        MessageHandler handler = new MessageHandler(breakReport, processor);
+        handler.enrichBreakReport(storageMap);
+        assertEquals(2, breakReport.getBaseOneSidedBreaks());
+        assertEquals(1, breakReport.getTargetOneSidedBreaks());
+
+    }
 }
