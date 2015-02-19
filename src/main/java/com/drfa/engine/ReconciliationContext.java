@@ -40,6 +40,7 @@ public class ReconciliationContext {
     public void setColumnReconciliationRules(Map<String, String> columnReconciliationRules) {
         this.columnReconciliationRules = columnReconciliationRules;
     }
+
     public List<String> getColumnNames() {
         return columnNames;
     }
