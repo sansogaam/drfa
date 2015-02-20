@@ -10,7 +10,6 @@ public class ReconciliationContext {
 
     private List<String> columnNames;
 
-
     private List<String> columnsToBeIgnored;
 
     private Map<String, String> columnTypeAttributeMapping;

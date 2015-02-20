@@ -1,4 +1,4 @@
-package com.drfa.engine;
+package com.drfa.util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class CreateCSVFile {
 
     public static void main(String args[]){
-        Path file = Paths.get("D:/dev/test1.csv");
+        Path file = Paths.get("D:/dev/test.csv");
         Charset charset = Charset.forName("US-ASCII");
         String s = "T1|T2|T3|T4|T5";
         try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {

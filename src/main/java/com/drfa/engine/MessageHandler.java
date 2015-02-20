@@ -24,7 +24,6 @@ public class MessageHandler {
             return false;
         }else if(message.startsWith("SUMMARY:")){
             String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
-            System.out.println("Thread Name..." + threadName);
             if("BASE".equalsIgnoreCase(threadName)){
                 String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
                 report.setBaseTotalRecords(new Integer(numberOfRecords));
@@ -34,7 +33,7 @@ public class MessageHandler {
             }
             return true;
         } else{
-            System.out.println(String.format("Take the message %s from the queue", message));
+//            System.out.println(String.format("Take the message %s from the queue", message));
             messageProcessor.processMessage(message);
             return true;
         }
