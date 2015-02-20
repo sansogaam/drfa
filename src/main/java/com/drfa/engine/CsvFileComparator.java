@@ -67,7 +67,7 @@ public class CsvFileComparator implements Comparator {
                         continueConsumingMessage = messageHandler.handleMessage(message);
                     }
                     System.out.println(String.format("Size of the storage map %s", storageMap.size()));
-                    messageHandler.enrichBreakReport(storageMap);
+                    messageHandler.enrichBreakReportWithOneSidedBreak(storageMap);
                     System.out.println("Break Report Details" + report);
                     System.out.println("Consumption is completed..." + messageProcessor.getMapOfBreaks().size());
                 } catch (InterruptedException e) {

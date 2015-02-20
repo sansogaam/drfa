@@ -1,5 +1,6 @@
 package com.drfa.engine;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,8 +12,7 @@ public class BreakReport {
     private int matchedWithNumberOfKeys;
     private int baseOneSidedBreaks;
     private int targetOneSidedBreaks;
-    private Map<String,Integer> columnBreaksCount;
-
+    private Map<String,List<Integer>> columnBreaksCount;
 
 
     public int getBaseTotalRecords() {
@@ -55,13 +55,14 @@ public class BreakReport {
         this.targetOneSidedBreaks = targetOneSidedBreaks;
     }
 
-    public Map<String, Integer> getColumnBreaksCount() {
+    public Map<String, List<Integer>> getColumnBreaksCount() {
         return columnBreaksCount;
     }
 
-    public void setColumnBreaksCount(Map<String, Integer> columnBreaksCount) {
+    public void setColumnBreaksCount(Map<String, List<Integer>> columnBreaksCount) {
         this.columnBreaksCount = columnBreaksCount;
     }
+
     @Override
     public String toString() {
         return "BreakReport{" +
@@ -70,6 +71,7 @@ public class BreakReport {
                 ", matchedWithNumberOfKeys=" + matchedWithNumberOfKeys +
                 ", baseOneSidedBreaks=" + baseOneSidedBreaks +
                 ", targetOneSidedBreaks=" + targetOneSidedBreaks +
+                ", columnBreaksCount=" + columnBreaksCount +
                 '}';
     }
 }
