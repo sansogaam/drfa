@@ -7,14 +7,21 @@ public class Answer {
 
     private String baseFile;
     private String targetFile;
+    private String sqlQueryBase;
+    private String sqlQueryTarget;
     private String baseDatabaseType;
-    private String baseDatabaseCredentials;
+    private String baseDatabaseCredentialFile;
+    private String baseDatabaseFile;
     private String targetDatabaseType;
-    private String targetDatabaseCredentials;
+    private String targetDatabaseCredentialFile;
+    private String targetDatabaseFile;
     private String metaDataFile;
     private String typeOfReport;
     private String summaryOutputPath;
     private String detailedOutputPath;
+
+    private String pluginPath;
+
     private int keyIndex;
 
     public int getKeyIndex() {
@@ -49,12 +56,12 @@ public class Answer {
         this.baseDatabaseType = baseDatabaseType;
     }
 
-    public String getBaseDatabaseCredentials() {
-        return baseDatabaseCredentials;
+    public String getBaseDatabaseFile() {
+        return baseDatabaseFile;
     }
 
-    public void setBaseDatabaseCredentials(String baseDatabaseCredentials) {
-        this.baseDatabaseCredentials = baseDatabaseCredentials;
+    public void setBaseDatabaseFile(String baseDatabaseFile) {
+        this.baseDatabaseFile = baseDatabaseFile;
     }
 
     public String getTargetDatabaseType() {
@@ -65,12 +72,12 @@ public class Answer {
         this.targetDatabaseType = targetDatabaseType;
     }
 
-    public String getTargetDatabaseCredentials() {
-        return targetDatabaseCredentials;
+    public String getTargetDatabaseFile() {
+        return targetDatabaseFile;
     }
 
-    public void setTargetDatabaseCredentials(String targetDatabaseCredentials) {
-        this.targetDatabaseCredentials = targetDatabaseCredentials;
+    public void setTargetDatabaseFile(String targetDatabaseFile) {
+        this.targetDatabaseFile = targetDatabaseFile;
     }
 
     public String getMetaDataFile() {
@@ -103,5 +110,45 @@ public class Answer {
 
     public void setDetailedOutputPath(String detailedOutputPath) {
         this.detailedOutputPath = detailedOutputPath;
+    }
+
+    public String getSqlQueryBase() {
+        return sqlQueryBase;
+    }
+
+    public void setSqlQueryBase(String sqlQueryBase) {
+        this.sqlQueryBase = sqlQueryBase;
+    }
+
+    public String getPluginPath() {
+        return pluginPath;
+    }
+
+    public void setPluginPath(String pluginPath) {
+        this.pluginPath = pluginPath;
+    }
+
+    public String getBaseDatabaseCredentialFile() {
+        return baseDatabaseCredentialFile;
+    }
+
+    public void setBaseDatabaseCredentialFile(String baseDatabaseCredentialFile) {
+        this.baseDatabaseCredentialFile = baseDatabaseCredentialFile;
+    }
+
+    public String getTargetDatabaseCredentialFile() {
+        return targetDatabaseCredentialFile;
+    }
+
+    public void setTargetDatabaseCredentialFile(String targetDatabaseCredentialFile) {
+        this.targetDatabaseCredentialFile = targetDatabaseCredentialFile;
+    }
+
+    public String getSqlQueryTarget() {
+        return sqlQueryTarget;
+    }
+
+    public void setSqlQueryTarget(String sqlQueryTarget) {
+        this.sqlQueryTarget = sqlQueryTarget;
     }
 }

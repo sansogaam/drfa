@@ -17,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -25,20 +28,26 @@ import java.util.Date;
 public class ExecuteDBRead implements Runnable {
 
     DatabaseInput databaseInput;
+    BlockingQueue queue;
+    AtomicLong aLong;
+    private String threadName;
 
-    public ExecuteDBRead(DatabaseInput databaseInput) {
+    public ExecuteDBRead(DatabaseInput databaseInput, BlockingQueue queue, AtomicLong aLong, String threadName) {
         this.databaseInput = databaseInput;
+        this.queue = queue;
+        this.aLong = aLong;
+        this.threadName = threadName;
     }
 
     @Override
     public void run() {
+        System.out.println("Running the thread: " + threadName);
 
-        EngineInitializer.initEngine(databaseInput.getPluginPath(), null, null);
-        EngineInitializer.forceActivateAllPlugins();
         DBConnectionImpl dbCon = new DBConnectionImpl("Conn0", databaseInput.getConnectionFile());
         DataRecordMetadataXMLReaderWriter metaReader = new DataRecordMetadataXMLReaderWriter();
         DataRecordMetadata metadataIn = null;
-        if(databaseInput.getMetaDataFile()!= null) {
+        if (databaseInput.getMetaDataFile() != null) {
+            System.out.println(String.format("Processing the metadata file %s", threadName));
             try {
                 metadataIn = metaReader.read(new FileInputStream(databaseInput.getMetaDataFile()));
             } catch (FileNotFoundException ex) {
@@ -47,6 +56,7 @@ public class ExecuteDBRead implements Runnable {
         }
 
         try {
+            System.out.println(String.format("Initializing the database %s", threadName));
             dbCon.init();
             LookupTable lookupTable = new DBLookupTable("lookup", dbCon, metadataIn, databaseInput.getSqlQuery());
             lookupTable.init();
@@ -62,28 +72,50 @@ public class ExecuteDBRead implements Runnable {
             lookup.seek();
 
             //display results, if there are any
+            System.out.println(String.format("Processing the results %s", threadName));
 
-            Path file = Paths.get(databaseInput.getOutputPath() + File.separator + new Date().getTime()+".csv");
+            Path file = Paths.get(databaseInput.getOutputPath() + File.separator + threadName+"-"+ new Date().getTime() + ".csv");
+
+            System.out.println(String.format("Creating the file %s on thread %s", file.getFileName(), threadName));
             Charset charset = Charset.forName("US-ASCII");
             try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
                 while (lookup.hasNext()) {
                     StringBuffer sb = new StringBuffer();
                     for (DataField data : lookup.next()) {
-                        sb.append(data.getValue().toString()).append("|");
+                        String valueString =data.getValue().toString();
+                    //    System.out.println(String.format("Displaying the value of %s thread with content %s", threadName, valueString));
+                        sb.append(valueString).append("|");
                     }
                     writer.write("\n");
                     writer.write(sb.toString());
                 }
-            }catch(IOException x){
+            } catch (IOException x) {
                 System.err.format("IOException: %s%n", x);
             }
             //free lookup table
             lookupTable.postExecute();
             lookupTable.free();
+            System.out.println(String.format("Processed the file format %s",threadName));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        long value = aLong.getAndIncrement();
+        System.out.println(String.format("The value of atomic long is %s for thread %s", value, threadName));
+        if (value == 1) {
+            System.out.println("Sending the message now......");
+            try {
+                queue.put("START_PROCESSING");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-
+    public static void initializeEngine(String pluginPath) {
+        if (!EngineInitializer.isInitialized()) {
+            System.out.println("Initializing the engine for processing....");
+            EngineInitializer.initEngine(pluginPath, null, null);
+            EngineInitializer.forceActivateAllPlugins();
+        }
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Record name="employee" recordDelimiter="\n" recordSize="212" type="fixed">
+<Field name="id" nullable="true" shift="0" size="4" type="integer"/>
+<Field name="name" nullable="true" shift="0" size="11" type="string"/>
+<Field name="department" nullable="true" shift="0" size="10" type="string"/>
+<Field name="salary" nullable="true" shift="0" size="10" type="integer"/>
+</Record>
