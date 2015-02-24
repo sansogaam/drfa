@@ -1,4 +1,4 @@
-package com.drfa.engine;
+package com.drfa.engine.file;
 
 import com.drfa.engine.file.MessageSplitter;
 import org.junit.Test;

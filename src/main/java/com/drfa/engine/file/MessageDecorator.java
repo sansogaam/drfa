@@ -1,7 +1,12 @@
 package com.drfa.engine.file;
 
+import com.drfa.engine.EngineConstants;
+
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static com.drfa.engine.EngineConstants.MATCHED;
+import static com.drfa.engine.EngineConstants.NOT_MATCHED;
 
 /**
  * Created by Sanjiv on 2/13/2015.
@@ -28,9 +33,9 @@ public class MessageDecorator {
                 List<String> columnValues = new ArrayList<String>();
                 String firstLineColumnValue =firstLineSplit[valueCounter];
                 String secondLineColumnValue = secondLineSplit[valueCounter];
-                String compareValue = "NOT MATCHED";
+                String compareValue = NOT_MATCHED;
                 if(firstLineColumnValue.equalsIgnoreCase(secondLineColumnValue)){
-                    compareValue = "MATCHED" ;
+                    compareValue = MATCHED ;
                 }
                 columnValues.add(firstLineSplit[valueCounter]);
                 columnValues.add(secondLineSplit[valueCounter]);

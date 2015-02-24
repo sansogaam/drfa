@@ -1,5 +1,6 @@
 package com.drfa.engine.db;
 
+import com.drfa.engine.EngineConstants;
 import org.jetel.connection.jdbc.DBConnectionImpl;
 import org.jetel.data.DataField;
 import org.jetel.data.RecordKey;
@@ -17,6 +18,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static com.drfa.engine.EngineConstants.START_PROCESSING;
 
 
 /**
@@ -103,7 +106,7 @@ public class ExecuteDBRead implements Runnable {
         if (value == 1) {
             System.out.println("Sending the message now......");
             try {
-                queue.put("START_PROCESSING");
+                queue.put(START_PROCESSING);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

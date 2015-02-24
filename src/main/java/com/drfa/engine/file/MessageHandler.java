@@ -1,11 +1,14 @@
 package com.drfa.engine.file;
 
+import com.drfa.engine.EngineConstants;
 import com.drfa.engine.report.BreakReport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.drfa.engine.EngineConstants.*;
 
 /**
  * Created by Sanjiv on 2/19/2015.
@@ -26,10 +29,10 @@ public class MessageHandler {
             return false;
         }else if(message.startsWith("SUMMARY:")){
             String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
-            if("BASE".equalsIgnoreCase(threadName)){
+            if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
                 String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
                 report.setBaseTotalRecords(new Integer(numberOfRecords));
-            }else if("TARGET".equalsIgnoreCase(threadName)){
+            }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
                 String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
                 report.setTargetTotalRecords(new Integer(numberOfRecords));
             }
@@ -44,9 +47,9 @@ public class MessageHandler {
         int baseOneSidedBreak = 0;
         int targetOneSidedBreak = 0;
         for(String key: storageMap.keySet()) {
-            if(key.startsWith("BASE")){
+            if(key.startsWith(BASE_THREAD_NAME)){
                 baseOneSidedBreak++;
-            }else if(key.startsWith("TARGET")){
+            }else if(key.startsWith(TARGET_THREAD_NAME)){
                 targetOneSidedBreak++;
             }
         }
@@ -62,7 +65,7 @@ public class MessageHandler {
             for(String columnName: columnBreakes.keySet()){
                 List<String> values = columnBreakes.get(columnName);
                 List<Integer> listNumberOfBreaks = mapOfColumnBreaks.get(columnName);
-                if(values.get(2).equalsIgnoreCase("NOT MATCHED")){
+                if(values.get(2).equalsIgnoreCase(NOT_MATCHED)){
                     if(listNumberOfBreaks == null) {
                         listNumberOfBreaks = new ArrayList<Integer>();
                         listNumberOfBreaks.add(0,new Integer(1));
@@ -72,7 +75,7 @@ public class MessageHandler {
                         listNumberOfBreaks.remove(0);
                         listNumberOfBreaks.add(0, existingValue);
                     }
-                }else if(values.get(2).equalsIgnoreCase("MATCHED")){
+                }else if(values.get(2).equalsIgnoreCase(MATCHED)){
                     if(listNumberOfBreaks == null) {
                         listNumberOfBreaks = new ArrayList<Integer>();
                         listNumberOfBreaks.add(0,new Integer(0));

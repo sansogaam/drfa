@@ -8,6 +8,9 @@ import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
+import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
+import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
+
 /**
  * Created by Sanjiv on 2/12/2015.
  */
@@ -48,26 +51,26 @@ public class ScanFile {
     }
 
     public String checkPrefixOfTheKey(String threadName){
-        return "BASE".equalsIgnoreCase(threadName) ? "TARGET:" : "BASE:";
+        return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME+":" : BASE_THREAD_NAME+":";
     }
     public void flushTheStorageMap(Map<String, String> storageMap, BlockingQueue queue) throws InterruptedException {
         Map<String, String> temporaryMap = new HashMap<String, String>();
         temporaryMap.putAll(storageMap);
         for(String key: temporaryMap.keySet()){
-            if(key.startsWith("BASE")){
+            if(key.startsWith(BASE_THREAD_NAME)){
                 String subStringKey = key.substring(key.indexOf(":")+1);
-                String columnKey = "TARGET:" + subStringKey;
+                String columnKey = TARGET_THREAD_NAME+":" + subStringKey;
                 if(storageMap.containsKey(columnKey)){
-                    String message = "BASE:" + temporaryMap.get(key) + "$" + temporaryMap.get(columnKey);
+                    String message = BASE_THREAD_NAME+":" + temporaryMap.get(key) + "$" + temporaryMap.get(columnKey);
                     queue.put(message);
                     storageMap.remove(columnKey);
                     storageMap.remove(key);
                 }
-            }else if(key.startsWith("TARGET")){
+            }else if(key.startsWith(TARGET_THREAD_NAME)){
                 String subStringKey = key.substring(key.indexOf(":")+1);
-                String columnKey = "BASE:" + subStringKey;
+                String columnKey = BASE_THREAD_NAME+":" + subStringKey;
                 if(storageMap.containsKey(columnKey)){
-                    String message = "BASE:" + temporaryMap.get(columnKey) + "$" + temporaryMap.get(key);
+                    String message = BASE_THREAD_NAME+":" + temporaryMap.get(columnKey) + "$" + temporaryMap.get(key);
                     queue.put(message);
                     storageMap.remove(columnKey);
                     storageMap.remove(key);

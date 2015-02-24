@@ -1,4 +1,4 @@
-package com.drfa.engine;
+package com.drfa.engine.db;
 
 import com.drfa.engine.db.MetaDataParser;
 import org.junit.Test;
