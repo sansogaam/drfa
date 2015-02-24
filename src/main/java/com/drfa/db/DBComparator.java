@@ -3,16 +3,18 @@ package com.drfa.db;
 import com.drfa.cli.Answer;
 import com.drfa.engine.BreakReport;
 import com.drfa.engine.Comparator;
+import com.drfa.engine.MetaDataParser;
 import com.drfa.engine.ReconciliationContext;
 
 import java.io.File;
+import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Sanjiv on 2/21/2015.
  */
-public class DBComparator{
+public class DBComparator implements Comparator{
     ReconciliationContext context;
     Answer answer;
     public DBComparator(ReconciliationContext context, Answer answer){
@@ -20,6 +22,7 @@ public class DBComparator{
         this.answer = answer;
     }
 
+    @Override
     public BreakReport compare() throws ExecutionException, InterruptedException {
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         AtomicLong aLong = new AtomicLong(0);
@@ -28,9 +31,10 @@ public class DBComparator{
         DatabaseInput databaseInputForBase = new DatabaseInput(answer.getSqlQueryBase(), answer.getMetaDataFile(),
                                                             answer.getBaseDatabaseCredentialFile(), answer.getPluginPath(),
                                                                 answer.getBaseDatabaseFile());
-
+        String baseOutputFile = answer.getBaseFile();
         final ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new ExecuteDBRead(databaseInputForBase, queue, aLong, "BASE"));
+
+        executorServiceBase.execute(new ExecuteDBRead(databaseInputForBase, queue, aLong, "BASE", baseOutputFile));
         executorServiceBase.shutdown();
 
         DatabaseInput databaseInputForTarget = new DatabaseInput(answer.getSqlQueryTarget(), answer.getMetaDataFile(),
@@ -38,13 +42,14 @@ public class DBComparator{
                 answer.getTargetDatabaseFile());
 
         final ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
-        executorServiceTarget.execute(new ExecuteDBRead(databaseInputForTarget, queue, aLong, "TARGET"));
+        String targetOutputFile = answer.getTargetFile();
+        executorServiceTarget.execute(new ExecuteDBRead(databaseInputForTarget, queue, aLong, "TARGET", targetOutputFile));
         executorServiceTarget.shutdown();
 
         final ExecutorService executorServiceCompare = Executors.newSingleThreadExecutor();
-        executorServiceCompare.execute(new DBMessageListener(queue, answer));
+        Future<BreakReport> compareReport = executorServiceCompare.submit(new DBMessageListener(context, queue, answer));
         executorServiceCompare.shutdown();
-        return null;
+        return compareReport.get();
     }
 
     public static void main(String args[]){
@@ -53,14 +58,20 @@ public class DBComparator{
         answer.setBaseDatabaseFile("D:/dev");
         answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-target.cfg");
         answer.setTargetDatabaseFile("D:/dev");
-
         answer.setPluginPath("D:/dev/drfa/src/main/resources/plugins");
         answer.setSqlQueryBase("SELECT * FROM EMPLOYEE");
         answer.setSqlQueryTarget("SELECT * FROM EMPLOYEE");
         answer.setMetaDataFile("D:/dev/drfa/src/test/resources/dbformat.fmt");
-        DBComparator dbCompare = new DBComparator(null, answer);
+        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + "BASE"+"-"+ new Date().getTime() + ".csv";
+        answer.setBaseFile(baseOutputFile);
+        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + "TARGET"+"-"+ new Date().getTime() + ".csv";
+        answer.setTargetFile(targetOutputFile);
+        ReconciliationContext context = new ReconciliationContext();
+        context.setColumnNames(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getMetaDataColumnNames());
+        DBComparator dbCompare = new DBComparator(context, answer);
         try {
-            dbCompare.compare();
+            BreakReport report = dbCompare.compare();
+            System.out.println("Comparing the results..." + report);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

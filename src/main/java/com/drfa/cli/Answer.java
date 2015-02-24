@@ -20,9 +20,18 @@ public class Answer {
     private String summaryOutputPath;
     private String detailedOutputPath;
 
+    private String reconciliationType;
     private String pluginPath;
 
     private int keyIndex;
+
+    public String getReconciliationType() {
+        return reconciliationType;
+    }
+
+    public void setReconciliationType(String reconciliationType) {
+        this.reconciliationType = reconciliationType;
+    }
 
     public int getKeyIndex() {
         return keyIndex;

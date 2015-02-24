@@ -1,5 +1,7 @@
 package com.drfa.engine;
 
+import com.drfa.cli.Answer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -11,30 +13,16 @@ import java.util.concurrent.*;
 public class CsvFileComparator implements Comparator {
 
     ReconciliationContext context;
+    Answer answer;
 
-    public CsvFileComparator(ReconciliationContext context) {
+    public CsvFileComparator(ReconciliationContext context, Answer answer) {
         this.context = context;
+        this.answer = answer;
     }
 
+
     @Override
-    public BreakReport compare(final int primaryKeyIndex, final File base, final File target) throws ExecutionException, InterruptedException {
-        Map<String, String> storageMap = new ConcurrentHashMap<String, String>();
-        BlockingQueue queue = new ArrayBlockingQueue(1024);
-        ScanFile scanFile = new ScanFile();
-
-        ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, primaryKeyIndex, base));
-        executorServiceBase.shutdown();
-
-        ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
-        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,primaryKeyIndex,target));
-        executorServiceTarget.shutdown();
-
-        ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();
-        Future<BreakReport> breakReportFuture = executorServiceComparator.submit(new ComparatorListener(context, queue, storageMap));
-        executorServiceComparator.shutdown();
-        BreakReport report  = breakReportFuture.get();
-        System.out.println(String.format("Size of the file hash map storage is %s", storageMap.size()));
-        return report;
+    public BreakReport compare() throws ExecutionException, InterruptedException {
+        return new CompareFiles(context).compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()));
     }
 }

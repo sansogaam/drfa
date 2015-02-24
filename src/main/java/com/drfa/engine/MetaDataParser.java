@@ -16,14 +16,16 @@ import java.util.List;
 public class MetaDataParser {
 
     public String metaDataFile;
+    public String pluginPath;
 
-    public MetaDataParser(String metaDataFile) {
+    public MetaDataParser(String metaDataFile, String pluginPath) {
         this.metaDataFile = metaDataFile;
+        this.pluginPath = pluginPath;
     }
 
     public List<String> getMetaDataColumnNames() {
         List<String> columnNames = new ArrayList<String>();
-        EngineInitializer.initEngine("", null, null);
+        EngineInitializer.initEngine(pluginPath, null, null);
 
         DataRecordMetadataXMLReaderWriter metaReader = new DataRecordMetadataXMLReaderWriter();
         try {

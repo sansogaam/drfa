@@ -8,6 +8,6 @@ import java.util.concurrent.ExecutionException;
  */
 public interface Comparator {
 
-    public BreakReport compare(int primaryKeyIndex, File base, File target) throws ExecutionException, InterruptedException;
+    public BreakReport compare() throws ExecutionException, InterruptedException;
 
 }

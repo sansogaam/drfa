@@ -14,7 +14,7 @@ public class MetaDataParserTest {
     String metaDataFile = "src/test/resources/customer.fmt";
     @Test
     public void shouldTestMetaDataFile() throws Exception{
-        MetaDataParser metaDataParser = new MetaDataParser(metaDataFile);
+        MetaDataParser metaDataParser = new MetaDataParser(metaDataFile, "");
         List<String> columnNames = metaDataParser.getMetaDataColumnNames();
         assertEquals(4, columnNames.size());
     }

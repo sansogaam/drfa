@@ -14,19 +14,18 @@ public class ReconciliationEngine {
 
     Answer answer;
 
-
     public ReconciliationEngine(Answer answer){
         this.answer = answer;
 
     }
 
     public void reconcile() throws ExecutionException, InterruptedException {
-        MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile());
+        MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath());
         List<String> columnNames = dataParser.getMetaDataColumnNames();
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnNames(columnNames);
-        Comparator comparator = new CsvFileComparator(context);
-        comparator.compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()));
+        Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
+        comparator.compare();
         System.out.println("Reconciliation is completed...");
     }
 
@@ -34,10 +33,15 @@ public class ReconciliationEngine {
         System.out.println("This is a test of reconciliation...");
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnNames(populateColumnNames());
-        Comparator comparator = new CsvFileComparator(context);
+        Answer answer = new Answer();
+        answer.setKeyIndex(1);
+        answer.setReconciliationType("FILE");
+        answer.setBaseFile("D:/dev/test.csv");
+        answer.setTargetFile("D:/dev/test1.csv");
+        Comparator comparator = new CsvFileComparator(context, answer);
         long startTime = System.currentTimeMillis();
         try {
-            BreakReport report = comparator.compare(1, new File("D:/dev/test.csv"), new File("D:/dev/test1.csv"));
+            BreakReport report = comparator.compare();
             System.out.println("Reporting tool: " + report);
         } catch (ExecutionException e) {
             e.printStackTrace();

@@ -31,12 +31,14 @@ public class ExecuteDBRead implements Runnable {
     BlockingQueue queue;
     AtomicLong aLong;
     private String threadName;
+    private String outputFile;
 
-    public ExecuteDBRead(DatabaseInput databaseInput, BlockingQueue queue, AtomicLong aLong, String threadName) {
+    public ExecuteDBRead(DatabaseInput databaseInput, BlockingQueue queue, AtomicLong aLong, String threadName, String outputFile) {
         this.databaseInput = databaseInput;
         this.queue = queue;
         this.aLong = aLong;
         this.threadName = threadName;
+        this.outputFile = outputFile;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class ExecuteDBRead implements Runnable {
             //display results, if there are any
             System.out.println(String.format("Processing the results %s", threadName));
 
-            Path file = Paths.get(databaseInput.getOutputPath() + File.separator + threadName+"-"+ new Date().getTime() + ".csv");
+            Path file = Paths.get(outputFile);
 
             System.out.println(String.format("Creating the file %s on thread %s", file.getFileName(), threadName));
             Charset charset = Charset.forName("US-ASCII");
@@ -83,11 +85,11 @@ public class ExecuteDBRead implements Runnable {
                     StringBuffer sb = new StringBuffer();
                     for (DataField data : lookup.next()) {
                         String valueString =data.getValue().toString();
-                    //    System.out.println(String.format("Displaying the value of %s thread with content %s", threadName, valueString));
+                        System.out.println(String.format("Displaying the value of %s thread with content %s", threadName, valueString));
                         sb.append(valueString).append("|");
                     }
-                    writer.write("\n");
                     writer.write(sb.toString());
+                    writer.write("\n");
                 }
             } catch (IOException x) {
                 System.err.format("IOException: %s%n", x);

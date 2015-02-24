@@ -15,7 +15,7 @@ public class DBExecutor {
         String outputPath = "D:/dev/drfa/data";
         DatabaseInput databaseInput = new DatabaseInput(sqlQueryBase, null, dbConnectionFileBase, pluginPath, outputPath);
         final ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new ExecuteDBRead(databaseInput, null, null, "SINGLE"));
+        executorServiceBase.execute(new ExecuteDBRead(databaseInput, null, null, "SINGLE", null));
         executorServiceBase.shutdown();
     }
 }
