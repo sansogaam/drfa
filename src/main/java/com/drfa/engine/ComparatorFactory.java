@@ -1,7 +1,8 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.db.DBComparator;
+import com.drfa.engine.db.DBComparator;
+import com.drfa.engine.file.CsvFileComparator;
 
 /**
  * Created by Sanjiv on 2/18/2015.

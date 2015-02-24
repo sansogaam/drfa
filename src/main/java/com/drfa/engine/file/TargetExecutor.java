@@ -1,36 +1,36 @@
-package com.drfa.engine;
+package com.drfa.engine.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
 
 /**
  * Created by Sanjiv on 2/20/2015.
  */
-public class BaseExecutor implements Runnable {
+public class TargetExecutor implements Runnable {
+
     private ScanFile scanFile;
     private BlockingQueue queue;
     private Map<String, String> storageMap;
     private int primaryKeyIndex;
-    private File base;
+    private File target;
 
-    public BaseExecutor(ScanFile scanFile, BlockingQueue queue,
-                        Map<String, String> storageMap, int primaryKeyIndex, File base){
+    public TargetExecutor(ScanFile scanFile, BlockingQueue queue,
+                        Map<String, String> storageMap, int primaryKeyIndex, File target){
 
         this.scanFile = scanFile;
         this.queue = queue;
         this.storageMap = storageMap;
         this.primaryKeyIndex=primaryKeyIndex;
-        this.base = base;
+        this.target = target;
     }
 
     @Override
     public void run() {
         System.out.println("Parsing the base file for comparision");
         try {
-            scanFile.scanFile(primaryKeyIndex, storageMap, base, queue, "BASE");
+            scanFile.scanFile(primaryKeyIndex, storageMap, target, queue, "TARGET");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

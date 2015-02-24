@@ -1,4 +1,7 @@
-package com.drfa.engine;
+package com.drfa.engine.file;
+
+import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.report.BreakReport;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;

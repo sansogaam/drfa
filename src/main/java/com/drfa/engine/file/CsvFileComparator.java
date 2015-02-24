@@ -1,10 +1,11 @@
-package com.drfa.engine;
+package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
+import com.drfa.engine.Comparator;
+import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.report.BreakReport;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**

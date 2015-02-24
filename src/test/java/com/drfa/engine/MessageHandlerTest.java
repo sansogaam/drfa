@@ -1,5 +1,8 @@
 package com.drfa.engine;
 
+import com.drfa.engine.report.BreakReport;
+import com.drfa.engine.file.MessageHandler;
+import com.drfa.engine.file.MessageProcessor;
 import org.junit.Test;
 
 import java.util.ArrayList;

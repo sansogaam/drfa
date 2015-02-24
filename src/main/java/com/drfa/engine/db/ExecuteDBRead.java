@@ -1,8 +1,7 @@
-package com.drfa.db;
+package com.drfa.engine.db;
 
 import org.jetel.connection.jdbc.DBConnectionImpl;
 import org.jetel.data.DataField;
-import org.jetel.data.DataRecord;
 import org.jetel.data.RecordKey;
 import org.jetel.data.lookup.Lookup;
 import org.jetel.data.lookup.LookupTable;
@@ -16,8 +15,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 

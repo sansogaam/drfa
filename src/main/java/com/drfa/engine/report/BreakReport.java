@@ -1,4 +1,4 @@
-package com.drfa.engine;
+package com.drfa.engine.report;
 
 import java.util.List;
 import java.util.Map;

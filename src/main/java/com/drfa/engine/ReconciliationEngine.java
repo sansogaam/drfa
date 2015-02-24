@@ -1,8 +1,10 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
+import com.drfa.engine.db.MetaDataParser;
+import com.drfa.engine.report.BreakReport;
+import com.drfa.engine.file.CsvFileComparator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;

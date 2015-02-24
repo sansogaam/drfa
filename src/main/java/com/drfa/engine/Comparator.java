@@ -1,6 +1,7 @@
 package com.drfa.engine;
 
-import java.io.File;
+import com.drfa.engine.report.BreakReport;
+
 import java.util.concurrent.ExecutionException;
 
 /**

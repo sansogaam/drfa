@@ -1,4 +1,6 @@
-package com.drfa.engine;
+package com.drfa.engine.file;
+
+import com.drfa.engine.report.BreakReport;
 
 import java.util.ArrayList;
 import java.util.HashMap;

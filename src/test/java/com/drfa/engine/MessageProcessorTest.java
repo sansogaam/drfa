@@ -1,6 +1,7 @@
 package com.drfa.engine;
 
 
+import com.drfa.engine.file.MessageProcessor;
 import org.junit.Test;
 
 public class MessageProcessorTest {

@@ -1,8 +1,8 @@
-package com.drfa.db;
+package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
-import com.drfa.engine.BreakReport;
-import com.drfa.engine.CompareFiles;
+import com.drfa.engine.report.BreakReport;
+import com.drfa.engine.file.CompareFiles;
 import com.drfa.engine.ReconciliationContext;
 
 import java.io.File;

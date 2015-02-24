@@ -1,5 +1,6 @@
 package com.drfa.engine;
 
+import com.drfa.engine.db.MetaDataParser;
 import org.junit.Test;
 
 import java.util.List;

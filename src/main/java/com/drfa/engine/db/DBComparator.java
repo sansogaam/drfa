@@ -1,15 +1,17 @@
-package com.drfa.db;
+package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
-import com.drfa.engine.BreakReport;
 import com.drfa.engine.Comparator;
-import com.drfa.engine.MetaDataParser;
 import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.report.BreakReport;
 
 import java.io.File;
 import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
+import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 /**
  * Created by Sanjiv on 2/21/2015.
@@ -34,7 +36,7 @@ public class DBComparator implements Comparator{
         String baseOutputFile = answer.getBaseFile();
         final ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
 
-        executorServiceBase.execute(new ExecuteDBRead(databaseInputForBase, queue, aLong, "BASE", baseOutputFile));
+        executorServiceBase.execute(new ExecuteDBRead(databaseInputForBase, queue, aLong, BASE_THREAD_NAME, baseOutputFile));
         executorServiceBase.shutdown();
 
         DatabaseInput databaseInputForTarget = new DatabaseInput(answer.getSqlQueryTarget(), answer.getMetaDataFile(),
@@ -43,7 +45,7 @@ public class DBComparator implements Comparator{
 
         final ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
         String targetOutputFile = answer.getTargetFile();
-        executorServiceTarget.execute(new ExecuteDBRead(databaseInputForTarget, queue, aLong, "TARGET", targetOutputFile));
+        executorServiceTarget.execute(new ExecuteDBRead(databaseInputForTarget, queue, aLong, TARGET_THREAD_NAME, targetOutputFile));
         executorServiceTarget.shutdown();
 
         final ExecutorService executorServiceCompare = Executors.newSingleThreadExecutor();
@@ -62,9 +64,9 @@ public class DBComparator implements Comparator{
         answer.setSqlQueryBase("SELECT * FROM EMPLOYEE");
         answer.setSqlQueryTarget("SELECT * FROM EMPLOYEE");
         answer.setMetaDataFile("D:/dev/drfa/src/test/resources/dbformat.fmt");
-        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + "BASE"+"-"+ new Date().getTime() + ".csv";
+        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
-        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + "TARGET"+"-"+ new Date().getTime() + ".csv";
+        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnNames(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getMetaDataColumnNames());
