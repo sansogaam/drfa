@@ -16,13 +16,14 @@ public class CommandConsole {
 
     public static void main(String args[]) {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
-        System.out.println( ansi().eraseScreen().fg(GREEN).a("Enter the reconciliation type (FILE, DATABASES)"));
+        System.out.println( ansi().eraseScreen().fg(GREEN).a("Enter the reconciliation type (FILE, DATABASE)"));
         Scanner scanner = new Scanner(System.in);
         String typeOfReconciliation = scanner.nextLine();
         System.out.println("Type of reconciliation: " + typeOfReconciliation);
         QuestionFactory questionFactory = new QuestionFactory();
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
         Answer answer = questions.askQuestions();
+        answer.setReconciliationType(typeOfReconciliation);
         ReconciliationEngine reconciliationEngine = new ReconciliationEngine(answer);
         try {
             reconciliationEngine.reconcile();
@@ -32,7 +33,4 @@ public class CommandConsole {
             e.printStackTrace();
         }
     }
-
-
-
 }

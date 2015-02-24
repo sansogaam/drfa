@@ -20,7 +20,7 @@ public class ComparatorFactory {
     public Comparator getComparator(String reconciliationType){
         if("FILE".equalsIgnoreCase(reconciliationType)){
             return new CsvFileComparator(context, answer);
-        }else if("DB".equalsIgnoreCase(reconciliationType)){
+        }else if("DATABASE".equalsIgnoreCase(reconciliationType)){
             return new DBComparator(context,answer);
         }
         return null;
