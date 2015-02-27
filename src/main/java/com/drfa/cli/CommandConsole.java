@@ -24,6 +24,7 @@ public class CommandConsole {
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
         Answer answer = questions.askQuestions();
         answer.setReconciliationType(typeOfReconciliation);
+        System.out.println("Answers received.." + answer);
         ReconciliationEngine reconciliationEngine = new ReconciliationEngine(answer);
         try {
             reconciliationEngine.reconcile();

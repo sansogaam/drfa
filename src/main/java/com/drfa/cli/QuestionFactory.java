@@ -8,6 +8,8 @@ public class QuestionFactory {
     public Questions getQuestion(String questionType) {
         if (questionType.equalsIgnoreCase("FILE")) {
             return new FileQuestions();
+        }else if(questionType.equalsIgnoreCase("DATABASE")) {
+            return new DatabaseQuestions();
         }
         return null;
     }

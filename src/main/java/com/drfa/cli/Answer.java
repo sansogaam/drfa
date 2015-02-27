@@ -19,10 +19,8 @@ public class Answer {
     private String typeOfReport;
     private String summaryOutputPath;
     private String detailedOutputPath;
-
     private String reconciliationType;
     private String pluginPath;
-
     private int keyIndex;
 
     public String getReconciliationType() {
@@ -159,5 +157,28 @@ public class Answer {
 
     public void setSqlQueryTarget(String sqlQueryTarget) {
         this.sqlQueryTarget = sqlQueryTarget;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "baseFile='" + baseFile + '\'' +
+                ", targetFile='" + targetFile + '\'' +
+                ", sqlQueryBase='" + sqlQueryBase + '\'' +
+                ", sqlQueryTarget='" + sqlQueryTarget + '\'' +
+                ", baseDatabaseType='" + baseDatabaseType + '\'' +
+                ", baseDatabaseCredentialFile='" + baseDatabaseCredentialFile + '\'' +
+                ", baseDatabaseFile='" + baseDatabaseFile + '\'' +
+                ", targetDatabaseType='" + targetDatabaseType + '\'' +
+                ", targetDatabaseCredentialFile='" + targetDatabaseCredentialFile + '\'' +
+                ", targetDatabaseFile='" + targetDatabaseFile + '\'' +
+                ", metaDataFile='" + metaDataFile + '\'' +
+                ", typeOfReport='" + typeOfReport + '\'' +
+                ", summaryOutputPath='" + summaryOutputPath + '\'' +
+                ", detailedOutputPath='" + detailedOutputPath + '\'' +
+                ", reconciliationType='" + reconciliationType + '\'' +
+                ", pluginPath='" + pluginPath + '\'' +
+                ", keyIndex=" + keyIndex +
+                '}';
     }
 }
