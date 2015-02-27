@@ -1,5 +1,7 @@
 package com.drfa.cli;
 
+import com.drfa.validator.*;
+
 import java.util.Scanner;
 
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
@@ -13,59 +15,42 @@ public class FileQuestions implements Questions {
     @Override
     public Answer askQuestions() {
         Answer answer = new Answer();
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of the base file: "));
-        Scanner scanner = new Scanner(System.in);
-        String baseFilePath = scanner.nextLine();
+
+        String baseFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the base file: ");
         answer.setBaseFile(baseFilePath);
 
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of the target file: "));
-        scanner = new Scanner(System.in);
-        String targetFilePath = scanner.nextLine();
+        String targetFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the target file: ");
         answer.setTargetFile(targetFilePath);
 
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of the meta data file: "));
-        scanner = new Scanner(System.in);
-        String metaDataFilePath = scanner.nextLine();
+        String pluginPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the plugin: ");
+        answer.setPluginPath(pluginPath);
+
+        String metaDataFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the meta data file: ");
         answer.setMetaDataFile(metaDataFilePath);
 
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Key Index in the file(0,1,2,..., n"));
-        scanner = new Scanner(System.in);
-        String keyIndex = scanner.nextLine();
+        String keyIndex = new DisplayQuestion(new NumberValidator()).displayQuestion("Please Enter Key Index in the file(0,1,2,..., n)");
         answer.setKeyIndex(new Integer(keyIndex));
 
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Type of Report (XLS, HTML"));
-        scanner = new Scanner(System.in);
-        String typeOfReport = scanner.nextLine();
+        String typeOfReport = new DisplayQuestion(new ReportExtensionValidator()).displayQuestion("Type of Report (XLS, HTML)");
         answer.setTypeOfReport(typeOfReport);
 
-        System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please select the category of the report SUMMARY, DETAILED, BOTH"));
-        scanner = new Scanner(System.in);
-        String reportCategory = scanner.nextLine();
+        String reportCategory = new DisplayQuestion(new ReportDetailValidator()).displayQuestion("Please select the category of the report SUMMARY, DETAILED, BOTH");
         selectMoreQuestionOnBasisOfReportCategory(answer, reportCategory);
 
         return answer;
     }
 
     private void selectMoreQuestionOnBasisOfReportCategory(Answer answer, String reportCategory) {
-        Scanner scanner;
         if("SUMMARY".equalsIgnoreCase(reportCategory)){
-            System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of SUMMARY Output"));
-            scanner = new Scanner(System.in);
-            String summaryOutPutPath = scanner.nextLine();
+            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
             answer.setSummaryOutputPath(summaryOutPutPath);
         }else if("DETAILED".equalsIgnoreCase(reportCategory)){
-            System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of DETAILED Output"));
-            scanner = new Scanner(System.in);
-            String detailedOutPutPath = scanner.nextLine();
+            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
             answer.setSummaryOutputPath(detailedOutPutPath);
         }else{
-            System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of SUMMARY Output"));
-            scanner = new Scanner(System.in);
-            String summaryOutPutPath = scanner.nextLine();
+            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
             answer.setSummaryOutputPath(summaryOutPutPath);
-            System.out.println( ansi().eraseScreen().fg(YELLOW).a("Please provide the absolute path of DETAILED Output"));
-            scanner = new Scanner(System.in);
-            String detailedOutPutPath = scanner.nextLine();
+            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
             answer.setSummaryOutputPath(detailedOutPutPath);
         }
     }

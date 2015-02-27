@@ -1,7 +1,6 @@
 package com.drfa.cli;
 
-import com.drfa.validator.FileValidator;
-import com.drfa.validator.NoValidator;
+import com.drfa.validator.*;
 
 import java.io.File;
 import java.util.Date;
@@ -23,11 +22,11 @@ public class DatabaseQuestions implements Questions {
         String metaDataFile = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the metadata file path");
         answer.setMetaDataFile(metaDataFile);
 
-        String keyIndex = new DisplayQuestion(new NoValidator()).displayQuestion("Please provide the key index(0,1,2,3,..., n)");
+        String keyIndex = new DisplayQuestion(new NumberValidator()).displayQuestion("Please provide the key index(0,1,2,3,..., n)");
         answer.setKeyIndex(new Integer(keyIndex));
 
-        String baseDatabaseType = new DisplayQuestion(new NoValidator()).displayQuestion("What is the Base Database type (MYSQL, ORACLE, MS-SQL)");
-        //TODO: Need to send this to validator
+        String baseDatabaseType = new DisplayQuestion(new DatabaseTypeValidator()).displayQuestion("What is the Base Database type (MYSQL, ORACLE, MS-SQL)");
+
 
         String baseCredentialFile = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the credential file for accessing the base database");
         answer.setBaseDatabaseCredentialFile(baseCredentialFile);
@@ -41,8 +40,8 @@ public class DatabaseQuestions implements Questions {
         String baseSQLQuery = new DisplayQuestion(new NoValidator()).displayQuestion("Please provide the BASE SQL Query...");
         answer.setSqlQueryBase(baseSQLQuery);
 
-        String targetDatabaseType = new DisplayQuestion(new NoValidator()).displayQuestion("What is the Target Database type (MYSQL, ORACLE, MS-SQL)");
-        //TODO: Need to send this to validator
+        String targetDatabaseType = new DisplayQuestion(new DatabaseTypeValidator()).displayQuestion("What is the Target Database type (MYSQL, ORACLE, MS-SQL)");
+
 
         String targetCredentialFile = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the credential file for accessing the target database");
         answer.setTargetDatabaseCredentialFile(targetCredentialFile);
@@ -56,6 +55,29 @@ public class DatabaseQuestions implements Questions {
         String targetSQLQuery = new DisplayQuestion(new NoValidator()).displayQuestion("Please provide the TARGET SQL Query...");
         answer.setSqlQueryTarget(targetSQLQuery);
 
+        String typeOfReport = new DisplayQuestion(new ReportExtensionValidator()).displayQuestion("Type of Report (XLS, HTML)");
+        answer.setTypeOfReport(typeOfReport);
+
+        String reportCategory = new DisplayQuestion(new ReportDetailValidator()).displayQuestion("Please select the category of the report SUMMARY, DETAILED, BOTH");
+        selectMoreQuestionOnBasisOfReportCategory(answer, reportCategory);
+
         return answer;
     }
+
+    //TODO: Need to refactor as its a repeatable method.
+    private void selectMoreQuestionOnBasisOfReportCategory(Answer answer, String reportCategory) {
+        if("SUMMARY".equalsIgnoreCase(reportCategory)){
+            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
+            answer.setSummaryOutputPath(summaryOutPutPath);
+        }else if("DETAILED".equalsIgnoreCase(reportCategory)){
+            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
+            answer.setSummaryOutputPath(detailedOutPutPath);
+        }else{
+            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
+            answer.setSummaryOutputPath(summaryOutPutPath);
+            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
+            answer.setSummaryOutputPath(detailedOutPutPath);
+        }
+    }
+
 }

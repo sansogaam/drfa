@@ -1,6 +1,9 @@
 package com.drfa.cli;
 
 import com.drfa.engine.ReconciliationEngine;
+import com.drfa.validator.FileValidator;
+import com.drfa.validator.NoValidator;
+import com.drfa.validator.ReconciliationTypeValidator;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -16,9 +19,8 @@ public class CommandConsole {
 
     public static void main(String args[]) {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
-        System.out.println( ansi().eraseScreen().fg(GREEN).a("Enter the reconciliation type (FILE, DATABASE)"));
-        Scanner scanner = new Scanner(System.in);
-        String typeOfReconciliation = scanner.nextLine();
+        String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
+
         System.out.println("Type of reconciliation: " + typeOfReconciliation);
         QuestionFactory questionFactory = new QuestionFactory();
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
