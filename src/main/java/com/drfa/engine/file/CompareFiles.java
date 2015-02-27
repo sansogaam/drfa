@@ -2,6 +2,7 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.concurrent.*;
 public class CompareFiles {
 
     ReconciliationContext context;
+    static Logger LOG = Logger.getLogger(CompareFiles.class);
+
     public CompareFiles(ReconciliationContext context){
         this.context = context;
     }
@@ -35,7 +38,7 @@ public class CompareFiles {
         Future<BreakReport> breakReportFuture = executorServiceComparator.submit(new ComparatorListener(context, queue, storageMap));
         executorServiceComparator.shutdown();
         BreakReport report  = breakReportFuture.get();
-        System.out.println(String.format("Size of the file hash map storage is %s", storageMap.size()));
+        LOG.info(String.format("Size of the file hash map storage is %s", storageMap.size()));
         return report;
     }
 }

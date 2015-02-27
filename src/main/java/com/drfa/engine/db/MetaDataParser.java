@@ -1,5 +1,6 @@
 package com.drfa.engine.db;
 
+import org.apache.log4j.Logger;
 import org.jetel.graph.runtime.EngineInitializer;
 import org.jetel.metadata.DataFieldMetadata;
 import org.jetel.metadata.DataRecordMetadata;
@@ -17,6 +18,7 @@ public class MetaDataParser {
 
     public String metaDataFile;
     public String pluginPath;
+    static Logger LOG = Logger.getLogger(MetaDataParser.class);
 
     public MetaDataParser(String metaDataFile, String pluginPath) {
         this.metaDataFile = metaDataFile;
@@ -39,7 +41,7 @@ public class MetaDataParser {
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex.getMessage());
         }
-        System.out.println("Column Names.." + columnNames);
+        LOG.info("Column Names.." + columnNames);
 
         return columnNames;
     }

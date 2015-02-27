@@ -4,6 +4,8 @@ import com.drfa.engine.ReconciliationEngine;
 import com.drfa.validator.FileValidator;
 import com.drfa.validator.NoValidator;
 import com.drfa.validator.ReconciliationTypeValidator;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -17,16 +19,20 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class CommandConsole {
 
+    static Logger LOG = Logger.getLogger(CommandConsole.class);
+
     public static void main(String args[]) {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
 
-        System.out.println("Type of reconciliation: " + typeOfReconciliation);
+        LOG.info("Type of reconciliation: " + typeOfReconciliation);
+
         QuestionFactory questionFactory = new QuestionFactory();
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
         Answer answer = questions.askQuestions();
         answer.setReconciliationType(typeOfReconciliation);
-        System.out.println("Answers received.." + answer);
+
+        LOG.info("Answers received.." + answer);
         ReconciliationEngine reconciliationEngine = new ReconciliationEngine(answer);
         try {
             reconciliationEngine.reconcile();

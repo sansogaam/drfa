@@ -1,6 +1,7 @@
 package com.drfa.engine.db;
 
 import com.drfa.engine.EngineConstants;
+import org.apache.log4j.Logger;
 import org.jetel.connection.jdbc.DBConnectionImpl;
 import org.jetel.data.DataField;
 import org.jetel.data.RecordKey;
@@ -33,6 +34,8 @@ public class ExecuteDBRead implements Runnable {
     private String threadName;
     private String outputFile;
 
+    static Logger LOG = Logger.getLogger(ExecuteDBRead.class);
+
     public ExecuteDBRead(DatabaseInput databaseInput, BlockingQueue queue, AtomicLong aLong, String threadName, String outputFile) {
         this.databaseInput = databaseInput;
         this.queue = queue;
@@ -43,7 +46,7 @@ public class ExecuteDBRead implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Running the thread: " + threadName);
+        LOG.info("Running the thread: " + threadName);
 
         DBConnectionImpl dbCon = new DBConnectionImpl("Conn0", databaseInput.getConnectionFile());
         DataRecordMetadataXMLReaderWriter metaReader = new DataRecordMetadataXMLReaderWriter();
@@ -74,7 +77,7 @@ public class ExecuteDBRead implements Runnable {
             lookup.seek();
 
             //display results, if there are any
-            System.out.println(String.format("Processing the results %s", threadName));
+            LOG.info(String.format("Processing the results %s", threadName));
 
             Path file = Paths.get(outputFile);
 
@@ -85,7 +88,7 @@ public class ExecuteDBRead implements Runnable {
                     StringBuffer sb = new StringBuffer();
                     for (DataField data : lookup.next()) {
                         String valueString =data.getValue().toString();
-                        System.out.println(String.format("Displaying the value of %s thread with content %s", threadName, valueString));
+                        LOG.info(String.format("Displaying the value of %s thread with content %s", threadName, valueString));
                         sb.append(valueString).append("|");
                     }
                     writer.write(sb.toString());
@@ -97,14 +100,14 @@ public class ExecuteDBRead implements Runnable {
             //free lookup table
             lookupTable.postExecute();
             lookupTable.free();
-            System.out.println(String.format("Processed the file format %s",threadName));
+            LOG.info(String.format("Processed the file format %s",threadName));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         long value = aLong.getAndIncrement();
-        System.out.println(String.format("The value of atomic long is %s for thread %s", value, threadName));
+        LOG.info(String.format("The value of atomic long is %s for thread %s", value, threadName));
         if (value == 1) {
-            System.out.println("Sending the message now......");
+            LOG.info("Sending the message now......");
             try {
                 queue.put(START_PROCESSING);
             } catch (InterruptedException e) {

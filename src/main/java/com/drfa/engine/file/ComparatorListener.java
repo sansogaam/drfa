@@ -2,6 +2,7 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
+import org.apache.log4j.Logger;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -14,6 +15,7 @@ public class ComparatorListener implements Callable<BreakReport> {
     ReconciliationContext context;
     private BlockingQueue queue;
     private Map<String, String> storageMap;
+    static Logger LOG = Logger.getLogger(ComparatorListener.class);
 
     public ComparatorListener(ReconciliationContext context,BlockingQueue queue,
                               Map<String, String> storageMap){
@@ -27,17 +29,17 @@ public class ComparatorListener implements Callable<BreakReport> {
         BreakReport report = new BreakReport();
         MessageProcessor messageProcessor = new MessageProcessor(context);
         MessageHandler messageHandler = new MessageHandler(report, messageProcessor);
-        System.out.println("Matching the keys between the hash-map and storing it in one common place");
+        LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
         try {
             while (continueConsumingMessage) {
                 String message = (String) queue.take();
                 continueConsumingMessage = messageHandler.handleMessage(message);
             }
-            System.out.println(String.format("Size of the storage map %s", storageMap.size()));
+            LOG.info(String.format("Size of the storage map %s", storageMap.size()));
             messageHandler.enrichBreakReportWithOneSidedBreak(storageMap);
             messageHandler.enrichBreakReportWithColumnDetails();
-            System.out.println("Consumption is completed..." + messageProcessor.getMapOfBreaks().size());
+            LOG.info("Consumption is completed..." + messageProcessor.getMapOfBreaks().size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

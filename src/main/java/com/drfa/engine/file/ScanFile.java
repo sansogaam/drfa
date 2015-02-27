@@ -1,5 +1,7 @@
 package com.drfa.engine.file;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 public class ScanFile {
 
     volatile int sharedVariable = 0;
+
+    static Logger LOG = Logger.getLogger(ScanFile.class);
 
     public void scanFile(int primaryKeyIndex, Map<String, String> storageMap, File fileToBeScanned,
                          BlockingQueue queue, String threadName) throws FileNotFoundException, InterruptedException {
@@ -39,7 +43,7 @@ public class ScanFile {
         }
         sharedVariable++;
         if (sharedVariable == 2) {
-            System.out.println("Publishing the exit message....");
+            LOG.info("Publishing the exit message....");
             flushTheStorageMap(storageMap,queue);
             queue.put("SUMMARY:" + threadName+":"+totalNumberOfRecords);
             queue.put("Exit");
@@ -47,7 +51,7 @@ public class ScanFile {
             System.out.println(String.format("Ending of the thread %s with shared Counter %s", threadName, sharedVariable));
             queue.put("SUMMARY:" + threadName+":"+totalNumberOfRecords);
         }
-        System.out.println(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
+        LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }
 
     public String checkPrefixOfTheKey(String threadName){

@@ -2,6 +2,7 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.EngineConstants;
 import com.drfa.engine.report.BreakReport;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import static com.drfa.engine.EngineConstants.*;
 public class MessageHandler {
     BreakReport report;
     MessageProcessor messageProcessor;
+    static Logger LOG = Logger.getLogger(MessageHandler.class);
 
     public MessageHandler(BreakReport report, MessageProcessor messageProcessor){
         this.report = report;
@@ -24,8 +26,8 @@ public class MessageHandler {
 
     public boolean handleMessage(String message){
         if ("Exit".equalsIgnoreCase(message)) {
-            System.out.println("Exit message recieved.." + message);
-            System.out.println(report);
+            LOG.info("Exit message recieved: " + message);
+            LOG.info("Displaying the report: "+report);
             return false;
         }else if(message.startsWith("SUMMARY:")){
             String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
@@ -38,7 +40,6 @@ public class MessageHandler {
             }
             return true;
         } else{
-//            System.out.println(String.format("Take the message %s from the queue", message));
             messageProcessor.processMessage(message);
             return true;
         }

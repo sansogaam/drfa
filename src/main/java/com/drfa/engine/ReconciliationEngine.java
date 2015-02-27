@@ -4,6 +4,7 @@ import com.drfa.cli.Answer;
 import com.drfa.engine.db.MetaDataParser;
 import com.drfa.engine.report.BreakReport;
 import com.drfa.engine.file.CsvFileComparator;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,23 @@ public class ReconciliationEngine {
 
     Answer answer;
 
+    static Logger LOG = Logger.getLogger(ReconciliationEngine.class);
+
     public ReconciliationEngine(Answer answer){
         this.answer = answer;
 
     }
 
     public void reconcile() throws ExecutionException, InterruptedException {
+        long startTime = System.currentTimeMillis();
         MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath());
         List<String> columnNames = dataParser.getMetaDataColumnNames();
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnNames(columnNames);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
         comparator.compare();
-        System.out.println("Reconciliation is completed...");
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("Total time taken by reconciliation %s milliseconds", endTime-startTime));
     }
 
     public static void main(String args[]){
