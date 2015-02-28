@@ -41,3 +41,25 @@ Below are the minimal software requirement to run this tool
 ![Reconciliation type File or Database](/images/Rectype-1.png)
 #### Step-2 (Specify the base file for comparision)
 ![Path to the base file](/images/Rectype-2.png)
+#### Step-3 (Specify the target file for comparision)
+![Path to the base file](/images/Rectype-3.png)
+#### Step-4 (Specify the plugin, you can just put any empty directory path)
+![Path to the base file](/images/Rectype-4.png)
+#### Step-5 (Specify the proper metadata file, it should contain all the column names of the csv file)
+##### Sample Metadata file (it should be saved with .fmt extension)
+![Path to the base file](/images/Metadata.png)
+##### Mention the complete meta data file which has the extension .fmt
+![Path to the base file](/images/Rectype-5.png)
+#### Step-6 (Specify the column index of the key which will be used to match with other file. It should be integer)
+![Path to the base file](/images/Rectype-6.png)
+#### Step-7 (Specify the type of report. Currently only HTML is supported)
+![Path to the base file](/images/Rectype-7.png)
+#### Step-8 (Specify the category of report. SUMMARY or DETAILED)
+![Path to the base file](/images/Rectype-8.png)
+#### Step-9 (Output of the report to be stored)
+![Path to the base file](/images/Rectype-9.png)
+
+
+
+
+
