@@ -18,6 +18,7 @@ public class MessageHandler {
     BreakReport report;
     MessageProcessor messageProcessor;
     static Logger LOG = Logger.getLogger(MessageHandler.class);
+    int matchedRecords = 0;
 
     public MessageHandler(BreakReport report, MessageProcessor messageProcessor){
         this.report = report;
@@ -28,6 +29,7 @@ public class MessageHandler {
         if ("Exit".equalsIgnoreCase(message)) {
             LOG.info("Exit message recieved: " + message);
             LOG.info("Displaying the report: "+report);
+            report.setMatchedWithNumberOfKeys(matchedRecords);
             return false;
         }else if(message.startsWith("SUMMARY:")){
             String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
@@ -40,6 +42,7 @@ public class MessageHandler {
             }
             return true;
         } else{
+            matchedRecords ++;
             messageProcessor.processMessage(message);
             return true;
         }

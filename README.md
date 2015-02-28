@@ -19,10 +19,10 @@ Business User
 Below are the minimal software requirement to run this tool
 * JRE 1.7 or greater
 
-Developer
-* JDK 1.7 or greater
-* MAVEN 3.1 or greater
-* IntelliJ or Eclipse Luna (Latest version)
+* Developer
+    * JDK 1.7 or greater
+    * MAVEN 3.1 or greater
+    * IntelliJ or Eclipse Luna (Latest version)
 
 ##Third Party Library Used
 

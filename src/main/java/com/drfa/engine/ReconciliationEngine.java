@@ -4,9 +4,13 @@ import com.drfa.cli.Answer;
 import com.drfa.engine.db.MetaDataParser;
 import com.drfa.engine.report.BreakReport;
 import com.drfa.engine.file.CsvFileComparator;
+import com.drfa.engine.report.HTMLReportDecorator;
+import com.drfa.engine.report.ReportDecorator;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -31,7 +35,11 @@ public class ReconciliationEngine {
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnNames(columnNames);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
-        comparator.compare();
+        BreakReport report = comparator.compare();
+        String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime();
+        LOG.info(String.format("Report written on path %s", htmlReportPath));
+        ReportDecorator reportDecorator = new HTMLReportDecorator(report);
+        reportDecorator.decorateReport(htmlReportPath);
         long endTime = System.currentTimeMillis();
         LOG.info(String.format("Total time taken by reconciliation %s milliseconds", endTime-startTime));
     }
@@ -45,10 +53,15 @@ public class ReconciliationEngine {
         answer.setReconciliationType("FILE");
         answer.setBaseFile("D:/dev/test.csv");
         answer.setTargetFile("D:/dev/test1.csv");
+        answer.setSummaryOutputPath("D:/dev");
         Comparator comparator = new CsvFileComparator(context, answer);
         long startTime = System.currentTimeMillis();
         try {
             BreakReport report = comparator.compare();
+            String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
+            LOG.info(String.format("Report written on path %s", htmlReportPath));
+            ReportDecorator reportDecorator = new HTMLReportDecorator(report);
+            reportDecorator.decorateReport(htmlReportPath);
             System.out.println("Reporting tool: " + report);
         } catch (ExecutionException e) {
             e.printStackTrace();
