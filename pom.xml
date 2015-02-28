@@ -23,29 +23,21 @@
             <groupId>org.jetel</groupId>
             <artifactId>engine</artifactId>
             <version>4.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cloveretl.engine.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.jetel</groupId>
             <artifactId>connection</artifactId>
             <version>4.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/plugins/org.jetel.connection/cloveretl.connection.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>
             <version>52.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/icu4j-52_1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.jetel</groupId>
             <artifactId>lookup</artifactId>
             <version>4.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/plugins/org.jetel.lookup/cloveretl.lookup.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -118,4 +110,49 @@
             <version>1.11</version>
         </dependency>
     </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.drfa.cli.CommandConsole</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

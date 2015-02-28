@@ -1,0 +1,3 @@
+mvn deploy:deploy-file -DgroupId=org.jetel -DartifactId=engine -Dversion=4.0.3 -Dpackaging=jar -Dfile=D:/dev/drfa/lib/cloveretl.engine.jar -DrepositoryId=cloveretl-engine -Durl=file://${project.basedir}/lib
+mvn deploy:deploy-file -DgroupId=org.jetel -DartifactId=lookup -Dversion=4.0.3 -Dpackaging=jar -Dfile=D:/dev/drfa/lib/cloveretl.lookup.jar -DrepositoryId=cloveretl-lookup -Durl=file://${project.basedir}/lib
+mvn deploy:deploy-file -DgroupId=org.jetel -DartifactId=connection -Dversion=4.0.3 -Dpackaging=jar -Dfile=D:/dev/drfa/lib/cloveretl.connection.jar -DrepositoryId=cloveretl-connection -Durl=file://${project.basedir}/lib
