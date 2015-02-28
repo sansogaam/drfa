@@ -36,4 +36,4 @@ Developer
 3. Execute the _java -jar drfa-1.0.jar_ command
 4. This will open the command prompt as below.
 
-![Select the reconciliation type File or Database](/images/Rectype.png)
+![Select the reconciliation type File or Database](/images/Rectype-1.png)
