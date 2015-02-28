@@ -24,10 +24,14 @@ Developer
 *MAVEN 3.1 or greater
 *IntelliJ or Eclipse Luna (Latest version)
 
-#Third Party Library Usage
+#Third Party Library Used
 
 * Clover ETL 4.0.3
 * jansi (For command line console)
 
-#Usage
-java -jar drfa-1.0.jar
+#Steps to use the tool
+
+1. Download the drfa -<version>.jar from the dist folder in the above repository.
+2. Copy the file to your desired location
+3. Execute the _java -jar drfa-1.0.jar_ command
+4. This will open the command prompt as below.
