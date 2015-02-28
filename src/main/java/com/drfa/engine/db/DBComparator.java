@@ -56,7 +56,7 @@ public class DBComparator implements Comparator{
 
     public static void main(String args[]){
         Answer answer = new Answer();
-        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-base.cfg");
+            answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-base.cfg");
         answer.setBaseDatabaseFile("D:/dev");
         answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-target.cfg");
         answer.setTargetDatabaseFile("D:/dev");
