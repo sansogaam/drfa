@@ -12,28 +12,32 @@ User can achieve this by straight away reconciling the data between
 
 The tool will generate the nice summary report.
 
-#Software Requirements
+##Software Requirements
 
 Business User
 
 Below are the minimal software requirement to run this tool
-*JRE 1.7 or greater
+* JRE 1.7 or greater
 
 Developer
-*JDK 1.7 or greater
-*MAVEN 3.1 or greater
-*IntelliJ or Eclipse Luna (Latest version)
+* JDK 1.7 or greater
+* MAVEN 3.1 or greater
+* IntelliJ or Eclipse Luna (Latest version)
 
-#Third Party Library Used
+##Third Party Library Used
 
 * Clover ETL 4.0.3
 * jansi (For command line console)
 
-#Steps to use the tool
+##Steps to use the tool
 
 1. Download the drfa -<version>.jar from the dist folder in the above repository.
 2. Copy the file to your desired location
 3. Execute the _java -jar drfa-1.0.jar_ command
-4. This will open the command prompt as below.
+4. This will open the command prompt and you need to follow the below steps 
 
-![Select the reconciliation type File or Database](/images/Rectype-1.png)
+### FILE Reconciliation type usage
+#### Step-1 (Select the reconciliation type)
+![Reconciliation type File or Database](/images/Rectype-1.png)
+#### Step-2 (Specify the base file for comparision)
+![Path to the base file](/images/Rectype-2.png)
