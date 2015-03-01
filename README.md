@@ -29,6 +29,9 @@ Below are the minimal software requirement to run this tool
 * Clover ETL 4.0.3
 * jansi (For command line console)
 
+##DRFA Roadmap 2015
+![DRFA Roadmap](/images/DRFA-Roadmap.png)
+#Documentation
 ##Steps to use the tool
 
 1. Download the drfa -<version>.jar from the dist folder in the above repository.
