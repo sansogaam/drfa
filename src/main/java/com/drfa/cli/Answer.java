@@ -21,7 +21,16 @@ public class Answer {
     private String detailedOutputPath;
     private String reconciliationType;
     private String pluginPath;
+    private String fileDelimiter ="|";
     private int keyIndex;
+
+    public String getFileDelimiter() {
+        return fileDelimiter;
+    }
+
+    public void setFileDelimiter(String fileDelimiter) {
+        this.fileDelimiter = fileDelimiter;
+    }
 
     public String getReconciliationType() {
         return reconciliationType;

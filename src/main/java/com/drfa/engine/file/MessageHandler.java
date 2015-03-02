@@ -32,7 +32,9 @@ public class MessageHandler {
             report.setMatchedWithNumberOfKeys(matchedRecords);
             return false;
         }else if(message.startsWith("SUMMARY:")){
+            LOG.info(String.format("Recieved the summary message %s", message));
             String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
+            LOG.info(String.format("Processing the thread name %s", threadName));
             if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
                 String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
                 report.setBaseTotalRecords(new Integer(numberOfRecords));

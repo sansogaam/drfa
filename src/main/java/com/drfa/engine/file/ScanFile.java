@@ -20,17 +20,17 @@ import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 public class ScanFile {
 
     volatile int sharedVariable = 0;
-
+    
     static Logger LOG = Logger.getLogger(ScanFile.class);
 
     public void scanFile(int primaryKeyIndex, Map<String, String> storageMap, File fileToBeScanned,
-                         BlockingQueue queue, String threadName) throws FileNotFoundException, InterruptedException {
+                         BlockingQueue queue, String threadName, String fileDelimiter) throws FileNotFoundException, InterruptedException {
         Scanner scanner = new Scanner(fileToBeScanned);
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            ///System.out.println(String.format("This line is for thread %s with content %s",threadName,line));
-            String splitLine[] = line.split(Pattern.quote("|"));
+            //LOG.info(String.format("This line is for thread %s with content %s",threadName,line));
+            String splitLine[] = line.split(Pattern.quote(fileDelimiter));
             String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+splitLine[primaryKeyIndex]);
             if (doesKeyExist == null) {
                 storageMap.put(threadName+":" + splitLine[primaryKeyIndex], line);
@@ -41,15 +41,18 @@ public class ScanFile {
             }
             totalNumberOfRecords++;
         }
+        
         sharedVariable++;
         if (sharedVariable == 2) {
-            LOG.info("Publishing the exit message....");
-            flushTheStorageMap(storageMap,queue);
-            queue.put("SUMMARY:" + threadName+":"+totalNumberOfRecords);
+            flushTheStorageMap(storageMap, queue);
+            queue.put("SUMMARY:" + threadName + ":" + totalNumberOfRecords);
+            LOG.info("Will publish the exit message in 500 milli-sec");
+            Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
             queue.put("Exit");
-        } else {
-            System.out.println(String.format("Ending of the thread %s with shared Counter %s", threadName, sharedVariable));
+        } else{
+            System.out.println(String.format("Ending of the thread %s with shared Counter %s ", threadName, sharedVariable));
             queue.put("SUMMARY:" + threadName+":"+totalNumberOfRecords);
+            
         }
         LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }

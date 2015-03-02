@@ -21,17 +21,17 @@ public class CompareFiles {
     }
 
 
-    public BreakReport compare(int primaryKeyIndex, File base, File target) throws ExecutionException, InterruptedException {
+    public BreakReport compare(int primaryKeyIndex, File base, File target, String fileDelimiter) throws ExecutionException, InterruptedException {
         Map<String, String> storageMap = new ConcurrentHashMap<String, String>();
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         ScanFile scanFile = new ScanFile();
 
         ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, primaryKeyIndex, base));
+        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, primaryKeyIndex, base, fileDelimiter));
         executorServiceBase.shutdown();
 
         ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
-        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,primaryKeyIndex,target));
+        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,primaryKeyIndex,target, fileDelimiter));
         executorServiceTarget.shutdown();
 
         ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();
@@ -40,5 +40,9 @@ public class CompareFiles {
         BreakReport report  = breakReportFuture.get();
         LOG.info(String.format("Size of the file hash map storage is %s", storageMap.size()));
         return report;
+        
+    }
+    public BreakReport compare(int primaryKeyIndex, File base, File target) throws ExecutionException, InterruptedException {
+        return compare(primaryKeyIndex,base,target,"|");
     }
 }

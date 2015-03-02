@@ -14,22 +14,24 @@ public class BaseExecutor implements Runnable {
     private Map<String, String> storageMap;
     private int primaryKeyIndex;
     private File base;
+    private String fileDelimiter;
 
     public BaseExecutor(ScanFile scanFile, BlockingQueue queue,
-                        Map<String, String> storageMap, int primaryKeyIndex, File base){
+                        Map<String, String> storageMap, int primaryKeyIndex, File base, String fileDelimiter){
 
         this.scanFile = scanFile;
         this.queue = queue;
         this.storageMap = storageMap;
         this.primaryKeyIndex=primaryKeyIndex;
         this.base = base;
+        this.fileDelimiter = fileDelimiter;
     }
 
     @Override
     public void run() {
         System.out.println("Parsing the base file for comparision");
         try {
-            scanFile.scanFile(primaryKeyIndex, storageMap, base, queue, "BASE");
+            scanFile.scanFile(primaryKeyIndex, storageMap, base, queue, "BASE", fileDelimiter);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

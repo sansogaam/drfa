@@ -36,7 +36,7 @@ public class ReconciliationEngine {
         context.setColumnNames(columnNames);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
         BreakReport report = comparator.compare();
-        String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime();
+        String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
         LOG.info(String.format("Report written on path %s", htmlReportPath));
         ReportDecorator reportDecorator = new HTMLReportDecorator(report);
         reportDecorator.decorateReport(htmlReportPath);
@@ -53,6 +53,8 @@ public class ReconciliationEngine {
         answer.setReconciliationType("FILE");
         answer.setBaseFile("D:/dev/test.csv");
         answer.setTargetFile("D:/dev/test1.csv");
+        answer.setMetaDataFile("D:/dev/testing.fmt");
+        answer.setPluginPath("D:/dev");
         answer.setSummaryOutputPath("D:/dev");
         Comparator comparator = new CsvFileComparator(context, answer);
         long startTime = System.currentTimeMillis();

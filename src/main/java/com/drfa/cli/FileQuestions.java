@@ -22,6 +22,9 @@ public class FileQuestions implements Questions {
         String targetFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the target file: ");
         answer.setTargetFile(targetFilePath);
 
+        String fileDelimiter = new DisplayQuestion(new NoValidator()).displayQuestion("Please specify the file delimiter | or ,");
+        answer.setFileDelimiter(fileDelimiter);
+
         String pluginPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the plugin: ");
         answer.setPluginPath(pluginPath);
 
