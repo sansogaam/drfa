@@ -8,6 +8,10 @@ import java.util.Map;
  */
 public class ReconciliationContext {
 
+    
+
+    private String fileDelimiter;
+    
     private List<String> columnNames;
 
     private List<String> columnsToBeIgnored;
@@ -48,4 +52,11 @@ public class ReconciliationContext {
         this.columnNames = columnNames;
     }
 
+    public String getFileDelimiter() {
+        return fileDelimiter;
+    }
+
+    public void setFileDelimiter(String fileDelimiter) {
+        this.fileDelimiter = fileDelimiter;
+    }
 }

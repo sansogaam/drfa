@@ -16,7 +16,7 @@ public class DatabaseQuestions implements Questions {
     public Answer askQuestions() {
         Answer answer = new Answer();
 
-        String pluginPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the plugin path");
+        String pluginPath = new DisplayQuestion(new PluginValidator()).displayQuestion("Please provide the plugin path");
         answer.setPluginPath(pluginPath);
 
         String metaDataFile = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the metadata file path");

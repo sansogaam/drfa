@@ -52,15 +52,28 @@ public class MessageHandler {
     public void enrichBreakReportWithOneSidedBreak(final Map<String, String> storageMap){
         int baseOneSidedBreak = 0;
         int targetOneSidedBreak = 0;
+        Map<Integer,Map<String, String>> baseOneSidedBreaksCollection = new HashMap<Integer,Map<String, String>>();
+        Map<Integer,Map<String, String>> targetOneSidedBreaksCollection = new HashMap<Integer,Map<String, String>>();
+        int baseRowCount = 1;
+        int targetRowCount = 1;
         for(String key: storageMap.keySet()) {
+            String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
+                Map<String, String> mapOfOneSidedBreaks = messageProcessor.processOneSidedMessage(value);
+                baseOneSidedBreaksCollection.put(baseRowCount, mapOfOneSidedBreaks);
+                baseRowCount++;
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
+                Map<String, String> mapOfOneSidedBreaks = messageProcessor.processOneSidedMessage(value);
+                targetOneSidedBreaksCollection.put(targetRowCount, mapOfOneSidedBreaks);
+                targetRowCount++;
                 targetOneSidedBreak++;
             }
         }
         report.setBaseOneSidedBreaks(baseOneSidedBreak);
         report.setTargetOneSidedBreaks(targetOneSidedBreak);
+        report.setBaseOneSidedBreaksCollection(baseOneSidedBreaksCollection);
+        report.setTargetOneSidedBreaksCollection(targetOneSidedBreaksCollection);
     }
 
     public void enrichBreakReportWithColumnDetails(){

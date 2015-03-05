@@ -1,5 +1,6 @@
 package com.drfa.engine.report;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,37 @@ public class BreakReport {
     private int baseOneSidedBreaks;
     private int targetOneSidedBreaks;
     private Map<String,List<Integer>> columnBreaksCount;
+    private Map<Integer,Map<String, String>> baseOneSidedBreaksCollection;
+    private Map<Integer,Map<String, String>> targetOneSidedBreaksCollection;
 
+    
+
+    private Map<Integer, Map<String, List<String>>> mapOfBreaks = new LinkedHashMap<Integer, Map<String, List<String>>>();
+
+
+    public Map<Integer, Map<String, String>> getBaseOneSidedBreaksCollection() {
+        return baseOneSidedBreaksCollection;
+    }
+
+    public void setBaseOneSidedBreaksCollection(Map<Integer, Map<String, String>> baseOneSidedBreaksCollection) {
+        this.baseOneSidedBreaksCollection = baseOneSidedBreaksCollection;
+    }
+
+    public Map<Integer, Map<String, String>> getTargetOneSidedBreaksCollection() {
+        return targetOneSidedBreaksCollection;
+    }
+
+    public void setTargetOneSidedBreaksCollection(Map<Integer, Map<String, String>> targetOneSidedBreaksCollection) {
+        this.targetOneSidedBreaksCollection = targetOneSidedBreaksCollection;
+    }
+
+    public Map<Integer, Map<String, List<String>>> getMapOfBreaks() {
+        return mapOfBreaks;
+    }
+
+    public void setMapOfBreaks(Map<Integer, Map<String, List<String>>> mapOfBreaks) {
+        this.mapOfBreaks = mapOfBreaks;
+    }
 
     public int getBaseTotalRecords() {
         return baseTotalRecords;

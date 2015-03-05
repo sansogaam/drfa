@@ -1,10 +1,6 @@
 package com.drfa.validator;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 /**
  * Created by Sanjiv on 3/5/2015.

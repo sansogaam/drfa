@@ -1,8 +1,7 @@
 package com.drfa.engine.file;
 
+import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
-import com.drfa.engine.file.MessageHandler;
-import com.drfa.engine.file.MessageProcessor;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,11 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 /**
  * Created by Sanjiv on 2/19/2015.
@@ -62,6 +60,36 @@ public class MessageHandlerTest {
         handler.enrichBreakReportWithOneSidedBreak(storageMap);
         assertEquals(2, breakReport.getBaseOneSidedBreaks());
         assertEquals(1, breakReport.getTargetOneSidedBreaks());
+    }
+
+    @Test
+    public void testEnrichBreakReportForOneSidedBreakWithDetails()throws  Exception{
+        Map<String, String> storageMap = new HashMap<String, String>();
+        storageMap.put("BASE:Exist1", "Exist1|Exist2|Exist3|Exist4");
+        storageMap.put("BASE:Exist2", "Exist1|Exist2|Exist3|Exist4");
+        storageMap.put("TARGET:Exist1", "Exist1|Exist2|Exist3|Exist4");
+        BreakReport breakReport = new BreakReport();
+        ReconciliationContext context = mock(ReconciliationContext.class);
+        when(context.getColumnNames()).thenReturn(populateColumnNames());
+        when(context.getFileDelimiter()).thenReturn("|");
+        MessageProcessor processor = new MessageProcessor(context);
+        MessageHandler handler = new MessageHandler(breakReport, processor);
+        handler.enrichBreakReportWithOneSidedBreak(storageMap);
+        assertEquals(2, breakReport.getBaseOneSidedBreaks());
+        assertEquals(1, breakReport.getTargetOneSidedBreaks());
+        compareBreaks(breakReport.getBaseOneSidedBreaksCollection());
+        compareBreaks(breakReport.getTargetOneSidedBreaksCollection());
+    }
+
+    private void compareBreaks(Map<Integer,Map<String, String>> mapOfBaseOneSidedBreaks) {
+        for(Integer rowValue : mapOfBaseOneSidedBreaks.keySet()){
+            Map<String, String> mapOfBreaks = mapOfBaseOneSidedBreaks.get(rowValue);
+            for(String columnName : mapOfBreaks.keySet()) {
+                int counter = new Integer(columnName.substring(columnName.length()-1,columnName.length()));
+                assertEquals("C" + counter, columnName);
+                assertEquals("Exist" + counter, mapOfBreaks.get(columnName));
+            }
+        }
     }
     @Test
     public void testEnrichBreakReportForColumnBreaks(){
@@ -145,6 +173,15 @@ public class MessageHandlerTest {
             mapOfBreaks.put(new Integer(j), mapOfRowBreaks);
         }
         return mapOfBreaks;
+    }
+
+    public List<String> populateColumnNames(){
+        List<String> columnNames = new ArrayList<String>();
+        columnNames.add("C1");
+        columnNames.add("C2");
+        columnNames.add("C3");
+        columnNames.add("C4");
+        return columnNames;
     }
 
 }

@@ -11,6 +11,7 @@ public class MessageProcessor {
     ReconciliationContext context;
     volatile int rowCount = 1;
     Map<Integer, Map<String, List<String>>> mapOfBreaks = new LinkedHashMap<Integer, Map<String, List<String>>>();
+    
 
     public MessageProcessor(ReconciliationContext context) {
         this.context = context;
@@ -20,13 +21,20 @@ public class MessageProcessor {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
         List<String> columnNames = context.getColumnNames();
-        MessageDecorator messageDecorator = new MessageDecorator(columnNames, splittedMessage);
+        MessageDecorator messageDecorator = new MessageDecorator(columnNames, splittedMessage, context.getFileDelimiter());
         if(!messageDecorator.decorateMessageWithBreak().isEmpty()) {
             mapOfBreaks.put(rowCount, messageDecorator.decorateMessageWithBreak());
         }
         rowCount++;
     }
 
+    public Map<String, String> processOneSidedMessage(String message){
+        List<String> columnNames = context.getColumnNames();
+        MessageDecorator messageDecorator = new MessageDecorator(columnNames, message, context.getFileDelimiter());
+        Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
+        return mapOfOneSidedBreaks;
+    }
+        
     public Map<Integer, Map<String, List<String>>> getMapOfBreaks(){
         return this.mapOfBreaks;
     }

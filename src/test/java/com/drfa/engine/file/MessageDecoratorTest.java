@@ -1,6 +1,5 @@
 package com.drfa.engine.file;
 
-import com.drfa.engine.file.MessageDecorator;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class MessageDecoratorTest {
         columnNames.add("C2");
         columnNames.add("C3");
         columnNames.add("C4");
-        MessageDecorator messageDecorator = new MessageDecorator(columnNames, lines);
+        MessageDecorator messageDecorator = new MessageDecorator(columnNames, lines, "|");
         Map<String, List<String>> mapOfBreaks = messageDecorator.decorateMessageWithBreak();
         assertEquals(0,mapOfBreaks.size());
     }
@@ -40,12 +39,28 @@ public class MessageDecoratorTest {
         columnNames.add("C2");
         columnNames.add("C3");
         columnNames.add("C4");
-        MessageDecorator messageDecorator = new MessageDecorator(columnNames, lines);
+        MessageDecorator messageDecorator = new MessageDecorator(columnNames, lines, "|");
         Map<String, List<String>> mapOfBreaks = messageDecorator.decorateMessageWithBreak();
         assertEquals(4, mapOfBreaks.size());
         List<String> breakColumn = mapOfBreaks.get("C4");
         assertEquals("NOT MATCHED", breakColumn.get(2));
         List<String> matchedColumn = mapOfBreaks.get("C1");
         assertEquals("MATCHED", matchedColumn.get(2));
+    }
+    
+    @Test
+    public void testTheMessageDecoratorForOneSidedBreak(){
+        String line = "T1|T2|T3|T4";
+        List<String> columnNames = new ArrayList<String>();
+        columnNames.add("C1");
+        columnNames.add("C2");
+        columnNames.add("C3");
+        columnNames.add("C4");
+        MessageDecorator messageDecorator = new MessageDecorator(columnNames, line, "|");
+        Map<String, String> mapOfBreaks = messageDecorator.decorateMessageWithOneSideBreak();
+        assertEquals("T1", mapOfBreaks.get("C1"));
+        assertEquals("T2", mapOfBreaks.get("C2"));
+        assertEquals("T3", mapOfBreaks.get("C3"));
+        assertEquals("T4", mapOfBreaks.get("C4"));
     }
 }

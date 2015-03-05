@@ -4,6 +4,7 @@ import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
 import org.apache.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -39,7 +40,9 @@ public class ComparatorListener implements Callable<BreakReport> {
             LOG.info(String.format("Size of the storage map %s", storageMap.size()));
             messageHandler.enrichBreakReportWithOneSidedBreak(storageMap);
             messageHandler.enrichBreakReportWithColumnDetails();
-            LOG.info("Consumption is completed..." + messageProcessor.getMapOfBreaks().size());
+            Map<Integer, Map<String, List<String>>> mapOfBreaks =messageProcessor.getMapOfBreaks();
+            report.setMapOfBreaks(mapOfBreaks);
+            LOG.info("Consumption is completed..." + mapOfBreaks.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

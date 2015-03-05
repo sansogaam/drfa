@@ -29,7 +29,7 @@ public class Answer {
     private int keyIndex;
 
     public String getFileDelimiter() {
-        return fileDelimiter;
+        return fileDelimiter != null ? fileDelimiter : "|";
     }
 
     public void setFileDelimiter(String fileDelimiter) {

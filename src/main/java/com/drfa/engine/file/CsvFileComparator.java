@@ -24,6 +24,7 @@ public class CsvFileComparator implements Comparator {
 
     @Override
     public BreakReport compare() throws ExecutionException, InterruptedException {
-        return new CompareFiles(context).compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()), answer.getFileDelimiter());
+        context.setFileDelimiter(answer.getFileDelimiter());
+        return new CompareFiles(context).compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()));
     }
 }
