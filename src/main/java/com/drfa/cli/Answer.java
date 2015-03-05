@@ -1,5 +1,9 @@
 package com.drfa.cli;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 /**
  * Created by Sanjiv on 2/18/2015.
  */
@@ -141,7 +145,11 @@ public class Answer {
     }
 
     public void setPluginPath(String pluginPath) {
-        this.pluginPath = pluginPath;
+        if("PLUGINS".equalsIgnoreCase(pluginPath)){
+            this.pluginPath = new File("plugins").getAbsolutePath();
+        }else {
+            this.pluginPath = pluginPath;
+        }
     }
 
     public String getBaseDatabaseCredentialFile() {
