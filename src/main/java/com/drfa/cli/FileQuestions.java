@@ -38,23 +38,11 @@ public class FileQuestions implements Questions {
         answer.setTypeOfReport(typeOfReport);
 
         String reportCategory = new DisplayQuestion(new ReportDetailValidator()).displayQuestion("Please select the category of the report SUMMARY, DETAILED, BOTH");
-        selectMoreQuestionOnBasisOfReportCategory(answer, reportCategory);
+        answer.setReportCategory(reportCategory);
 
+        String reportOutputPath= new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of Report Output");
+        answer.setReportOutputPath(reportOutputPath);
         return answer;
     }
 
-    private void selectMoreQuestionOnBasisOfReportCategory(Answer answer, String reportCategory) {
-        if("SUMMARY".equalsIgnoreCase(reportCategory)){
-            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
-            answer.setSummaryOutputPath(summaryOutPutPath);
-        }else if("DETAILED".equalsIgnoreCase(reportCategory)){
-            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
-            answer.setSummaryOutputPath(detailedOutPutPath);
-        }else{
-            String summaryOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of SUMMARY Output");
-            answer.setSummaryOutputPath(summaryOutPutPath);
-            String detailedOutPutPath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of DETAILED Output");
-            answer.setSummaryOutputPath(detailedOutPutPath);
-        }
-    }
 }

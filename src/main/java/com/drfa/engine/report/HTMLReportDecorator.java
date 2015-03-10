@@ -16,10 +16,12 @@ import java.util.Map;
  */
 public class HTMLReportDecorator implements ReportDecorator {
     private BreakReport report;
+    private String typeOfReport;
     StringBuffer sb = new StringBuffer();
 
-    public HTMLReportDecorator(BreakReport report) {
+    public HTMLReportDecorator(BreakReport report, String typeOfReport) {
         this.report = report;
+        this.typeOfReport = typeOfReport;
     }
 
     @Override
@@ -45,9 +47,16 @@ public class HTMLReportDecorator implements ReportDecorator {
     }
 
     private void applyBodyContent() {
-        applySummaryReport();
-        applyColumnSummaryReport();
-        applyColumnDetailedReport();
+        if("SUMMARY".equalsIgnoreCase(typeOfReport)){
+            applySummaryReport();
+            applyColumnSummaryReport();
+        }else if("DETAILED".equalsIgnoreCase(typeOfReport)) {
+            applyColumnDetailedReport();
+        }else if("BOTH".equalsIgnoreCase(typeOfReport)){
+            applySummaryReport();
+            applyColumnSummaryReport();
+            applyColumnDetailedReport();
+        }
     }
 
     private void applyColumnDetailedReport() {

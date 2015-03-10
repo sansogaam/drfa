@@ -21,8 +21,8 @@ public class Answer {
     private String targetDatabaseFile;
     private String metaDataFile;
     private String typeOfReport;
-    private String summaryOutputPath;
-    private String detailedOutputPath;
+    private String reportCategory;
+    private String reportOutputPath;
     private String reconciliationType;
     private String pluginPath;
     private String fileDelimiter ="|";
@@ -116,21 +116,6 @@ public class Answer {
         this.typeOfReport = typeOfReport;
     }
 
-    public String getSummaryOutputPath() {
-        return summaryOutputPath;
-    }
-
-    public void setSummaryOutputPath(String summaryOutputPath) {
-        this.summaryOutputPath = summaryOutputPath;
-    }
-
-    public String getDetailedOutputPath() {
-        return detailedOutputPath;
-    }
-
-    public void setDetailedOutputPath(String detailedOutputPath) {
-        this.detailedOutputPath = detailedOutputPath;
-    }
 
     public String getSqlQueryBase() {
         return sqlQueryBase;
@@ -176,6 +161,22 @@ public class Answer {
         this.sqlQueryTarget = sqlQueryTarget;
     }
 
+    public String getReportCategory() {
+        return reportCategory;
+    }
+
+    public void setReportCategory(String reportCategory) {
+        this.reportCategory = reportCategory;
+    }
+
+    public String getReportOutputPath() {
+        return reportOutputPath;
+    }
+
+    public void setReportOutputPath(String reportOutputPath) {
+        this.reportOutputPath = reportOutputPath;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -191,10 +192,11 @@ public class Answer {
                 ", targetDatabaseFile='" + targetDatabaseFile + '\'' +
                 ", metaDataFile='" + metaDataFile + '\'' +
                 ", typeOfReport='" + typeOfReport + '\'' +
-                ", summaryOutputPath='" + summaryOutputPath + '\'' +
-                ", detailedOutputPath='" + detailedOutputPath + '\'' +
+                ", reportCategory='" + reportCategory + '\'' +
+                ", reportOutputPath='" + reportOutputPath + '\'' +
                 ", reconciliationType='" + reconciliationType + '\'' +
                 ", pluginPath='" + pluginPath + '\'' +
+                ", fileDelimiter='" + fileDelimiter + '\'' +
                 ", keyIndex=" + keyIndex +
                 '}';
     }

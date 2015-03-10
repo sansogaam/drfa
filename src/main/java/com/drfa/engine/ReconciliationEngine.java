@@ -36,9 +36,9 @@ public class ReconciliationEngine {
         context.setColumnNames(columnNames);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
         BreakReport report = comparator.compare();
-        String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
-        LOG.info(String.format("Report written on path %s", htmlReportPath));
-        ReportDecorator reportDecorator = new HTMLReportDecorator(report);
+        String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
+        LOG.info(String.format("Report written on path %s with type %s", htmlReportPath, answer.getReportCategory()));
+        ReportDecorator reportDecorator = new HTMLReportDecorator(report, answer.getReportCategory());
         reportDecorator.decorateReport(htmlReportPath);
         long endTime = System.currentTimeMillis();
         LOG.info(String.format("Total time taken by reconciliation %s milliseconds", endTime-startTime));
@@ -51,18 +51,18 @@ public class ReconciliationEngine {
         Answer answer = new Answer();
         answer.setKeyIndex(1);
         answer.setReconciliationType("FILE");
-        answer.setBaseFile("D:/dev/test.csv");
-        answer.setTargetFile("D:/dev/test1.csv");
+        answer.setBaseFile("D:/dev/test-large.csv");
+        answer.setTargetFile("D:/dev/test-large-1.csv");
         answer.setMetaDataFile("D:/dev/testing.fmt");
         answer.setPluginPath("D:/dev");
-        answer.setSummaryOutputPath("D:/dev");
+        answer.setReportOutputPath("D:/dev");
         Comparator comparator = new CsvFileComparator(context, answer);
         long startTime = System.currentTimeMillis();
         try {
             BreakReport report = comparator.compare();
-            String htmlReportPath = answer.getSummaryOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
+            String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
             LOG.info(String.format("Report written on path %s", htmlReportPath));
-            ReportDecorator reportDecorator = new HTMLReportDecorator(report);
+            ReportDecorator reportDecorator = new HTMLReportDecorator(report, "SUMMARY");
             reportDecorator.decorateReport(htmlReportPath);
             System.out.println("Reporting tool: " + report);
         } catch (ExecutionException e) {
