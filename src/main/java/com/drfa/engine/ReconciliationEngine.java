@@ -1,7 +1,8 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.engine.db.MetaDataParser;
+import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.engine.meta.MetaDataParser;
 import com.drfa.engine.report.BreakReport;
 import com.drfa.engine.file.CsvFileComparator;
 import com.drfa.engine.report.HTMLReportDecorator;
@@ -31,9 +32,9 @@ public class ReconciliationEngine {
     public void reconcile() throws ExecutionException, InterruptedException {
         long startTime = System.currentTimeMillis();
         MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath());
-        List<String> columnNames = dataParser.getMetaDataColumnNames();
+        List<ColumnAttribute> columnAttributes = dataParser.getColumnAttributes();
         ReconciliationContext context = new ReconciliationContext();
-        context.setColumnNames(columnNames);
+        context.setColumnAttributes(columnAttributes);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
         BreakReport report = comparator.compare();
         String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
@@ -47,12 +48,14 @@ public class ReconciliationEngine {
     public static void main(String args[]){
         System.out.println("This is a test of reconciliation...");
         ReconciliationContext context = new ReconciliationContext();
-        context.setColumnNames(populateColumnNames());
+        context.setColumnAttributes(populateColumnNames());
         Answer answer = new Answer();
         answer.setKeyIndex(1);
+        answer.setBaseKeyIndex("1");
+        answer.setTargetKeyIndex("1");
         answer.setReconciliationType("FILE");
-        answer.setBaseFile("D:/dev/test-large.csv");
-        answer.setTargetFile("D:/dev/test-large-1.csv");
+        answer.setBaseFile("D:/dev/test.csv");
+        answer.setTargetFile("D:/dev/test1.csv");
         answer.setMetaDataFile("D:/dev/testing.fmt");
         answer.setPluginPath("D:/dev");
         answer.setReportOutputPath("D:/dev");
@@ -62,7 +65,7 @@ public class ReconciliationEngine {
             BreakReport report = comparator.compare();
             String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
             LOG.info(String.format("Report written on path %s", htmlReportPath));
-            ReportDecorator reportDecorator = new HTMLReportDecorator(report, "SUMMARY");
+            ReportDecorator reportDecorator = new HTMLReportDecorator(report, "BOTH");
             reportDecorator.decorateReport(htmlReportPath);
             System.out.println("Reporting tool: " + report);
         } catch (ExecutionException e) {
@@ -74,13 +77,13 @@ public class ReconciliationEngine {
         System.out.println(String.format("Total time taken by comparator %s milliseconds", endTime-startTime));
     }
 
-    public static List<String> populateColumnNames(){
-        List<String> columnNames = new ArrayList<String>();
-        columnNames.add("C1");
-        columnNames.add("C2");
-        columnNames.add("C3");
-        columnNames.add("C4");
-        return columnNames;
+    public static List<ColumnAttribute> populateColumnNames(){
+        List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
+        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", ""));
+        columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", ""));
+        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-3", ""));
+        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-2", ""));
+        return columnAttributes;
     }
 
 }

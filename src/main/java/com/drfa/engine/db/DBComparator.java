@@ -2,6 +2,7 @@ package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.Comparator;
+import com.drfa.engine.meta.MetaDataParser;
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
 
@@ -69,7 +70,7 @@ public class DBComparator implements Comparator{
         String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
         ReconciliationContext context = new ReconciliationContext();
-        context.setColumnNames(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getMetaDataColumnNames());
+        context.setColumnAttributes(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getColumnAttributes());
         DBComparator dbCompare = new DBComparator(context, answer);
         try {
             BreakReport report = dbCompare.compare();

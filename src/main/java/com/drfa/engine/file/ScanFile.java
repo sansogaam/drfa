@@ -1,5 +1,6 @@
 package com.drfa.engine.file;
 
+import com.drfa.cli.Answer;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -23,21 +24,23 @@ public class ScanFile {
     
     static Logger LOG = Logger.getLogger(ScanFile.class);
 
-    public void scanFile(int primaryKeyIndex, Map<String, String> storageMap, File fileToBeScanned,
-                         BlockingQueue queue, String threadName, String fileDelimiter) throws FileNotFoundException, InterruptedException {
-        Scanner scanner = new Scanner(fileToBeScanned);
+    public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer) throws FileNotFoundException, InterruptedException {
+        ScanUtility scanUtility = new ScanUtility();
+        Scanner scanner = new Scanner(fetchTheRelevantFile(threadName, answer));
+        String fileDelimiter = answer.getFileDelimiter();
+        String primaryKeyIndex = fetchPrimaryKeyIndex(threadName, answer);
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             //LOG.info(String.format("This line is for thread %s with content %s",threadName,line));
-            String splitLine[] = line.split(Pattern.quote(fileDelimiter));
-            String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+splitLine[primaryKeyIndex]);
+            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, line,fileDelimiter);
+            String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+constructedPrimaryKey );
             if (doesKeyExist == null) {
-                storageMap.put(threadName+":" + splitLine[primaryKeyIndex], line);
+                storageMap.put(threadName+":" + constructedPrimaryKey , line);
             } else {
                 String stringToCompare = threadName + ":" + line + "$" + doesKeyExist;
                 queue.put(stringToCompare);
-                storageMap.remove(checkPrefixOfTheKey(threadName)+ splitLine[primaryKeyIndex]);
+                storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
             }
             totalNumberOfRecords++;
         }
@@ -57,9 +60,19 @@ public class ScanFile {
         LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }
 
+    private String fetchPrimaryKeyIndex(String threadName, Answer answer) {
+        return threadName.equalsIgnoreCase("BASE")? answer.getBaseKeyIndex() : answer.getTargetKeyIndex();
+    }
+
+    private File fetchTheRelevantFile(String threadName, Answer answer) {
+        return threadName.equals("BASE") ? new File(answer.getBaseFile()) : new File(answer.getTargetFile());
+    }
+
+
     public String checkPrefixOfTheKey(String threadName){
         return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME+":" : BASE_THREAD_NAME+":";
     }
+    
     public void flushTheStorageMap(Map<String, String> storageMap, BlockingQueue queue) throws InterruptedException {
         Map<String, String> temporaryMap = new HashMap<String, String>();
         temporaryMap.putAll(storageMap);

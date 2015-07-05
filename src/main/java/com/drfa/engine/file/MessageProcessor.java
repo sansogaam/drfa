@@ -1,6 +1,7 @@
 package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.meta.ColumnAttribute;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,8 +21,8 @@ public class MessageProcessor {
     public void processMessage(String message) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
-        List<String> columnNames = context.getColumnNames();
-        MessageDecorator messageDecorator = new MessageDecorator(columnNames, splittedMessage, context.getFileDelimiter());
+        List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
+        MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, splittedMessage, context.getFileDelimiter());
         if(!messageDecorator.decorateMessageWithBreak().isEmpty()) {
             mapOfBreaks.put(rowCount, messageDecorator.decorateMessageWithBreak());
         }
@@ -29,8 +30,8 @@ public class MessageProcessor {
     }
 
     public Map<String, String> processOneSidedMessage(String message){
-        List<String> columnNames = context.getColumnNames();
-        MessageDecorator messageDecorator = new MessageDecorator(columnNames, message, context.getFileDelimiter());
+        List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
+        MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, message, context.getFileDelimiter());
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
         return mapOfOneSidedBreaks;
     }

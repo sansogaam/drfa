@@ -1,5 +1,7 @@
 package com.drfa.engine;
 
+import com.drfa.engine.meta.ColumnAttribute;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class ReconciliationContext {
 
     private String fileDelimiter;
     
-    private List<String> columnNames;
+    private List<ColumnAttribute> columnAttributes;
 
     private List<String> columnsToBeIgnored;
 
@@ -44,12 +46,12 @@ public class ReconciliationContext {
         this.columnReconciliationRules = columnReconciliationRules;
     }
 
-    public List<String> getColumnNames() {
-        return columnNames;
+    public List<ColumnAttribute> getColumnAttributes() {
+        return columnAttributes;
     }
 
-    public void setColumnNames(List<String> columnNames) {
-        this.columnNames = columnNames;
+    public void setColumnAttributes(List<ColumnAttribute> columnAttributes) {
+        this.columnAttributes= columnAttributes;
     }
 
     public String getFileDelimiter() {

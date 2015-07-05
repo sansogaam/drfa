@@ -1,5 +1,6 @@
 package com.drfa.engine.file;
 
+import com.drfa.cli.Answer;
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.report.BreakReport;
 import org.apache.log4j.Logger;
@@ -21,18 +22,19 @@ public class CompareFiles {
     }
 
 
-    public BreakReport compare(int primaryKeyIndex, File base, File target) throws ExecutionException, InterruptedException {
+
+    public BreakReport compare(Answer answer) throws ExecutionException, InterruptedException {
 
         Map<String, String> storageMap = new ConcurrentHashMap<String, String>();
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         ScanFile scanFile = new ScanFile();
 
         ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, primaryKeyIndex, base, context.getFileDelimiter()));
+        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, answer));
         executorServiceBase.shutdown();
 
         ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
-        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,primaryKeyIndex,target, context.getFileDelimiter()));
+        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,answer));
         executorServiceTarget.shutdown();
 
         ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();

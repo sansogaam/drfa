@@ -1,5 +1,7 @@
 package com.drfa.engine.file;
 
+import com.drfa.cli.Answer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -13,26 +15,21 @@ public class TargetExecutor implements Runnable {
     private ScanFile scanFile;
     private BlockingQueue queue;
     private Map<String, String> storageMap;
-    private int primaryKeyIndex;
-    private File target;
-    private String fileDelimiter;
-
+    private Answer answer;
     public TargetExecutor(ScanFile scanFile, BlockingQueue queue,
-                        Map<String, String> storageMap, int primaryKeyIndex, File target, String fileDelimiter){
+                        Map<String, String> storageMap, Answer answer){
 
         this.scanFile = scanFile;
         this.queue = queue;
         this.storageMap = storageMap;
-        this.primaryKeyIndex=primaryKeyIndex;
-        this.target = target;
-        this.fileDelimiter = fileDelimiter;
+        this.answer = answer;
     }
 
     @Override
     public void run() {
         System.out.println("Parsing the base file for comparision");
         try {
-            scanFile.scanFile(primaryKeyIndex, storageMap, target, queue, "TARGET", fileDelimiter);
+            scanFile.scanFile(storageMap, queue, "TARGET", answer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

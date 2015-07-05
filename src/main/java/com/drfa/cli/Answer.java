@@ -1,8 +1,6 @@
 package com.drfa.cli;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 /**
  * Created by Sanjiv on 2/18/2015.
@@ -26,8 +24,11 @@ public class Answer {
     private String reconciliationType;
     private String pluginPath;
     private String fileDelimiter ="|";
+    private String baseKeyIndex;
+    private String targetKeyIndex;
     private int keyIndex;
 
+    
     public String getFileDelimiter() {
         return fileDelimiter != null ? fileDelimiter : "|";
     }
@@ -177,6 +178,22 @@ public class Answer {
         this.reportOutputPath = reportOutputPath;
     }
 
+    public String getTargetKeyIndex() {
+        return targetKeyIndex;
+    }
+
+    public void setTargetKeyIndex(String targetKeyIndex) {
+        this.targetKeyIndex = targetKeyIndex;
+    }
+
+    public String getBaseKeyIndex() {
+        return baseKeyIndex;
+    }
+
+    public void setBaseKeyIndex(String baseKeyIndex) {
+        this.baseKeyIndex = baseKeyIndex;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -197,6 +214,8 @@ public class Answer {
                 ", reconciliationType='" + reconciliationType + '\'' +
                 ", pluginPath='" + pluginPath + '\'' +
                 ", fileDelimiter='" + fileDelimiter + '\'' +
+                ", baseKeyIndex='" + baseKeyIndex + '\'' +
+                ", targetKeyIndex='" + targetKeyIndex + '\'' +
                 ", keyIndex=" + keyIndex +
                 '}';
     }

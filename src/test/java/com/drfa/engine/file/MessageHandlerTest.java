@@ -1,6 +1,7 @@
 package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.engine.report.BreakReport;
 import org.junit.Test;
 
@@ -70,7 +71,7 @@ public class MessageHandlerTest {
         storageMap.put("TARGET:Exist1", "Exist1|Exist2|Exist3|Exist4");
         BreakReport breakReport = new BreakReport();
         ReconciliationContext context = mock(ReconciliationContext.class);
-        when(context.getColumnNames()).thenReturn(populateColumnNames());
+        when(context.getColumnAttributes()).thenReturn(populateColumnNames());
         when(context.getFileDelimiter()).thenReturn("|");
         MessageProcessor processor = new MessageProcessor(context);
         MessageHandler handler = new MessageHandler(breakReport, processor);
@@ -175,13 +176,13 @@ public class MessageHandlerTest {
         return mapOfBreaks;
     }
 
-    public List<String> populateColumnNames(){
-        List<String> columnNames = new ArrayList<String>();
-        columnNames.add("C1");
-        columnNames.add("C2");
-        columnNames.add("C3");
-        columnNames.add("C4");
-        return columnNames;
+    public static List<ColumnAttribute> populateColumnNames(){
+        List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
+        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", ""));
+        columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", ""));
+        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", ""));
+        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", ""));
+        return columnAttributes;
     }
 
 }

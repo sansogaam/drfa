@@ -1,4 +1,4 @@
-package com.drfa.engine.db;
+package com.drfa.engine.meta;
 
 import org.apache.log4j.Logger;
 import org.jetel.graph.runtime.EngineInitializer;
@@ -25,24 +25,24 @@ public class MetaDataParser {
         this.pluginPath = pluginPath;
     }
 
-    public List<String> getMetaDataColumnNames() {
-        List<String> columnNames = new ArrayList<String>();
+    public List<ColumnAttribute> getColumnAttributes() {
+        List<ColumnAttribute> columnAttributeses = new ArrayList<ColumnAttribute>();
         EngineInitializer.initEngine(pluginPath, null, null);
-
         DataRecordMetadataXMLReaderWriter metaReader = new DataRecordMetadataXMLReaderWriter();
         try {
             DataRecordMetadata metadataIn = metaReader.read(new FileInputStream(this.metaDataFile));
             DataFieldMetadata[] dataFieldMetadatas = metadataIn.getFields();
             for (DataFieldMetadata dataFieldMetadata : dataFieldMetadatas) {
                 String columnName = dataFieldMetadata.getName();
-                columnNames.add(columnName);
+                String columnType = dataFieldMetadata.getDataType().getName();
+                String columnRule = dataFieldMetadata.getAutoFilling();
+                String columnMatching = dataFieldMetadata.getLabel();
+                columnAttributeses.add(new ColumnAttribute(columnName, columnType,columnMatching,columnRule));
             }
-
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex.getMessage());
         }
-        LOG.info("Column Names.." + columnNames);
-
-        return columnNames;
+        return columnAttributeses;
     }
+
 }

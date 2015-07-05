@@ -36,7 +36,7 @@ public class DBMessageListener implements Callable<BreakReport>{
             String message = (String)queue.take();
             if(START_PROCESSING.equalsIgnoreCase(message)){
                 LOG.info(String.format("Start Comparing the BASE %s and TARGET %s", answer.getBaseFile(), answer.getTargetFile()));
-                return new CompareFiles(context).compare(answer.getKeyIndex(), new File(answer.getBaseFile()), new File(answer.getTargetFile()));
+                return new CompareFiles(context).compare(answer);
             }
 
         } catch (InterruptedException e) {
