@@ -20,13 +20,23 @@ public class ScanUtilityTest{
     }
     
     @Test
-    public void shouldTestIfTheNumberOfColumnMappedIsNumberOfColumnPassed() throws Exception{
+    public void shouldTestIfTheBaseFileLineReturnsCorrect() throws Exception{
         String line="T0|T1|T2|T3|T4|T5|T6|T7";
         List<ColumnAttribute> columnAttributes = populateColumnNames();
         String fileDelimiter = "|";
         ScanUtility scanUtility = new ScanUtility();
         String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter, "BASE", line, columnAttributes);
         assertEquals("T0|T1|T2|T3", toBeComparedLine);
+    }
+
+    @Test
+    public void shouldTestIfTheTargetFileLineReturnsCorrect() throws Exception{
+        String line="T0|T1|T2|T3|T4|T5|T6|T7";
+        List<ColumnAttribute> columnAttributes = populateColumnNames();
+        String fileDelimiter = "|";
+        ScanUtility scanUtility = new ScanUtility();
+        String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter, "TARGET", line, columnAttributes);
+        assertEquals("T0|T1|T3|T2", toBeComparedLine);
     }
 
     public static List<ColumnAttribute> populateColumnNames(){

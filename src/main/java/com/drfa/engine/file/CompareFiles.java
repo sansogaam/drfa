@@ -30,11 +30,11 @@ public class CompareFiles {
         ScanFile scanFile = new ScanFile();
 
         ExecutorService executorServiceBase = Executors.newSingleThreadExecutor();
-        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, answer));
+        executorServiceBase.execute(new BaseExecutor(scanFile,queue,storageMap, answer, context.getColumnAttributes()));
         executorServiceBase.shutdown();
 
         ExecutorService executorServiceTarget = Executors.newSingleThreadExecutor();
-        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,answer));
+        executorServiceTarget.execute(new TargetExecutor(scanFile,queue,storageMap,answer,context.getColumnAttributes()));
         executorServiceTarget.shutdown();
 
         ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();

@@ -55,6 +55,7 @@ public class ReconciliationEngine {
         answer.setTargetKeyIndex("1");
         answer.setReconciliationType("FILE");
         answer.setBaseFile("D:/dev/test.csv");
+        answer.setFileDelimiter("|");
         answer.setTargetFile("D:/dev/test1.csv");
         answer.setMetaDataFile("D:/dev/testing.fmt");
         answer.setPluginPath("D:/dev");
@@ -81,8 +82,8 @@ public class ReconciliationEngine {
         List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
         columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", ""));
         columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", ""));
-        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-3", ""));
-        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-2", ""));
+        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", ""));
+        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", ""));
         return columnAttributes;
     }
 

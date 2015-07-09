@@ -1,11 +1,13 @@
 package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
+import com.drfa.engine.meta.ColumnAttribute;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
@@ -24,21 +26,23 @@ public class ScanFile {
     
     static Logger LOG = Logger.getLogger(ScanFile.class);
 
-    public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer) throws FileNotFoundException, InterruptedException {
+    public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
         ScanUtility scanUtility = new ScanUtility();
         Scanner scanner = new Scanner(fetchTheRelevantFile(threadName, answer));
         String fileDelimiter = answer.getFileDelimiter();
         String primaryKeyIndex = fetchPrimaryKeyIndex(threadName, answer);
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+            String originalLine = scanner.nextLine();
+            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine,fileDelimiter);
+            LOG.debug(String.format("Constructed primary key %s", constructedPrimaryKey));
+            String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter,threadName, originalLine, columnAttributes);
             //LOG.info(String.format("This line is for thread %s with content %s",threadName,line));
-            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, line,fileDelimiter);
             String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+constructedPrimaryKey );
             if (doesKeyExist == null) {
-                storageMap.put(threadName+":" + constructedPrimaryKey , line);
+                storageMap.put(threadName+":" + constructedPrimaryKey , toBeComparedLine);
             } else {
-                String stringToCompare = threadName + ":" + line + "$" + doesKeyExist;
+                String stringToCompare = threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
                 queue.put(stringToCompare);
                 storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
             }
