@@ -1,5 +1,8 @@
 package com.drfa.engine.file;
 
+import com.drfa.engine.expression.Expression;
+import com.drfa.engine.expression.ExpressionFactory;
+
 import java.util.regex.Pattern;
 
 /**
@@ -41,7 +44,11 @@ public class ValueComparator {
     }
 
     public boolean compareValue(String baseValue, String targetValue){
-        return false;
+        Expression baseExpressionParser = ExpressionFactory.expression(columnType,baseColumnExpressionType);
+        String modifiedBaseValue = baseExpressionParser.modifiedValue(baseValue);
+        Expression targetExpressionParser = ExpressionFactory.expression(columnType,baseColumnExpressionType);
+        String modifiedTargetValue = targetExpressionParser.modifiedValue(targetValue);
+        return modifiedBaseValue.equalsIgnoreCase(modifiedTargetValue);
     }
 
     public String getBaseColumnExpressionType() {
