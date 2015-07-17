@@ -45,9 +45,9 @@ public class ValueComparator {
 
     public boolean compareValue(String baseValue, String targetValue){
         Expression baseExpressionParser = ExpressionFactory.expression(columnType,baseColumnExpressionType);
-        String modifiedBaseValue = baseExpressionParser.modifiedValue(baseValue);
-        Expression targetExpressionParser = ExpressionFactory.expression(columnType,baseColumnExpressionType);
-        String modifiedTargetValue = targetExpressionParser.modifiedValue(targetValue);
+        String modifiedBaseValue = baseExpressionParser.modifiedValue(baseValue, baseColumnExpressionType);
+        Expression targetExpressionParser = ExpressionFactory.expression(columnType,targetColumnExpressionType);
+        String modifiedTargetValue = targetExpressionParser.modifiedValue(targetValue, targetColumnExpressionType);
         return modifiedBaseValue.equalsIgnoreCase(modifiedTargetValue);
     }
 
