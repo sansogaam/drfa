@@ -6,7 +6,7 @@ package com.drfa.engine.expression;
 public class StringParserExpression implements Expression {
 
     @Override
-    public String modifiedValue(String valueToBeConverted, String expressionType) {
-        return null;
+    public boolean compareValue(String baseValue, String baseExpressionType, String targetValue, String targetExpressionType) {
+        return false;
     }
 }

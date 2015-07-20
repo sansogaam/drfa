@@ -5,6 +5,7 @@ package com.drfa.engine.expression;
  */
 public interface Expression {
     
-    String modifiedValue(String valueToBeConverted, String expressionType);
+    boolean compareValue(String baseValue, String baseExpressionType, 
+                                String targetValue, String targetExpressionType);
         
 }
