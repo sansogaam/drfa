@@ -1,5 +1,6 @@
 package com.drfa.engine.expression;
 
+import com.drfa.engine.file.ExpressionContext;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "100";
         String expressionType = "10";
         Expression expression = new TolerancePercentageExpression();
-        boolean comparedValue = expression.compareValue(valueToBeConverted, expressionType, "95",null);
+        boolean comparedValue = expression.compareValue(valueToBeConverted, "95", new ExpressionContext("TP",null,null,expressionType));
         assertTrue(comparedValue);
     }
 
@@ -25,7 +26,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "NA";
         String expressionType = "10";
         Expression expression = new TolerancePercentageExpression();
-        assertFalse(expression.compareValue(valueToBeConverted, expressionType,"45", null));
+        assertFalse(expression.compareValue(valueToBeConverted, "45", new ExpressionContext("TP",null,null,expressionType)));
     }
 
     @Test
@@ -33,7 +34,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "100";
         String expressionType = "13";
         Expression expression = new TolerancePercentageExpression();
-        boolean comparedValue = expression.compareValue(valueToBeConverted, expressionType, "110",null);
+        boolean comparedValue = expression.compareValue(valueToBeConverted, "110", new ExpressionContext("TP",null,null,expressionType));
         assertTrue(comparedValue);
     }
 
@@ -42,7 +43,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "100";
         String expressionType = "13";
         Expression expression = new TolerancePercentageExpression();
-        boolean comparedValue = expression.compareValue(valueToBeConverted, expressionType, "113",null);
+        boolean comparedValue = expression.compareValue(valueToBeConverted, "113", new ExpressionContext("TP",null,null,expressionType));
         assertTrue(comparedValue);
     }
 
@@ -51,7 +52,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "76";
         String expressionType = "13";
         Expression expression = new TolerancePercentageExpression();
-        boolean comparedValue = expression.compareValue(valueToBeConverted, expressionType, "80",null);
+        boolean comparedValue = expression.compareValue(valueToBeConverted, "80", new ExpressionContext("TP",null,null,expressionType));
         assertTrue(comparedValue);
     }
 
@@ -61,7 +62,7 @@ public class TolerancePercentageExpressionTest {
         String valueToBeConverted = "76";
         String expressionType = "13";
         Expression expression = new TolerancePercentageExpression();
-        boolean comparedValue = expression.compareValue(valueToBeConverted, expressionType, "90",null);
+        boolean comparedValue = expression.compareValue(valueToBeConverted, "90", new ExpressionContext("TP",null,null,expressionType));
         assertFalse(comparedValue);
     }
 

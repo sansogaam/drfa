@@ -1,5 +1,6 @@
 package com.drfa.engine.expression;
 
+import com.drfa.engine.file.ExpressionContext;
 import org.apache.log4j.Logger;
 
 /**
@@ -10,10 +11,10 @@ public class ToleranceAbsoluteExpression implements Expression {
     static Logger LOG = Logger.getLogger(ToleranceAbsoluteExpression.class);
 
     @Override
-    public boolean compareValue(String baseValue, String baseExpressionType, String targetValue, String targetExpressionType) {
+    public boolean compareValue(String baseValue, String targetValue, ExpressionContext expressionContext) {
         try {
             Integer intValue = Integer.parseInt(baseValue);
-            Integer deltaFactor = Integer.parseInt(baseExpressionType);
+            Integer deltaFactor = Integer.parseInt(expressionContext.getRangeExpression());
             Integer lhsCalculatedValued = intValue - deltaFactor;
             Integer rhsCalculatedValued = intValue + deltaFactor;
             Integer targetIntValue = Integer.parseInt(targetValue);

@@ -1,5 +1,6 @@
 package com.drfa.engine.expression;
 
+import com.drfa.engine.file.ExpressionContext;
 import org.apache.log4j.Logger;
 
 /**
@@ -10,10 +11,10 @@ public class TolerancePercentageExpression implements Expression {
     static Logger LOG = Logger.getLogger(TolerancePercentageExpression.class);
 
     @Override
-    public boolean compareValue(String baseValue, String baseExpressionType, String targetValue, String targetExpressionType) {
+    public boolean compareValue(String baseValue, String targetValue, ExpressionContext expressionContext) {
         try {
             Integer baseIntValue = Integer.parseInt(baseValue);
-            double percentageValue = new Double(Double.parseDouble(baseExpressionType) / 100);
+            double percentageValue = new Double(Double.parseDouble(expressionContext.getRangeExpression()) / 100);
             double subtractValue = percentageValue * baseIntValue;
             Integer lhsCalculatedValued = baseIntValue - (int) subtractValue;
             Integer rhsCalculatedValued = baseIntValue + (int) subtractValue;

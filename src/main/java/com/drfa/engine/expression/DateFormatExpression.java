@@ -1,7 +1,8 @@
 package com.drfa.engine.expression;
 
+import com.drfa.engine.file.ExpressionContext;
+
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,10 +12,10 @@ import java.util.Date;
 public class DateFormatExpression implements Expression {
 
     @Override
-    public boolean compareValue(String baseValue, String baseExpressionType, String targetValue, String targetExpressionType) {
+    public boolean compareValue(String baseValue, String targetValue, ExpressionContext expressionContext) {
         try {
-            DateFormat baseFormat = new SimpleDateFormat(baseExpressionType);
-            DateFormat targetFormat = new SimpleDateFormat(targetExpressionType);
+            DateFormat baseFormat = new SimpleDateFormat(expressionContext.getBaseColumnExpressionType());
+            DateFormat targetFormat = new SimpleDateFormat(expressionContext.getTargetColumnExpressionType());
             Date baseDate = baseFormat.parse(baseValue);
             Date targetDate = targetFormat.parse(targetValue);
             return baseDate.equals(targetDate);

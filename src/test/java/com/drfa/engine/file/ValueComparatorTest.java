@@ -8,31 +8,43 @@ import static org.junit.Assert.assertNull;
 public class ValueComparatorTest {
 
     @Test
-    public void shouldParseColumnExpressionWhenBaseAndTargetBothExist() throws Exception{
-        ValueComparator valueComparator = new ValueComparator("Integer", "B-TP-3|T-TP-4");
-        valueComparator.parseColumnExpression();
-        assertEquals("TP", valueComparator.getBaseColumnExpressionType());
-        assertEquals("3", valueComparator.getBaseColumnExpressionValue());
-        assertEquals("TP", valueComparator.getTargetColumnExpressionType());
-        assertEquals("4", valueComparator.getTargetColumnExpressionValue());
+    public void shouldParseColumnExpressionWithSimpleExpression() throws Exception{
+        ValueComparator valueComparator = new ValueComparator("Integer", "TP-(B-NR|T-NR)-(R-5)");
+        ExpressionContext expressionContext = valueComparator.parseColumnExpression();
+        assertEquals("TP", expressionContext.getExpressionType());
+        assertEquals("NR", expressionContext.getBaseColumnExpressionType());
+        assertEquals("NR", expressionContext.getTargetColumnExpressionType());
+        assertEquals("5", expressionContext.getRangeExpression());
     }
 
     @Test
-    public void shouldParserColumnExpressionOnceThereIsOnlyOneExpression() throws Exception{
-        ValueComparator valueComparator = new ValueComparator("Integer", "TP-3");
-        valueComparator.parseColumnExpression();
-        assertEquals("TP", valueComparator.getBaseColumnExpressionType());
-        assertEquals("3", valueComparator.getBaseColumnExpressionValue());
-        assertEquals("TP", valueComparator.getTargetColumnExpressionType());
-        assertEquals("3", valueComparator.getTargetColumnExpressionValue());
+    public void shouldParseColumnExpressionWithDateExpression() throws Exception{
+        ValueComparator valueComparator = new ValueComparator("Integer", "DF-(B-dd/MMM/yyyy|T-dd-mm-yyyy)-(R-5)");
+        ExpressionContext expressionContext = valueComparator.parseColumnExpression();
+        assertEquals("DF", expressionContext.getExpressionType());
+        assertEquals("dd/MMM/yyyy", expressionContext.getBaseColumnExpressionType());
+        assertEquals("dd-mm-yyyy", expressionContext.getTargetColumnExpressionType());
+        assertEquals("5", expressionContext.getRangeExpression());
     }
 
     @Test
-    public void shouldParserColumnExpressionOnceThereIsNoExpression() throws Exception{
-        ValueComparator valueComparator = new ValueComparator("Integer", null);
-        valueComparator.parseColumnExpression();
-        assertNull(valueComparator.getBaseColumnExpressionType());
-        assertNull(valueComparator.getTargetColumnExpressionType());
+    public void shouldParseColumnExpressionWithStringExpression() throws Exception{
+        ValueComparator valueComparator = new ValueComparator("Integer", "DF-(B-dd/MMM/yyyy|T-dd-mm-yyyy)-(R-/d4/R652/65)");
+        ExpressionContext expressionContext = valueComparator.parseColumnExpression();
+        assertEquals("DF", expressionContext.getExpressionType());
+        assertEquals("dd/MMM/yyyy", expressionContext.getBaseColumnExpressionType());
+        assertEquals("dd-mm-yyyy", expressionContext.getTargetColumnExpressionType());
+        assertEquals("/d4/R652/65", expressionContext.getRangeExpression());
     }
+
+    @Test
+    public void shouldParseColumnExpressionIfNothing() throws Exception{
+        ValueComparator valueComparator = new ValueComparator("Integer", "");
+        ExpressionContext expressionContext = valueComparator.parseColumnExpression();
+        assertNull(expressionContext.getBaseColumnExpressionType());
+        assertNull(expressionContext.getTargetColumnExpressionType());
+        assertNull(expressionContext.getRangeExpression());
+    }
+
 
 }
