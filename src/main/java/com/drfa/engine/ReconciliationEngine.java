@@ -50,9 +50,9 @@ public class ReconciliationEngine {
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnAttributes(populateColumnNames());
         Answer answer = new Answer();
-        answer.setKeyIndex(1);
-        answer.setBaseKeyIndex("1");
-        answer.setTargetKeyIndex("1");
+        answer.setKeyIndex(0);
+        answer.setBaseKeyIndex("0");
+        answer.setTargetKeyIndex("0");
         answer.setReconciliationType("FILE");
         answer.setBaseFile("D:/dev/test.csv");
         answer.setFileDelimiter("|");
@@ -80,10 +80,11 @@ public class ReconciliationEngine {
 
     public static List<ColumnAttribute> populateColumnNames(){
         List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
-        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", ""));
-        columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", ""));
-        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", ""));
-        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", ""));
+        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", "SP-(B-NR|T-NR)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C2", "Date", "B-1|T-1", "DF-(B-dd-MM-yyyy|T-dd/MM/yyyy)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C3", "Integer", "B-2|T-2", "TA-(B-NR|T-NR)-(R-1)"));
+        columnAttributes.add(new ColumnAttribute("C4", "Date", "B-3|T-3", "DF-(B-dd-MM-yyyy|T-dd-MM-yyyy)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C5", "Integer", "B-4|T-4", "TP-(B-NR|T-NR)-(R-10)"));
         return columnAttributes;
     }
 
