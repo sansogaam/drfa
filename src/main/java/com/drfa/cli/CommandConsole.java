@@ -3,6 +3,7 @@ package com.drfa.cli;
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.ReconciliationEngine;
 import com.drfa.server.JMSConnection;
+import com.drfa.server.Publisher;
 import com.drfa.validator.FileValidator;
 import com.drfa.validator.NoValidator;
 import com.drfa.validator.ReconciliationTypeValidator;
@@ -22,7 +23,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 /**
  * Created by Sanjiv on 2/18/2015.
  */
-public class CommandConsole {
+public class CommandConsole implements Publisher{
 
     static Logger LOG = Logger.getLogger(CommandConsole.class);
 
@@ -47,7 +48,7 @@ public class CommandConsole {
             e.printStackTrace();
         }
     }
-    
+    @Override
     public void publisher(String message, String queueName) throws JMSException {
         Session session = JMSConnection.createSession();
         Destination dest = new QueueImpl(queueName);
@@ -73,10 +74,13 @@ public class CommandConsole {
         answer.setTargetFile("D:/dev/test1.csv");
         answer.setMetaDataFile("D:/dev/drfa/src/test/resources/rec-test.fmt");
         answer.setPluginPath("D:/dev");
+        answer.setTypeOfReport("HTML");
+        answer.setReportCategory("BOTH");
         answer.setReportOutputPath("D:/dev");
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
         commandConsole.publisher(answerString,"queue://recAnswer");
     }
+
 }

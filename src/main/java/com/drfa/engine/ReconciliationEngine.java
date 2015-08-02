@@ -33,10 +33,12 @@ public class ReconciliationEngine {
         long startTime = System.currentTimeMillis();
         MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath());
         List<ColumnAttribute> columnAttributes = dataParser.getColumnAttributes();
+        LOG.info(String.format("Column Attributes parsed %s", columnAttributes));
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnAttributes(columnAttributes);
         Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
         BreakReport report = comparator.compare();
+        LOG.info(String.format("Report output path %s", report));
         String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
         LOG.info(String.format("Report written on path %s with type %s", htmlReportPath, answer.getReportCategory()));
         ReportDecorator reportDecorator = new HTMLReportDecorator(report, answer.getReportCategory());
