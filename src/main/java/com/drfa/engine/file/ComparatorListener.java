@@ -28,8 +28,9 @@ public class ComparatorListener implements Callable<BreakReport> {
     @Override
     public BreakReport call() throws Exception {
         BreakReport report = new BreakReport();
+        BreakEvent breakEvent = new BreakEvent();
         MessageProcessor messageProcessor = new MessageProcessor(context);
-        MessageHandler messageHandler = new MessageHandler(report, messageProcessor);
+        MessageHandler messageHandler = new MessageHandler(breakEvent, messageProcessor);
         LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
         try {
@@ -39,10 +40,6 @@ public class ComparatorListener implements Callable<BreakReport> {
             }
             LOG.info(String.format("Size of the storage map %s", storageMap.size()));
             messageHandler.enrichBreakReportWithOneSidedBreak(storageMap);
-            messageHandler.enrichBreakReportWithColumnDetails();
-            Map<Integer, Map<String, List<String>>> mapOfBreaks =messageProcessor.getMapOfBreaks();
-            report.setMapOfBreaks(mapOfBreaks);
-            LOG.info("Consumption is completed..." + mapOfBreaks.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -47,7 +47,6 @@ public class MessageDecorator {
                 String secondLineColumnValue = secondLineSplit[valueCounter];
                 String compareValue = NOT_MATCHED;
                 ValueComparator valueComparator = new ValueComparator(columnAttribute.getColumnType(),columnAttribute.getColumnRule());
-                //if (firstLineColumnValue.equalsIgnoreCase(secondLineColumnValue)) {
                 if(valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue,valueComparator.parseColumnExpression())){
                     compareValue = MATCHED;
                 }

@@ -2,7 +2,6 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.meta.ColumnAttribute;
-import com.drfa.engine.report.BreakReport;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -20,33 +19,34 @@ import static org.mockito.Mockito.when;
  */
 public class MessageHandlerTest {
 
+
     @Test
     public void testMessageHandlerForExitMessage() throws Exception{
-        BreakReport breakReport = mock(BreakReport.class);
+        BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(breakReport, processor);
-        assertFalse(handler.handleMessage("Exit"));
+        MessageHandler handler = new MessageHandler(breakEvent, processor);
+        handler.handleMessage("Exit");
+        verify(breakEvent).publisher(eq("MATCHED_RECORDS-0"),anyString());
     }
 
     @Test
-    public void testMessageHandlerForSummaryMessageOfBase() throws Exception{
-        BreakReport breakReport = new BreakReport();
+    public void testMessageHandlerForSummaryMessageOfBase() throws Exception {
+        BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(breakReport, processor);
+        MessageHandler handler = new MessageHandler(breakEvent, processor);
         String message = "SUMMARY:BASE:24";
-        boolean continueMessage = handler.handleMessage(message);
-        assertTrue(continueMessage);
-        assertEquals(24, breakReport.getBaseTotalRecords());
+        handler.handleMessage(message);
+        verify(breakEvent).publisher(eq("BASE_TOTAL_RECORDS-24"), anyString());
     }
+        
     @Test
     public void testMessageHandlerForSummaryMessageOfTarget() throws Exception{
-        BreakReport breakReport = new BreakReport();
+        BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(breakReport, processor);
+        MessageHandler handler = new MessageHandler(breakEvent, processor);
         String message = "SUMMARY:TARGET:25";
-        boolean continueMessage = handler.handleMessage(message);
-        assertTrue(continueMessage);
-        assertEquals(25, breakReport.getTargetTotalRecords());
+        handler.handleMessage(message);
+        verify(breakEvent).publisher(eq("TARGET_TOTAL_RECORDS-25"), anyString());
     }
 
     @Test
@@ -55,78 +55,37 @@ public class MessageHandlerTest {
         storageMap.put("BASE:C1", "Exist");
         storageMap.put("BASE:C2", "Exist");
         storageMap.put("TARGET:C1", "Exist");
-        BreakReport breakReport = new BreakReport();
+        BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(breakReport, processor);
+        MessageHandler handler = new MessageHandler(breakEvent, processor);
         handler.enrichBreakReportWithOneSidedBreak(storageMap);
-        assertEquals(2, breakReport.getBaseOneSidedBreaks());
-        assertEquals(1, breakReport.getTargetOneSidedBreaks());
+        verify(breakEvent, times(2)).publisher(anyString(), anyString());
+        verify(breakEvent, times(1)).publisher(eq("BASE_ONE_SIDED_BREAK-2"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("TARGET_ONE_SIDED_BREAK-1"), anyString());
     }
 
     @Test
     public void testEnrichBreakReportForOneSidedBreakWithDetails()throws  Exception{
         Map<String, String> storageMap = new HashMap<String, String>();
         storageMap.put("BASE:Exist1", "Exist1|Exist2|Exist3|Exist4");
-        storageMap.put("BASE:Exist2", "Exist1|Exist2|Exist3|Exist4");
+        storageMap.put("BASE:Exist2", "Exist5|Exist6|Exist7|Exist8");
         storageMap.put("TARGET:Exist1", "Exist1|Exist2|Exist3|Exist4");
-        BreakReport breakReport = new BreakReport();
+        BreakEvent breakEvent = mock(BreakEvent.class);
         ReconciliationContext context = mock(ReconciliationContext.class);
         when(context.getColumnAttributes()).thenReturn(populateColumnNames());
         when(context.getFileDelimiter()).thenReturn("|");
         MessageProcessor processor = new MessageProcessor(context);
-        MessageHandler handler = new MessageHandler(breakReport, processor);
+        MessageHandler handler = new MessageHandler(breakEvent, processor);
         handler.enrichBreakReportWithOneSidedBreak(storageMap);
-        assertEquals(2, breakReport.getBaseOneSidedBreaks());
-        assertEquals(1, breakReport.getTargetOneSidedBreaks());
-        compareBreaks(breakReport.getBaseOneSidedBreaksCollection());
-        compareBreaks(breakReport.getTargetOneSidedBreaksCollection());
+        verify(breakEvent, times(5)).publisher(anyString(), anyString());
+        verify(breakEvent, times(1)).publisher(eq("BASE_ONE_SIDED_BREAK-2"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("TARGET_ONE_SIDED_BREAK-1"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE-BASE"));
+        verify(breakEvent, times(1)).publisher(eq("C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE-TARGET"));
+        verify(breakEvent, times(1)).publisher(eq("C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"), eq("queue://BREAK_MESSAGE-BASE"));
     }
 
-    private void compareBreaks(Map<Integer,Map<String, String>> mapOfBaseOneSidedBreaks) {
-        for(Integer rowValue : mapOfBaseOneSidedBreaks.keySet()){
-            Map<String, String> mapOfBreaks = mapOfBaseOneSidedBreaks.get(rowValue);
-            for(String columnName : mapOfBreaks.keySet()) {
-                int counter = new Integer(columnName.substring(columnName.length()-1,columnName.length()));
-                assertEquals("C" + counter, columnName);
-                assertEquals("Exist" + counter, mapOfBreaks.get(columnName));
-            }
-        }
-    }
-    @Test
-    public void testEnrichBreakReportForColumnBreaks(){
-        BreakReport breakReport = new BreakReport();
-        MessageProcessor processor = mock(MessageProcessor.class);
-        when(processor.getMapOfBreaks()).thenReturn(populateMapOfBreaks());
-        MessageHandler handler = new MessageHandler(breakReport, processor);
-        handler.enrichBreakReportWithColumnDetails();
 
-        List<Integer> columnBreakCountNonMatched = breakReport.getColumnBreaksCount().get("C1");
-        assertEquals(10, columnBreakCountNonMatched.get(0).longValue());
-        assertEquals(0, columnBreakCountNonMatched.get(1).longValue());
-        List<Integer> columnBreakCountMatched = breakReport.getColumnBreaksCount().get("C3");
-
-        assertEquals(0, columnBreakCountMatched.get(0).longValue());
-        assertEquals(10, columnBreakCountMatched.get(1).longValue());
-
-    }
-    @Test
-    public void testEnrichBreakReportForColumnBreaksWithMatchedNonMatched(){
-        BreakReport breakReport = new BreakReport();
-        MessageProcessor processor = mock(MessageProcessor.class);
-        when(processor.getMapOfBreaks()).thenReturn(populateMapOfBreakswithMatchAndUnMatch());
-        MessageHandler handler = new MessageHandler(breakReport, processor);
-        handler.enrichBreakReportWithColumnDetails();
-        System.out.println("Break Report: " + breakReport);
-
-        List<Integer> columnBreakCountNonMatched = breakReport.getColumnBreaksCount().get("C1");
-        assertEquals(5, columnBreakCountNonMatched.get(0).longValue());
-        assertEquals(5, columnBreakCountNonMatched.get(1).longValue());
-        List<Integer> columnBreakCountMatched = breakReport.getColumnBreaksCount().get("C3");
-
-        assertEquals(5, columnBreakCountMatched.get(0).longValue());
-        assertEquals(5, columnBreakCountMatched.get(1).longValue());
-
-    }
 
     private Map<Integer, Map<String, List<String>>> populateMapOfBreaks(){
         Map<Integer, Map<String, List<String>>> mapOfBreaks = new HashMap<Integer, Map<String, List<String>>>();
@@ -184,5 +143,4 @@ public class MessageHandlerTest {
         columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", ""));
         return columnAttributes;
     }
-
 }

@@ -15,100 +15,63 @@ import static com.drfa.engine.EngineConstants.*;
  * Created by Sanjiv on 2/19/2015.
  */
 public class MessageHandler {
-    BreakReport report;
     MessageProcessor messageProcessor;
     static Logger LOG = Logger.getLogger(MessageHandler.class);
     int matchedRecords = 0;
-
-    public MessageHandler(BreakReport report, MessageProcessor messageProcessor){
-        this.report = report;
+    BreakEvent breakEvent;
+    String queueName = "queue://BREAK_SUMMARY_MESSAGE";
+    
+    public MessageHandler(BreakEvent breakEvent, MessageProcessor messageProcessor){
+        this.breakEvent = breakEvent;
         this.messageProcessor = messageProcessor;
     }
 
-    public boolean handleMessage(String message){
+    public boolean handleMessage(String message) throws Exception {
         if ("Exit".equalsIgnoreCase(message)) {
-            LOG.info("Exit message recieved: " + message);
-            LOG.info("Displaying the report: "+report);
-            report.setMatchedWithNumberOfKeys(matchedRecords);
-            return false;
+            return processExitMessage(message);
         }else if(message.startsWith("SUMMARY:")){
-            LOG.info(String.format("Recieved the summary message %s", message));
-            String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
-            LOG.info(String.format("Processing the thread name %s", threadName));
-            if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
-                String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-                report.setBaseTotalRecords(new Integer(numberOfRecords));
-            }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
-                String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-                report.setTargetTotalRecords(new Integer(numberOfRecords));
-            }
-            return true;
+            return processSummaryMessage(message);
         } else{
             matchedRecords ++;
-            messageProcessor.processMessage(message);
+            messageProcessor.processMessage(breakEvent,message);
             return true;
         }
     }
-    public void enrichBreakReportWithOneSidedBreak(final Map<String, String> storageMap){
+
+    private boolean processSummaryMessage(String message) throws Exception {
+        LOG.info(String.format("Received the summary message %s", message));
+        String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
+        LOG.info(String.format("Processing the thread name %s", threadName));
+        if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
+            String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
+            breakEvent.publisher("BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+        }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
+            String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
+            breakEvent.publisher("TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+        }
+        return true;
+    }
+
+    private boolean processExitMessage(String message) throws Exception {
+        LOG.info("Exit message recieved: " + message);
+        breakEvent.publisher("MATCHED_RECORDS-" + matchedRecords, queueName);
+        return false;
+    }
+
+    public void enrichBreakReportWithOneSidedBreak(final Map<String, String> storageMap) throws Exception {
         int baseOneSidedBreak = 0;
         int targetOneSidedBreak = 0;
-        Map<Integer,Map<String, String>> baseOneSidedBreaksCollection = new HashMap<Integer,Map<String, String>>();
-        Map<Integer,Map<String, String>> targetOneSidedBreaksCollection = new HashMap<Integer,Map<String, String>>();
-        int baseRowCount = 1;
-        int targetRowCount = 1;
         for(String key: storageMap.keySet()) {
             String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
-                Map<String, String> mapOfOneSidedBreaks = messageProcessor.processOneSidedMessage(value);
-                baseOneSidedBreaksCollection.put(baseRowCount, mapOfOneSidedBreaks);
-                baseRowCount++;
+                messageProcessor.processOneSidedMessage(breakEvent,"BASE", value);
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
-                Map<String, String> mapOfOneSidedBreaks = messageProcessor.processOneSidedMessage(value);
-                targetOneSidedBreaksCollection.put(targetRowCount, mapOfOneSidedBreaks);
-                targetRowCount++;
+                messageProcessor.processOneSidedMessage(breakEvent,"TARGET",value);
                 targetOneSidedBreak++;
             }
         }
-        report.setBaseOneSidedBreaks(baseOneSidedBreak);
-        report.setTargetOneSidedBreaks(targetOneSidedBreak);
-        report.setBaseOneSidedBreaksCollection(baseOneSidedBreaksCollection);
-        report.setTargetOneSidedBreaksCollection(targetOneSidedBreaksCollection);
+        breakEvent.publisher("BASE_ONE_SIDED_BREAK-"+ baseOneSidedBreak, queueName);
+        breakEvent.publisher("TARGET_ONE_SIDED_BREAK-"+ targetOneSidedBreak, queueName);
     }
-
-    public void enrichBreakReportWithColumnDetails(){
-        Map<Integer, Map<String, List<String>>> mapOfBreaks = messageProcessor.getMapOfBreaks();
-        Map<String, List<Integer>> mapOfColumnBreaks = new HashMap<String, List<Integer>>();
-        for(Integer i : mapOfBreaks.keySet()){
-            Map<String, List<String>> columnBreakes = mapOfBreaks.get(i);
-            for(String columnName: columnBreakes.keySet()){
-                List<String> values = columnBreakes.get(columnName);
-                List<Integer> listNumberOfBreaks = mapOfColumnBreaks.get(columnName);
-                if(values.get(2).equalsIgnoreCase(NOT_MATCHED)){
-                    if(listNumberOfBreaks == null) {
-                        listNumberOfBreaks = new ArrayList<Integer>();
-                        listNumberOfBreaks.add(0,new Integer(1));
-                        listNumberOfBreaks.add(1,new Integer(0));
-                    }else{
-                        int existingValue = listNumberOfBreaks.get(0) +1;
-                        listNumberOfBreaks.remove(0);
-                        listNumberOfBreaks.add(0, existingValue);
-                    }
-                }else if(values.get(2).equalsIgnoreCase(MATCHED)){
-                    if(listNumberOfBreaks == null) {
-                        listNumberOfBreaks = new ArrayList<Integer>();
-                        listNumberOfBreaks.add(0,new Integer(0));
-                        listNumberOfBreaks.add(1,new Integer(1));
-                    }else{
-                        int existingValue = listNumberOfBreaks.get(1)+1;
-                        listNumberOfBreaks.remove(1);
-                        listNumberOfBreaks.add(1, existingValue);
-                    }
-                }
-                mapOfColumnBreaks.put(columnName,listNumberOfBreaks);
-            }
-        }
-        report.setColumnBreaksCount(mapOfColumnBreaks);
-    }
-
 }

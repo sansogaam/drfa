@@ -80,7 +80,7 @@ public class CommandConsole implements Publisher{
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        commandConsole.publisher(answerString,"queue://recAnswer");
+        commandConsole.publisher(answerString,"queue://REC_ANSWER");
     }
 
 }

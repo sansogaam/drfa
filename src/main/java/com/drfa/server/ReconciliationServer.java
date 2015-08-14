@@ -4,7 +4,6 @@ import com.drfa.cli.Answer;
 import com.drfa.engine.ReconciliationEngine;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
-import org.apache.qpid.amqp_1_0.jms.impl.ConnectionFactoryImpl;
 import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
 
 import javax.jms.*;
@@ -57,7 +56,7 @@ public class ReconciliationServer implements Listener {
     public static void main(String args[]){
         try{
             ReconciliationServer reconciliationServer = new ReconciliationServer();
-            reconciliationServer.listener("queue://recAnswer");
+            reconciliationServer.listener("queue://REC_ANSWER");
         }catch(Exception e){
             e.printStackTrace();
         }
