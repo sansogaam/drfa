@@ -1,4 +1,4 @@
-package com.drfa.server;
+package com.drfa.jms;
 
 
 public interface Listener {

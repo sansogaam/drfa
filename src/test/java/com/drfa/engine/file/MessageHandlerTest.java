@@ -80,9 +80,9 @@ public class MessageHandlerTest {
         verify(breakEvent, times(5)).publisher(anyString(), anyString());
         verify(breakEvent, times(1)).publisher(eq("BASE_ONE_SIDED_BREAK-2"), anyString());
         verify(breakEvent, times(1)).publisher(eq("TARGET_ONE_SIDED_BREAK-1"), anyString());
-        verify(breakEvent, times(1)).publisher(eq("C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE-BASE"));
-        verify(breakEvent, times(1)).publisher(eq("C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE-TARGET"));
-        verify(breakEvent, times(1)).publisher(eq("C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"), eq("queue://BREAK_MESSAGE-BASE"));
+        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
+        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
+        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-BASE-C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"), eq("queue://BREAK_MESSAGE"));
     }
 
 

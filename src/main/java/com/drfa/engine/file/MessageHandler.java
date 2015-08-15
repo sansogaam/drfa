@@ -1,12 +1,7 @@
 package com.drfa.engine.file;
 
-import com.drfa.engine.EngineConstants;
-import com.drfa.engine.report.BreakReport;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.drfa.engine.EngineConstants.*;
@@ -19,7 +14,7 @@ public class MessageHandler {
     static Logger LOG = Logger.getLogger(MessageHandler.class);
     int matchedRecords = 0;
     BreakEvent breakEvent;
-    String queueName = "queue://BREAK_SUMMARY_MESSAGE";
+    String queueName = "queue://BREAK_MESSAGE";
     
     public MessageHandler(BreakEvent breakEvent, MessageProcessor messageProcessor){
         this.breakEvent = breakEvent;
@@ -64,10 +59,10 @@ public class MessageHandler {
         for(String key: storageMap.keySet()) {
             String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,"BASE", value);
+                messageProcessor.processOneSidedMessage(breakEvent,"ONE-SIDED-BASE", value);
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,"TARGET",value);
+                messageProcessor.processOneSidedMessage(breakEvent,"ONE-SIDED-TARGET",value);
                 targetOneSidedBreak++;
             }
         }

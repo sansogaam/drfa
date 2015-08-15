@@ -1,7 +1,8 @@
-package com.drfa.server;
+package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.engine.ReconciliationEngine;
+import com.drfa.jms.JMSConnection;
+import com.drfa.jms.Listener;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
 import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
@@ -37,9 +38,9 @@ public class ReconciliationServer implements Listener {
 
     private void processMessage(String messageBody) {
         Answer answer = convertToAnswerObject(messageBody);
-        ReconciliationEngine reconciliationEngine = new ReconciliationEngine(answer);
+        Engine engine = new Engine(answer);
         try {
-            reconciliationEngine.reconcile();
+            engine.reconcile();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

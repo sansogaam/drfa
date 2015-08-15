@@ -61,7 +61,7 @@ public class MessageProcessor {
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            breakEvent.publisher(breakValue, "queue://BREAK_MESSAGE-" + fileType);
+            breakEvent.publisher(fileType+"-" + breakValue, "queue://BREAK_MESSAGE");
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

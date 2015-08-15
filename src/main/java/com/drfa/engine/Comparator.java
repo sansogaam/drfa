@@ -1,7 +1,5 @@
 package com.drfa.engine;
 
-import com.drfa.engine.report.BreakReport;
-
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -9,6 +7,6 @@ import java.util.concurrent.ExecutionException;
  */
 public interface Comparator {
 
-    public BreakReport compare() throws ExecutionException, InterruptedException;
+    public boolean compare() throws ExecutionException, InterruptedException;
 
 }

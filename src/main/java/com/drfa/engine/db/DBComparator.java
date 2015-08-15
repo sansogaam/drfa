@@ -4,7 +4,6 @@ import com.drfa.cli.Answer;
 import com.drfa.engine.Comparator;
 import com.drfa.engine.meta.MetaDataParser;
 import com.drfa.engine.ReconciliationContext;
-import com.drfa.engine.report.BreakReport;
 
 import java.io.File;
 import java.util.Date;
@@ -26,7 +25,7 @@ public class DBComparator implements Comparator{
     }
 
     @Override
-    public BreakReport compare() throws ExecutionException, InterruptedException {
+    public boolean compare() throws ExecutionException, InterruptedException {
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         AtomicLong aLong = new AtomicLong(0);
         ExecuteDBRead.initializeEngine(answer.getPluginPath());
@@ -50,7 +49,7 @@ public class DBComparator implements Comparator{
         executorServiceTarget.shutdown();
 
         final ExecutorService executorServiceCompare = Executors.newSingleThreadExecutor();
-        Future<BreakReport> compareReport = executorServiceCompare.submit(new DBMessageListener(context, queue, answer));
+        Future<Boolean> compareReport = executorServiceCompare.submit(new DBMessageListener(context, queue, answer));
         executorServiceCompare.shutdown();
         return compareReport.get();
     }
@@ -73,8 +72,8 @@ public class DBComparator implements Comparator{
         context.setColumnAttributes(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getColumnAttributes());
         DBComparator dbCompare = new DBComparator(context, answer);
         try {
-            BreakReport report = dbCompare.compare();
-            System.out.println("Comparing the results..." + report);
+            Boolean compareFlag = dbCompare.compare();
+            System.out.println("Comparing the results..." + compareFlag);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package com.drfa.server;
+package com.drfa.jms;
 
 /**
  * Created by Sanjiv on 8/1/2015.

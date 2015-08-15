@@ -1,10 +1,9 @@
 package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
-import com.drfa.engine.report.BreakReport;
+import com.drfa.report.BreakReport;
 import org.apache.log4j.Logger;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -12,7 +11,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by Sanjiv on 2/20/2015.
  */
-public class ComparatorListener implements Callable<BreakReport> {
+public class ComparatorListener implements Callable<Boolean> {
     ReconciliationContext context;
     private BlockingQueue queue;
     private Map<String, String> storageMap;
@@ -26,7 +25,7 @@ public class ComparatorListener implements Callable<BreakReport> {
     }
 
     @Override
-    public BreakReport call() throws Exception {
+    public Boolean call() throws Exception {
         BreakReport report = new BreakReport();
         BreakEvent breakEvent = new BreakEvent();
         MessageProcessor messageProcessor = new MessageProcessor(context);
@@ -43,6 +42,6 @@ public class ComparatorListener implements Callable<BreakReport> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return report;
+        return true;
     }
 }

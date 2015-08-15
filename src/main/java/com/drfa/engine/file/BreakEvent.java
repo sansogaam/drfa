@@ -1,7 +1,7 @@
 package com.drfa.engine.file;
 
-import com.drfa.server.JMSConnection;
-import com.drfa.server.Publisher;
+import com.drfa.jms.JMSConnection;
+import com.drfa.jms.Publisher;
 import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
 
 import javax.jms.DeliveryMode;

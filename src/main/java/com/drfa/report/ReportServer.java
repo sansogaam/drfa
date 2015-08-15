@@ -1,0 +1,53 @@
+package com.drfa.report;
+
+import com.drfa.jms.JMSConnection;
+import com.drfa.jms.Listener;
+import org.apache.log4j.Logger;
+import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
+
+import javax.jms.*;
+
+/**
+ * Created by Sanjiv on 8/15/2015.
+ */
+public class ReportServer implements Listener{
+
+    static Logger LOG = Logger.getLogger(ReportServer.class);
+
+    @Override
+    public void listener(String queueName) throws Exception {
+        listenBreakMessage(queueName);
+    }
+
+    private void listenBreakMessage(String queueName) throws JMSException {
+        Session session = JMSConnection.createSession();
+        Destination dest = new QueueImpl(queueName);
+        MessageConsumer consumer = session.createConsumer(dest);
+        LOG.info(String.format("Server Started successfully and listening on the queue %s", queueName));
+        System.out.println(String.format("Server Started successfully and listening on the queue %s", queueName));
+        while (true) {
+            System.out.println("Waiting for the message....");
+            Message message = consumer.receive();
+            if(message instanceof TextMessage) {
+                String messageBody = ((TextMessage)message).getText();
+                LOG.info(String.format("Received the message detail %s ", messageBody));
+                System.out.println(String.format("Received the message detail %s ", messageBody));
+            }
+        }
+    }
+    
+    public static void main(String args[]){
+        try {
+            new ReportServer().listener("queue://BREAK_MESSAGE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        LOG.info(String.format("Report output path %s", compareFlag));
+//        String htmlReportPath = answer.getReportOutputPath() + File.separator + "HTML-"+new Date().getTime()+".html";
+//        LOG.info(String.format("Report written on path %s with type %s", htmlReportPath, answer.getReportCategory()));
+//        ReportDecorator reportDecorator = new HTMLReportDecorator(compareFlag, answer.getReportCategory());
+//        reportDecorator.decorateReport(htmlReportPath);
+//        long endTime = System.currentTimeMillis();
+//        LOG.info(String.format("Total time taken by reconciliation %s milliseconds", endTime-startTime));
+    }
+}
