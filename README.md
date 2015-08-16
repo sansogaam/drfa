@@ -44,17 +44,17 @@ Below are the minimal software requirement to run this tool
 
 #### How to run this reconciliation
 
-_There are three main components of the reconciliation_
+_There are three main components of the reconciliation. __Ensure your active mq server is running with default setting___
 
-* Reconciliation Server 
+* Reconciliation Server (java ReconciliationServer)
     * Engine for doing the reconciliation
     * Data Source ETL
     * Publishing the Reconciliation results to the messaging queue
-* Command Console 
+* Command Console (java CommandConsole)
     * Ask questions to the user
     * Do pre-validation of the answers
     * Publish the XML to the reconciliation engine.
-* Reporting Server 
+* Reporting Server(java ReportServer)
     * Subscribe the output of the reconciliation results
     * Process the output and decorate into the desired reporting format.
     * Two format, HTML or XLS.
