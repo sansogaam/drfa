@@ -1,5 +1,7 @@
 package com.drfa.report;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,8 @@ import java.util.regex.Pattern;
 
 public class ReportEnricher implements Enricher {
     public BreakReport report;
-    
+    static Logger LOG = Logger.getLogger(ReportEnricher.class);
+
 
     public ReportEnricher(BreakReport report){
         this.report = report;    
@@ -21,15 +24,15 @@ public class ReportEnricher implements Enricher {
     @Override
     public void enrich(String message) {
         if(message.startsWith("MATCHED_RECORDS")){
-            
+            enrichMatchedNumberOfRecords(message);
         }else if(message.startsWith("BASE_TOTAL_RECORDS")){
-            
+            enrichBaseTotalRecords(message);
         }else if(message.startsWith("TARGET_TOTAL_RECORDS")){
-            
+            enrichTargetTotalRecords(message);
         }else if(message.startsWith("BASE_ONE_SIDED_BREAK")){
-            
+            enrichBaseOneSidedBreaksRecords(message);
         }else if(message.startsWith("TARGET_ONE_SIDED_BREAK")){
-            
+            enrichTargetOneSideBreakRecords(message);
         }else if(message.startsWith("ONE-SIDED-BASE")){
             
         }else if(message.startsWith("ONE-SIDED-TARGET")){
@@ -37,6 +40,36 @@ public class ReportEnricher implements Enricher {
         }else {
             enrichDetailMessageReport(message);
         }
+    }
+
+    private void enrichTargetOneSideBreakRecords(String message) {
+        String totalRecords = message.substring(message.lastIndexOf("-")+1, message.length());
+        LOG.info(String.format("Total number of matched records as per key %s", totalRecords));
+        report.setTargetOneSidedBreaks(new Integer(totalRecords));
+    }
+
+    private void enrichBaseOneSidedBreaksRecords(String message) {
+        String totalRecords = message.substring(message.lastIndexOf("-")+1, message.length());
+        LOG.info(String.format("Total number of matched records as per key %s", totalRecords));
+        report.setBaseOneSidedBreaks(new Integer(totalRecords));
+    }
+
+    private void enrichTargetTotalRecords(String message) {
+        String totalRecords = message.substring(message.lastIndexOf("-")+1, message.length());
+        LOG.info(String.format("Total number of matched records as per key %s", totalRecords));
+        report.setTargetTotalRecords(new Integer(totalRecords));
+    }
+
+    private void enrichBaseTotalRecords(String message) {
+        String totalRecords = message.substring(message.lastIndexOf("-")+1, message.length());
+        LOG.info(String.format("Total number of matched records as per key %s", totalRecords));
+        report.setBaseTotalRecords(new Integer(totalRecords));
+    }
+
+    private void enrichMatchedNumberOfRecords(String message) {
+        String totalMatchedRecords = message.substring(message.lastIndexOf("-")+1, message.length());
+        LOG.info(String.format("Total number of matched records as per key %s", totalMatchedRecords));
+        report.setMatchedWithNumberOfKeys(new Integer(totalMatchedRecords));
     }
 
     private void enrichDetailMessageReport(String message) {

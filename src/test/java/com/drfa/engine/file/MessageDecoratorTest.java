@@ -54,10 +54,10 @@ public class MessageDecoratorTest {
     }
     public static List<ColumnAttribute> populateColumnAttributes(){
         List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
-        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", ""));
-        columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", ""));
-        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", ""));
-        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", ""));
+        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", "SP-(B-NR|T-NR)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", "SP-(B-NR|T-NR)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", "SP-(B-NR|T-NR)-(R-NA)"));
+        columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", "SP-(B-NR|T-NR)-(R-NA)"));
         return columnAttributes;
     }
 }

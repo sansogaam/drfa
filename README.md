@@ -21,14 +21,26 @@ Below are the minimal software requirement to run this tool
 * JRE 1.7 or greater
 
 * Developer
-    * JDK 1.7 or greater
+    * JDK 1.7 or greater, 1.8 (Preferred)
     * MAVEN 3.1 or greater
+    * Apache Active MQ-1.11.1
     * IntelliJ or Eclipse Luna (Latest version)
 
 ##Third Party Library Used
 
 * Clover ETL 4.0.3
+* Active-MQ-5.11.1-bin
 * jansi (For command line console)
+
+## Getting Started
+
+* Checkout the code from the above GIT Repository
+* Setup the maven on your local machine
+* Download and install the active mq messaging concept
+* Import the maven existing project from the directory you have checked out the code.
+* On command line type mvn install, it should run the build successful.
+* On your favorite IDE open any of the unit test case e.g. MessageHandlerTest. 
+* Run the test case if it runs successfully, your code is setup for further enhancement.
 
 ##DRFA Roadmap 2015
 ![DRFA Roadmap](/images/DRFA-Roadmap.png)

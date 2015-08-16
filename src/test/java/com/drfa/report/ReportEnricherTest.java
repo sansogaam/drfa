@@ -27,7 +27,38 @@ public class ReportEnricherTest{
         assertThat(mapOfBreaks.size(), is(2));
     }
     
+    @Test
+    public void shouldTestTotalNumberOfMatchedRecords() throws Exception{
+        String message ="MATCHED_RECORDS-34";
+        BreakReport breakReport = new BreakReport();
+        ReportEnricher reportEnricher = new ReportEnricher(breakReport);
+        reportEnricher.enrich(message);
+        assertThat(breakReport.getMatchedWithNumberOfKeys(), is(34));
+    }
 
+    @Test
+    public void shouldTestTotalNumberOfBasedRecords() throws Exception{
+        String message ="BASE_TOTAL_RECORDS-86";
+        BreakReport breakReport = new BreakReport();
+        ReportEnricher reportEnricher = new ReportEnricher(breakReport);
+        reportEnricher.enrich(message);
+        assertThat(breakReport.getBaseTotalRecords(), is(86));
+    }
+
+    @Test
+    public void shouldTestTotalNumberOfTargetRecords() throws Exception{
+        String message ="TARGET_TOTAL_RECORDS-967";
+        BreakReport breakReport = new BreakReport();
+        ReportEnricher reportEnricher = new ReportEnricher(breakReport);
+        reportEnricher.enrich(message);
+        assertThat(breakReport.getTargetTotalRecords(), is(967));
+    }
+
+    @Test
+    public void shouldTestBaseOneSidedBreak() throws Exception{
+        
+        
+    }
     private Map<String, List<String>> expectedHashMap(){
         Map<String, List<String>> mapOfBreaks = new HashMap<String, List<String>>();
         //Column-1

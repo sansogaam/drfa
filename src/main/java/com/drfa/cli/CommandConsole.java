@@ -1,6 +1,5 @@
 package com.drfa.cli;
 
-import com.drfa.engine.Engine;
 import com.drfa.jms.JMSConnection;
 import com.drfa.jms.Publisher;
 import com.drfa.validator.ReconciliationTypeValidator;
@@ -9,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
 
 import javax.jms.*;
-import java.util.concurrent.ExecutionException;
 
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -21,7 +19,7 @@ public class CommandConsole implements Publisher{
 
     static Logger LOG = Logger.getLogger(CommandConsole.class);
 
-    public static void askQuestions() {
+    public void askQuestions() throws JMSException {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
 
@@ -31,16 +29,10 @@ public class CommandConsole implements Publisher{
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
         Answer answer = questions.askQuestions();
         answer.setReconciliationType(typeOfReconciliation);
-
         LOG.info("Answers received.." + answer);
-        Engine engine = new Engine(answer);
-        try {
-            engine.reconcile();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        String answerString = convertAnswerToString(answer);
+        LOG.info(String.format("Answer string to be published %s", answerString));
+        publisher(answerString, "queue://REC_ANSWER");
     }
     @Override
     public void publisher(String message, String queueName) throws JMSException {
@@ -58,6 +50,12 @@ public class CommandConsole implements Publisher{
     }
     
     public static void main(String args[]) throws JMSException {
+        CommandConsole commandConsole = new CommandConsole();
+        //commandConsole.manualRunProgram();
+        commandConsole.askQuestions();
+    }
+
+    private void manualRunProgram() throws JMSException {
         Answer answer = new Answer();
         answer.setKeyIndex(0);
         answer.setBaseKeyIndex("0");
