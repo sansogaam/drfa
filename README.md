@@ -38,9 +38,26 @@ Below are the minimal software requirement to run this tool
 * Setup the maven on your local machine
 * Download and install the active mq messaging concept
 * Import the maven existing project from the directory you have checked out the code.
-* On command line type mvn install, it should run the build successful.
+* On command line type _mvn install_, it should run the build successful.
 * On your favorite IDE open any of the unit test case e.g. MessageHandlerTest. 
 * Run the test case if it runs successfully, your code is setup for further enhancement.
+
+#### How to run this reconciliation
+
+_There are three main components of the reconciliation_
+
+* Reconciliation Server 
+** Engine for doing the reconciliation
+** Data Source ETL
+** Publishing the Reconciliation results to the messaging queue
+* Command Console 
+** Ask questions to the user
+** Do pre-validation of the answers
+** Publish the XML to the reconciliation engine.
+* Reporting Server 
+** Subscribe the output of the reconciliation results
+** Process the output and decorate into the desired reporting format.
+** Two format, HTML or XLS.
 
 ##DRFA Roadmap 2015
 ![DRFA Roadmap](/images/DRFA-Roadmap.png)
