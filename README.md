@@ -47,17 +47,17 @@ Below are the minimal software requirement to run this tool
 _There are three main components of the reconciliation_
 
 * Reconciliation Server 
-** Engine for doing the reconciliation
-** Data Source ETL
-** Publishing the Reconciliation results to the messaging queue
+    * Engine for doing the reconciliation
+    * Data Source ETL
+    * Publishing the Reconciliation results to the messaging queue
 * Command Console 
-** Ask questions to the user
-** Do pre-validation of the answers
-** Publish the XML to the reconciliation engine.
+    * Ask questions to the user
+    * Do pre-validation of the answers
+    * Publish the XML to the reconciliation engine.
 * Reporting Server 
-** Subscribe the output of the reconciliation results
-** Process the output and decorate into the desired reporting format.
-** Two format, HTML or XLS.
+    * Subscribe the output of the reconciliation results
+    * Process the output and decorate into the desired reporting format.
+    * Two format, HTML or XLS.
 
 ##DRFA Roadmap 2015
 ![DRFA Roadmap](/images/DRFA-Roadmap.png)
