@@ -34,11 +34,37 @@ public class ReportEnricher implements Enricher {
         }else if(message.startsWith("TARGET_ONE_SIDED_BREAK")){
             enrichTargetOneSideBreakRecords(message);
         }else if(message.startsWith("ONE-SIDED-BASE")){
-            
+            enrichOneSideBreakRecords(message, "BASE");
         }else if(message.startsWith("ONE-SIDED-TARGET")){
-            
+            enrichOneSideBreakRecords(message, "TARGET");
         }else {
             enrichDetailMessageReport(message);
+        }
+    }
+
+    private void enrichOneSideBreakRecords(String message, String type) {
+        //C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$
+        String breakMessage= message.substring(message.lastIndexOf("-"), message.length());
+        String splitMessages[] = breakMessage.split(Pattern.quote("$"));
+        Map<String, String> mapOfColumnBreaks = new HashMap<String, String>();
+        for(String splitMessage: splitMessages){
+            String columnSplitMessage[] = splitMessage.split(Pattern.quote("~"));
+            mapOfColumnBreaks.put(columnSplitMessage[0], columnSplitMessage[1]);
+        }
+        int rowCount;
+        Map<Integer, Map<String, String>> mapOfOneSidedRowBreaks = report.getBaseOneSidedBreaksCollection();
+        if(mapOfOneSidedRowBreaks == null || mapOfOneSidedRowBreaks.isEmpty()){
+            rowCount=1;
+            mapOfOneSidedRowBreaks = new HashMap<Integer, Map<String, String>>();
+            mapOfOneSidedRowBreaks.put(new Integer(rowCount), mapOfColumnBreaks);
+        }else{
+            rowCount = mapOfColumnBreaks.size()+1;
+            mapOfOneSidedRowBreaks.put(new Integer(rowCount), mapOfColumnBreaks);
+        }
+        if("BASE".equalsIgnoreCase(type)){
+            report.setBaseOneSidedBreaksCollection(mapOfOneSidedRowBreaks); 
+        }else{
+            report.setTargetOneSidedBreaksCollection(mapOfOneSidedRowBreaks);
         }
     }
 
