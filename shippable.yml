@@ -6,3 +6,8 @@ jdk:
 after_success:
    - mvn clean
    - mvn install
+notifications:
+    email:
+        - kuldeepsinghk@gmail.com
+        - kumar.sanjiv34@gmail.com
+        - ram.gaurav.chhabra@gmail.com

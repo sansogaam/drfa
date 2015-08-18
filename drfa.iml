@@ -29,7 +29,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org.jetel:engine:4.0.3">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/cloveretl.engine.jar!/" />
+          <root url="jar://$MODULE_DIR$/etl-lib/cloveretl.engine.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -38,7 +38,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org.jetel:connection:4.0.3">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/cloveretl.connection.jar!/" />
+          <root url="jar://$MODULE_DIR$/etl-lib/cloveretl.connection.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -47,7 +47,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.ibm.icu:icu4j:52.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/icu4j-52_1.jar!/" />
+          <root url="jar://$MODULE_DIR$/etl-lib/icu4j-52_1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -56,7 +56,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org.jetel:lookup:4.0.3">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/cloveretl.lookup.jar!/" />
+          <root url="jar://$MODULE_DIR$/etl-lib/cloveretl.lookup.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
