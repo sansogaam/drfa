@@ -11,3 +11,5 @@ notifications:
         - kuldeepsinghk@gmail.com
         - kumar.sanjiv34@gmail.com
         - ram.gaurav.chhabra@gmail.com
+    on_success: always
+    on_failure: always
