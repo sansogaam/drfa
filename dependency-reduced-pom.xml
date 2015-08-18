@@ -76,6 +76,34 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.jetel</groupId>
+      <artifactId>engine</artifactId>
+      <version>4.0.3</version>
+      <scope>system</scope>
+      <systemPath>D:\dev\drfa/lib/cloveretl.engine.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.jetel</groupId>
+      <artifactId>connection</artifactId>
+      <version>4.0.3</version>
+      <scope>system</scope>
+      <systemPath>D:\dev\drfa/lib/cloveretl.connection.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+      <version>52.1</version>
+      <scope>system</scope>
+      <systemPath>D:\dev\drfa/lib/icu4j-52_1.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.jetel</groupId>
+      <artifactId>lookup</artifactId>
+      <version>4.0.3</version>
+      <scope>system</scope>
+      <systemPath>D:\dev\drfa/lib/cloveretl.lookup.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>xstream</groupId>
       <artifactId>xstream</artifactId>
       <version>1.2.2</version>
