@@ -125,4 +125,38 @@ public class ReportEnricher implements Enricher {
         report.setMapOfBreaks(mapOfRowBreaks);
     }
 
+    public void enrichBreakReportWithColumnDetails(){
+        Map<Integer, Map<String, List<String>>> mapOfBreaks = report.getMapOfBreaks();
+        Map<String, List<Integer>> mapOfColumnBreaks = new HashMap<String, List<Integer>>();
+        for(Integer i : mapOfBreaks.keySet()){
+            Map<String, List<String>> columnBreakes = mapOfBreaks.get(i);
+            for(String columnName: columnBreakes.keySet()){
+                List<String> values = columnBreakes.get(columnName);
+                List<Integer> listNumberOfBreaks = mapOfColumnBreaks.get(columnName);
+                if(values.get(2).equalsIgnoreCase("NOT_MATCHED")){
+                    if(listNumberOfBreaks == null) {
+                        listNumberOfBreaks = new ArrayList<Integer>();
+                        listNumberOfBreaks.add(0,new Integer(1));
+                        listNumberOfBreaks.add(1,new Integer(0));
+                    }else{
+                        int existingValue = listNumberOfBreaks.get(0) +1;
+                        listNumberOfBreaks.remove(0);
+                        listNumberOfBreaks.add(0, existingValue);
+                    }
+                }else if(values.get(2).equalsIgnoreCase("MATCHED")){
+                    if(listNumberOfBreaks == null) {
+                        listNumberOfBreaks = new ArrayList<Integer>();
+                        listNumberOfBreaks.add(0,new Integer(0));
+                        listNumberOfBreaks.add(1,new Integer(1));
+                    }else{
+                        int existingValue = listNumberOfBreaks.get(1)+1;
+                        listNumberOfBreaks.remove(1);
+                        listNumberOfBreaks.add(1, existingValue);
+                    }
+                }
+                mapOfColumnBreaks.put(columnName,listNumberOfBreaks);
+            }
+        }
+        report.setColumnBreaksCount(mapOfColumnBreaks);
+    }
 }

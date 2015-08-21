@@ -51,8 +51,8 @@ public class CommandConsole implements Publisher{
     
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        //commandConsole.manualRunProgram();
-        commandConsole.askQuestions();
+        commandConsole.manualRunProgram();
+        //commandConsole.askQuestions();
     }
 
     private void manualRunProgram() throws JMSException {

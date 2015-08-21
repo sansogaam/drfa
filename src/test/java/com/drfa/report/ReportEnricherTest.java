@@ -56,8 +56,14 @@ public class ReportEnricherTest{
 
     @Test
     public void shouldTestBaseOneSidedBreak() throws Exception{
-        
-        
+        String message = "ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$";
+        BreakReport breakReport = new BreakReport();
+        ReportEnricher reportEnricher = new ReportEnricher(breakReport);
+        reportEnricher.enrich(message);
+        Map<Integer, Map<String, String>> mapOfBreaks = breakReport.getBaseOneSidedBreaksCollection();
+        assertThat(mapOfBreaks.size(),is(1));
+        Map<String, String> mapOfColumns = mapOfBreaks.get(new Integer(1));
+        assertThat(mapOfColumns.size(),is(4));
     }
     private Map<String, List<String>> expectedHashMap(){
         Map<String, List<String>> mapOfBreaks = new HashMap<String, List<String>>();
