@@ -23,7 +23,7 @@ public class MessageProcessor {
         this.context = context;
     }
 
-    public void processMessage(BreakEvent breakEvent, String message) {
+    public void processMessage(BreakEvent breakEvent, String message, String processId) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
         List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
@@ -33,7 +33,7 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                breakEvent.publisher(breakValue, "queue://BREAK_MESSAGE");
+                breakEvent.publisher(processId+breakValue, "queue://BREAK_MESSAGE");
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();

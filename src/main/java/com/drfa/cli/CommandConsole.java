@@ -61,6 +61,7 @@ public class CommandConsole implements Publisher{
         answer.setBaseKeyIndex("0");
         answer.setTargetKeyIndex("0");
         answer.setReconciliationType("FILE");
+        answer.setProcessId(1);
         answer.setBaseFile("D:/dev/test.csv");
         answer.setFileDelimiter("|");
         answer.setTargetFile("D:/dev/test1.csv");

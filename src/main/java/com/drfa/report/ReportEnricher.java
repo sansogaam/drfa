@@ -23,23 +23,29 @@ public class ReportEnricher implements Enricher {
     
     @Override
     public void enrich(String message) {
-        if(message.startsWith("MATCHED_RECORDS")){
-            enrichMatchedNumberOfRecords(message);
-        }else if(message.startsWith("BASE_TOTAL_RECORDS")){
-            enrichBaseTotalRecords(message);
-        }else if(message.startsWith("TARGET_TOTAL_RECORDS")){
-            enrichTargetTotalRecords(message);
-        }else if(message.startsWith("BASE_ONE_SIDED_BREAK")){
-            enrichBaseOneSidedBreaksRecords(message);
-        }else if(message.startsWith("TARGET_ONE_SIDED_BREAK")){
-            enrichTargetOneSideBreakRecords(message);
-        }else if(message.startsWith("ONE-SIDED-BASE")){
-            enrichOneSideBreakRecords(message, "BASE");
-        }else if(message.startsWith("ONE-SIDED-TARGET")){
-            enrichOneSideBreakRecords(message, "TARGET");
+        String messageWithoutProcessId = extractMessageWithoutProcessId(message);
+        if(messageWithoutProcessId.startsWith("MATCHED_RECORDS")){
+            enrichMatchedNumberOfRecords(messageWithoutProcessId);
+        }else if(messageWithoutProcessId.startsWith("BASE_TOTAL_RECORDS")){
+            enrichBaseTotalRecords(messageWithoutProcessId);
+        }else if(messageWithoutProcessId.startsWith("TARGET_TOTAL_RECORDS")){
+            enrichTargetTotalRecords(messageWithoutProcessId);
+        }else if(messageWithoutProcessId.startsWith("BASE_ONE_SIDED_BREAK")){
+            enrichBaseOneSidedBreaksRecords(messageWithoutProcessId);
+        }else if(messageWithoutProcessId.startsWith("TARGET_ONE_SIDED_BREAK")){
+            enrichTargetOneSideBreakRecords(messageWithoutProcessId);
+        }else if(messageWithoutProcessId.startsWith("ONE-SIDED-BASE")){
+            enrichOneSideBreakRecords(messageWithoutProcessId, "BASE");
+        }else if(messageWithoutProcessId.startsWith("ONE-SIDED-TARGET")){
+            enrichOneSideBreakRecords(messageWithoutProcessId, "TARGET");
         }else {
-            enrichDetailMessageReport(message);
+            LOG.info(String.format("Message Without Process Id %s & With Process Id %s", messageWithoutProcessId, message));
+            enrichDetailMessageReport(messageWithoutProcessId);
         }
+    }
+
+    private String extractMessageWithoutProcessId(String message) {
+        return message.substring(message.indexOf("-")+1, message.length());
     }
 
     private void enrichOneSideBreakRecords(String message, String type) {

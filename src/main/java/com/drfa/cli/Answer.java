@@ -7,6 +7,7 @@ import java.io.File;
  */
 public class Answer {
 
+    private int processId;
     private String baseFile;
     private String targetFile;
     private String sqlQueryBase;
@@ -194,10 +195,20 @@ public class Answer {
         this.baseKeyIndex = baseKeyIndex;
     }
 
+
+    public int getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(int processId) {
+        this.processId = processId;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
-                "baseFile='" + baseFile + '\'' +
+                "processId=" + processId +
+                ", baseFile='" + baseFile + '\'' +
                 ", targetFile='" + targetFile + '\'' +
                 ", sqlQueryBase='" + sqlQueryBase + '\'' +
                 ", sqlQueryTarget='" + sqlQueryTarget + '\'' +
@@ -219,4 +230,6 @@ public class Answer {
                 ", keyIndex=" + keyIndex +
                 '}';
     }
+
+
 }

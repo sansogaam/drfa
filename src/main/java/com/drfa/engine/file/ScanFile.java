@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
-import java.util.regex.Pattern;
 
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
 import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
@@ -27,6 +26,7 @@ public class ScanFile {
     static Logger LOG = Logger.getLogger(ScanFile.class);
 
     public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
+        String processPrefix = "PROCESS_ID:"+answer.getProcessId()+"-";
         ScanUtility scanUtility = new ScanUtility();
         Scanner scanner = new Scanner(fetchTheRelevantFile(threadName, answer));
         String fileDelimiter = answer.getFileDelimiter();
@@ -42,7 +42,7 @@ public class ScanFile {
             if (doesKeyExist == null) {
                 storageMap.put(threadName+":" + constructedPrimaryKey , toBeComparedLine);
             } else {
-                String stringToCompare = threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
+                String stringToCompare = processPrefix+threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
                 queue.put(stringToCompare);
                 storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
             }
@@ -51,14 +51,14 @@ public class ScanFile {
         
         sharedVariable++;
         if (sharedVariable == 2) {
-            flushTheStorageMap(storageMap, queue);
-            queue.put("SUMMARY:" + threadName + ":" + totalNumberOfRecords);
+            flushTheStorageMap(storageMap, queue,processPrefix);
+            queue.put(processPrefix+"SUMMARY:" + threadName + ":" + totalNumberOfRecords);
             LOG.info("Will publish the exit message in 500 milli-sec");
             Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
-            queue.put("Exit");
+            queue.put(processPrefix+"Exit");
         } else{
             System.out.println(String.format("Ending of the thread %s with shared Counter %s ", threadName, sharedVariable));
-            queue.put("SUMMARY:" + threadName+":"+totalNumberOfRecords);
+            queue.put(processPrefix+"SUMMARY:" + threadName+":"+totalNumberOfRecords);
             
         }
         LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
@@ -77,7 +77,7 @@ public class ScanFile {
         return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME+":" : BASE_THREAD_NAME+":";
     }
     
-    public void flushTheStorageMap(Map<String, String> storageMap, BlockingQueue queue) throws InterruptedException {
+    public void flushTheStorageMap(Map<String, String> storageMap, BlockingQueue queue, String processPrefix) throws InterruptedException {
         Map<String, String> temporaryMap = new HashMap<String, String>();
         temporaryMap.putAll(storageMap);
         for(String key: temporaryMap.keySet()){
@@ -85,7 +85,7 @@ public class ScanFile {
                 String subStringKey = key.substring(key.indexOf(":")+1);
                 String columnKey = TARGET_THREAD_NAME+":" + subStringKey;
                 if(storageMap.containsKey(columnKey)){
-                    String message = BASE_THREAD_NAME+":" + temporaryMap.get(key) + "$" + temporaryMap.get(columnKey);
+                    String message = processPrefix+BASE_THREAD_NAME+":" + temporaryMap.get(key) + "$" + temporaryMap.get(columnKey);
                     queue.put(message);
                     storageMap.remove(columnKey);
                     storageMap.remove(key);
@@ -94,7 +94,7 @@ public class ScanFile {
                 String subStringKey = key.substring(key.indexOf(":")+1);
                 String columnKey = BASE_THREAD_NAME+":" + subStringKey;
                 if(storageMap.containsKey(columnKey)){
-                    String message = BASE_THREAD_NAME+":" + temporaryMap.get(columnKey) + "$" + temporaryMap.get(key);
+                    String message = processPrefix+BASE_THREAD_NAME+":" + temporaryMap.get(columnKey) + "$" + temporaryMap.get(key);
                     queue.put(message);
                     storageMap.remove(columnKey);
                     storageMap.remove(key);

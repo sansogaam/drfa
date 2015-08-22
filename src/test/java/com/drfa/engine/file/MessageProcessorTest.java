@@ -22,9 +22,9 @@ public class MessageProcessorTest {
         when(context.getColumnAttributes()).thenReturn(populateColumnNames());
         when(context.getFileDelimiter()).thenReturn("|");
         MessageProcessor messageProcessor = new MessageProcessor(context);
-        messageProcessor.processMessage(breakEvent,message);
+        messageProcessor.processMessage(breakEvent,message,"PROCESS_ID:786-");
         verify(breakEvent, times(1)).publisher(anyString(), anyString());
-        verify(breakEvent, times(1)).publisher(eq("C3~T3#T3#MATCHED#$C4~T4#T4#MATCHED#$C1~T1#T1#MATCHED#$C2~T2#T2.1#NOT MATCHED#$"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-C3~T3#T3#MATCHED#$C4~T4#T4#MATCHED#$C1~T1#T1#MATCHED#$C2~T2#T2.1#NOT MATCHED#$"), anyString());
     }
     
     public static List<ColumnAttribute> populateColumnNames(){

@@ -24,8 +24,8 @@ public class MessageHandlerTest {
         BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(breakEvent, processor);
-        handler.handleMessage("Exit");
-        verify(breakEvent).publisher(eq("MATCHED_RECORDS-0"),anyString());
+        handler.handleMessage("PROCESS_ID:786-Exit");
+        verify(breakEvent).publisher(eq("PROCESS_ID:786-MATCHED_RECORDS-0"),anyString());
     }
 
     @Test
@@ -33,9 +33,9 @@ public class MessageHandlerTest {
         BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(breakEvent, processor);
-        String message = "SUMMARY:BASE:24";
+        String message = "PROCESS_ID:786-SUMMARY:BASE:24";
         handler.handleMessage(message);
-        verify(breakEvent).publisher(eq("BASE_TOTAL_RECORDS-24"), anyString());
+        verify(breakEvent).publisher(eq("PROCESS_ID:786-BASE_TOTAL_RECORDS-24"), anyString());
     }
         
     @Test
@@ -43,9 +43,9 @@ public class MessageHandlerTest {
         BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(breakEvent, processor);
-        String message = "SUMMARY:TARGET:25";
+        String message = "PROCESS_ID:786-SUMMARY:TARGET:25";
         handler.handleMessage(message);
-        verify(breakEvent).publisher(eq("TARGET_TOTAL_RECORDS-25"), anyString());
+        verify(breakEvent).publisher(eq("PROCESS_ID:786-TARGET_TOTAL_RECORDS-25"), anyString());
     }
 
     @Test
@@ -57,10 +57,10 @@ public class MessageHandlerTest {
         BreakEvent breakEvent = mock(BreakEvent.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(breakEvent, processor);
-        handler.enrichBreakReportWithOneSidedBreak(storageMap);
+        handler.publishOneSidedBreak(storageMap,"PROCESS_ID:786-");
         verify(breakEvent, times(2)).publisher(anyString(), anyString());
-        verify(breakEvent, times(1)).publisher(eq("BASE_ONE_SIDED_BREAK-2"), anyString());
-        verify(breakEvent, times(1)).publisher(eq("TARGET_ONE_SIDED_BREAK-1"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-BASE_ONE_SIDED_BREAK-2"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-TARGET_ONE_SIDED_BREAK-1"), anyString());
     }
 
     @Test
@@ -75,13 +75,13 @@ public class MessageHandlerTest {
         when(context.getFileDelimiter()).thenReturn("|");
         MessageProcessor processor = new MessageProcessor(context);
         MessageHandler handler = new MessageHandler(breakEvent, processor);
-        handler.enrichBreakReportWithOneSidedBreak(storageMap);
+        handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(breakEvent, times(5)).publisher(anyString(), anyString());
-        verify(breakEvent, times(1)).publisher(eq("BASE_ONE_SIDED_BREAK-2"), anyString());
-        verify(breakEvent, times(1)).publisher(eq("TARGET_ONE_SIDED_BREAK-1"), anyString());
-        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
-        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
-        verify(breakEvent, times(1)).publisher(eq("ONE-SIDED-BASE-C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"), eq("queue://BREAK_MESSAGE"));
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-BASE_ONE_SIDED_BREAK-2"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-TARGET_ONE_SIDED_BREAK-1"), anyString());
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"), eq("queue://BREAK_MESSAGE"));
+        verify(breakEvent, times(1)).publisher(eq("PROCESS_ID:786-ONE-SIDED-BASE-C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"), eq("queue://BREAK_MESSAGE"));
     }
 
 

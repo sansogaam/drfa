@@ -38,7 +38,7 @@ public class ReportServer implements Listener{
                 LOG.info(String.format("Received the message detail %s ", messageBody));
                 System.out.println(String.format("Received the message detail %s ", messageBody));
                 reportEnricher.enrich(messageBody);
-                if(messageBody.startsWith("MATCHED_RECORDS")){
+                if(messageBody.contains("MATCHED_RECORDS")){
                     break;
                 }
             }

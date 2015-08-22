@@ -1,7 +1,6 @@
 package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
-import com.drfa.report.BreakReport;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -26,19 +25,20 @@ public class ComparatorListener implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
-        BreakReport report = new BreakReport();
         BreakEvent breakEvent = new BreakEvent();
         MessageProcessor messageProcessor = new MessageProcessor(context);
         MessageHandler messageHandler = new MessageHandler(breakEvent, messageProcessor);
         LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
+        String processId = null;
         try {
             while (continueConsumingMessage) {
                 String message = (String) queue.take();
+                processId = message.substring(0, message.indexOf("-")+1);
                 continueConsumingMessage = messageHandler.handleMessage(message);
             }
             LOG.info(String.format("Size of the storage map %s", storageMap.size()));
-            messageHandler.enrichBreakReportWithOneSidedBreak(storageMap);
+            messageHandler.publishOneSidedBreak(storageMap, processId);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

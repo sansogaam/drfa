@@ -22,51 +22,64 @@ public class MessageHandler {
     }
 
     public boolean handleMessage(String message) throws Exception {
-        if ("Exit".equalsIgnoreCase(message)) {
+        String messageWithoutProcessId = extractMessageWithoutProcessId(message);
+        String messageProcessId = extractProcessIdFromMessage(message);
+        if ("Exit".equalsIgnoreCase(messageWithoutProcessId)) {
             return processExitMessage(message);
-        }else if(message.startsWith("SUMMARY:")){
+        }else if(messageWithoutProcessId.startsWith("SUMMARY:")){
             return processSummaryMessage(message);
         } else{
             matchedRecords ++;
-            messageProcessor.processMessage(breakEvent,message);
+            messageProcessor.processMessage(breakEvent,messageWithoutProcessId, messageProcessId);
             return true;
         }
     }
 
+    private String extractMessageWithoutProcessId(String message) {
+        return message.substring(message.indexOf("-")+1, message.length());
+    }
+
+    private String extractProcessIdFromMessage(String message) {
+        return message.substring(0, message.indexOf("-")+1);
+    }
+
     private boolean processSummaryMessage(String message) throws Exception {
         LOG.info(String.format("Received the summary message %s", message));
-        String threadName = message.substring(message.indexOf(":")+1, message.lastIndexOf(":"));
+        String messageWithoutProcessId=extractMessageWithoutProcessId(message);
+        String processIdMessage = extractProcessIdFromMessage(message);
+        String threadName = messageWithoutProcessId.substring(messageWithoutProcessId.indexOf(":")+1, messageWithoutProcessId.lastIndexOf(":"));
         LOG.info(String.format("Processing the thread name %s", threadName));
         if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            breakEvent.publisher("BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            breakEvent.publisher(processIdMessage+"BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            breakEvent.publisher("TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            breakEvent.publisher(processIdMessage+"TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }
         return true;
     }
 
     private boolean processExitMessage(String message) throws Exception {
         LOG.info("Exit message recieved: " + message);
-        breakEvent.publisher("MATCHED_RECORDS-" + matchedRecords, queueName);
+        String processIdMessage = extractProcessIdFromMessage(message);
+        breakEvent.publisher(processIdMessage+"MATCHED_RECORDS-" + matchedRecords, queueName);
         return false;
     }
 
-    public void enrichBreakReportWithOneSidedBreak(final Map<String, String> storageMap) throws Exception {
+    public void publishOneSidedBreak(final Map<String, String> storageMap, String processId) throws Exception {
         int baseOneSidedBreak = 0;
         int targetOneSidedBreak = 0;
         for(String key: storageMap.keySet()) {
             String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,"ONE-SIDED-BASE", value);
+                messageProcessor.processOneSidedMessage(breakEvent,processId+"ONE-SIDED-BASE", value);
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,"ONE-SIDED-TARGET",value);
+                messageProcessor.processOneSidedMessage(breakEvent,processId+"ONE-SIDED-TARGET",value);
                 targetOneSidedBreak++;
             }
         }
-        breakEvent.publisher("BASE_ONE_SIDED_BREAK-"+ baseOneSidedBreak, queueName);
-        breakEvent.publisher("TARGET_ONE_SIDED_BREAK-"+ targetOneSidedBreak, queueName);
+        breakEvent.publisher(processId+"BASE_ONE_SIDED_BREAK-"+ baseOneSidedBreak, queueName);
+        breakEvent.publisher(processId+"TARGET_ONE_SIDED_BREAK-"+ targetOneSidedBreak, queueName);
     }
 }
