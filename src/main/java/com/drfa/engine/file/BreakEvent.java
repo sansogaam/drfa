@@ -10,12 +10,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 
-/**
- * Created by Sanjiv on 8/3/2015.
- */
 public class BreakEvent implements Publisher{
-
-    private String constructedMessage;
 
     @Override
     public void publisher(String message, String queueName) throws Exception {

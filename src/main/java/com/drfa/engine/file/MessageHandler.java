@@ -6,15 +6,13 @@ import java.util.Map;
 
 import static com.drfa.engine.EngineConstants.*;
 
-/**
- * Created by Sanjiv on 2/19/2015.
- */
+
 public class MessageHandler {
-    MessageProcessor messageProcessor;
-    static Logger LOG = Logger.getLogger(MessageHandler.class);
-    int matchedRecords = 0;
-    BreakEvent breakEvent;
-    String queueName = "queue://BREAK_MESSAGE";
+    private MessageProcessor messageProcessor;
+    private static Logger LOG = Logger.getLogger(MessageHandler.class);
+    private int matchedRecords = 0;
+    private BreakEvent breakEvent;
+    private String queueName = "queue://BREAK_MESSAGE";
     
     public MessageHandler(BreakEvent breakEvent, MessageProcessor messageProcessor){
         this.breakEvent = breakEvent;
