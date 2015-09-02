@@ -8,8 +8,7 @@ after_success:
    - mvn install
 notifications:
     email:
-        - kuldeepsinghk@gmail.com
-        - kumar.sanjiv34@gmail.com
-        - ram.gaurav.chhabra@gmail.com
+        - kuldeep.singh@drfa.in
+        - sanjiv.kumar@drfa.in
     on_success: always
     on_failure: always
