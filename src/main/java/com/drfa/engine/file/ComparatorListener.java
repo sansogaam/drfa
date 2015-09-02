@@ -34,6 +34,7 @@ public class ComparatorListener implements Callable<Boolean> {
         try {
             while (continueConsumingMessage) {
                 String message = (String) queue.take();
+                LOG.info(String.format("Continue consuming the message %s", message));
                 processId = message.substring(0, message.indexOf("-")+1);
                 continueConsumingMessage = messageHandler.handleMessage(message);
             }

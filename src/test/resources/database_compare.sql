@@ -6,7 +6,7 @@ CREATE TABLE EMPLOYEE(
     date_of_joining DATE
 );
 
-SELECT CONCAT(first_name, ' ', last_name) as name, email_address as email, date_of_joining as joining from employee
+SELECT CONCAT(first_name, ' ', last_name) as name, email_address as email, date_of_joining as joining from employee;
 CREATE TABLE PERSON(
     ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(20),

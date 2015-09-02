@@ -52,7 +52,7 @@ public class ExecuteDBRead implements Runnable {
         DataRecordMetadataXMLReaderWriter metaReader = new DataRecordMetadataXMLReaderWriter();
         DataRecordMetadata metadataIn = null;
         if (databaseInput.getMetaDataFile() != null) {
-            System.out.println(String.format("Processing the metadata file %s", threadName));
+            System.out.println(String.format("Processing the metadata file %s of  thread %s", databaseInput.getMetaDataFile(),threadName));
             try {
                 metadataIn = metaReader.read(new FileInputStream(databaseInput.getMetaDataFile()));
             } catch (FileNotFoundException ex) {

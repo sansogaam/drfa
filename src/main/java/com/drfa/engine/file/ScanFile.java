@@ -36,13 +36,14 @@ public class ScanFile {
             String originalLine = scanner.nextLine();
             String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine,fileDelimiter);
             LOG.debug(String.format("Constructed primary key %s", constructedPrimaryKey));
-            String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter,threadName, originalLine, columnAttributes);
-            //LOG.info(String.format("This line is for thread %s with content %s",threadName,line));
+            String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, threadName, originalLine, columnAttributes);
+            LOG.info(String.format("This line is for thread %s with content %s",threadName,toBeComparedLine));
             String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+constructedPrimaryKey );
             if (doesKeyExist == null) {
                 storageMap.put(threadName+":" + constructedPrimaryKey , toBeComparedLine);
             } else {
                 String stringToCompare = processPrefix+threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
+                LOG.info(String.format("Comparing the line %s", stringToCompare));
                 queue.put(stringToCompare);
                 storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
             }

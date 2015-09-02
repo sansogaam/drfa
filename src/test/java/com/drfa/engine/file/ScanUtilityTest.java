@@ -25,7 +25,7 @@ public class ScanUtilityTest{
         List<ColumnAttribute> columnAttributes = populateColumnNames();
         String fileDelimiter = "|";
         ScanUtility scanUtility = new ScanUtility();
-        String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter, "BASE", line, columnAttributes);
+        String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, "BASE", line, columnAttributes);
         assertEquals("T0|T1|T2|T3", toBeComparedLine);
     }
 
@@ -35,7 +35,7 @@ public class ScanUtilityTest{
         List<ColumnAttribute> columnAttributes = populateColumnNames();
         String fileDelimiter = "|";
         ScanUtility scanUtility = new ScanUtility();
-        String toBeComparedLine = scanUtility.construtToBeComparedLineFromTheOriginalLine(fileDelimiter, "TARGET", line, columnAttributes);
+        String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, "TARGET", line, columnAttributes);
         assertEquals("T0|T1|T3|T2", toBeComparedLine);
     }
 

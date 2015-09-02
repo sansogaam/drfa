@@ -24,11 +24,11 @@ public class ScanUtility {
         return primaryKeyLine.substring(0,primaryKeyLine.length()-1);
     }
     
-    public String construtToBeComparedLineFromTheOriginalLine(String fileDelimiter, String threadName, String line, List<ColumnAttribute> columnAttributes){
+    public String constructToBeComparedLineFromTheOriginalLine(String fileDelimiter, String threadName, String line, List<ColumnAttribute> columnAttributes){
         StringBuffer toBeComparedLineBuffer = new StringBuffer();
-        LOG.debug(String.format("Line to find primary key %s with thread Name %s and delimeter %s", line, threadName, fileDelimiter));
+        //LOG.debug(String.format("Line to find primary key %s with thread Name %s and delimeter %s", line, threadName, fileDelimiter));
         String splitLine[] = line.split(Pattern.quote(fileDelimiter));
-        LOG.debug(String.format("Length of the split line %s and column attributes size %s",splitLine.length, columnAttributes.size()));
+        //LOG.debug(String.format("Length of the split line %s and column attributes size %s",splitLine.length, columnAttributes.size()));
         for(int i=0; i<columnAttributes.size();i++){
             ColumnAttribute columnAttribute = columnAttributes.get(i);
             String columnMatching = columnAttribute.getColumnMatching();
@@ -41,7 +41,7 @@ public class ScanUtility {
                 String targetColumn = columnSplit[1];
                 columnIndex = new Integer(targetColumn.substring(targetColumn.indexOf("-")+1, targetColumn.length()));
             }
-            LOG.debug("Column Index:"+columnIndex+"Split Line: "+ splitLine.length);
+            //LOG.debug("Column Index:"+columnIndex+"Split Line: "+ splitLine.length);
             toBeComparedLineBuffer.append(splitLine[columnIndex]).append(fileDelimiter);
         }
         String toBeComparedLine = toBeComparedLineBuffer.toString();

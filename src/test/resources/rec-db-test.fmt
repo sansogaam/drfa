@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Record name="recTest" recordDelimiter="\n" recordSize="212" type="fixed">
+    <Field name="ID" label="B-0|T-0" nullable="true" shift="0" size="4" type="integer" auto_filling="TA-(B-NR|T-NR)-(R-NA)"/>
+    <Field name="name" label="B-1|T-2" nullable="true" shift="0" size="4" type="string" auto_filling="SP-(B-NR|T-NR)-(R-NA)"/>
+    <Field name="email_address" label="B-3|T-3" nullable="true" shift="0" size="4" type="string" auto_filling="SP-(B-NR|T-NR)-(R-NA)"/>
+    <Field name="date_of_joining" label="B-4|T-4" nullable="true" shift="0" size="4" type="date" auto_filling="DF-(B-NR|T-NR)-(R-NA)"/>
+</Record>

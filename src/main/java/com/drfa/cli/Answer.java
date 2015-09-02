@@ -19,6 +19,8 @@ public class Answer {
     private String targetDatabaseCredentialFile;
     private String targetDatabaseFile;
     private String metaDataFile;
+    private String baseDatabaseMetaDataFile;
+    private String targetDatabaseMetaDataFile;
     private String typeOfReport;
     private String reportCategory;
     private String reportOutputPath;
@@ -204,6 +206,22 @@ public class Answer {
         this.processId = processId;
     }
 
+    public String getBaseDatabaseMetaDataFile() {
+        return baseDatabaseMetaDataFile;
+    }
+
+    public void setBaseDatabaseMetaDataFile(String baseDatabaseMetaDataFile) {
+        this.baseDatabaseMetaDataFile = baseDatabaseMetaDataFile;
+    }
+
+    public String getTargetDatabaseMetaDataFile() {
+        return targetDatabaseMetaDataFile;
+    }
+
+    public void setTargetDatabaseMetaDataFile(String targetDatabaseMetaDataFile) {
+        this.targetDatabaseMetaDataFile = targetDatabaseMetaDataFile;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -219,6 +237,8 @@ public class Answer {
                 ", targetDatabaseCredentialFile='" + targetDatabaseCredentialFile + '\'' +
                 ", targetDatabaseFile='" + targetDatabaseFile + '\'' +
                 ", metaDataFile='" + metaDataFile + '\'' +
+                ", baseDatabaseMetaDataFile='" + baseDatabaseMetaDataFile + '\'' +
+                ", targetDatabaseMetaDataFile='" + targetDatabaseMetaDataFile + '\'' +
                 ", typeOfReport='" + typeOfReport + '\'' +
                 ", reportCategory='" + reportCategory + '\'' +
                 ", reportOutputPath='" + reportOutputPath + '\'' +
@@ -230,6 +250,4 @@ public class Answer {
                 ", keyIndex=" + keyIndex +
                 '}';
     }
-
-
 }

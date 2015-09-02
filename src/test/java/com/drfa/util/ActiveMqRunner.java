@@ -18,7 +18,7 @@ public class ActiveMqRunner {
             broker.addConnector("tcp://localhost:61616");
             broker.start();
         } catch (Exception e) {
-            System.out.println("Something wrong with the broker");
+            System.out.println(String.format("Something wrong with the broker %s",e.getMessage()));
         }
 
     }
@@ -27,7 +27,7 @@ public class ActiveMqRunner {
         try {
             broker.stop();
         } catch (Exception e) {
-            System.out.println("Something wrong with the broker");
+            System.out.println(String.format("Some problem with broker %s", e.getMessage()));
         }
 
     }

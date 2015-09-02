@@ -30,7 +30,7 @@ public class DBComparator implements Comparator{
         AtomicLong aLong = new AtomicLong(0);
         ExecuteDBRead.initializeEngine(answer.getPluginPath());
 
-        DatabaseInput databaseInputForBase = new DatabaseInput(answer.getSqlQueryBase(), answer.getMetaDataFile(),
+        DatabaseInput databaseInputForBase = new DatabaseInput(answer.getSqlQueryBase(), answer.getBaseDatabaseMetaDataFile(),
                                                             answer.getBaseDatabaseCredentialFile(), answer.getPluginPath(),
                                                                 answer.getBaseDatabaseFile());
         String baseOutputFile = answer.getBaseFile();
@@ -39,7 +39,7 @@ public class DBComparator implements Comparator{
         executorServiceBase.execute(new ExecuteDBRead(databaseInputForBase, queue, aLong, BASE_THREAD_NAME, baseOutputFile));
         executorServiceBase.shutdown();
 
-        DatabaseInput databaseInputForTarget = new DatabaseInput(answer.getSqlQueryTarget(), answer.getMetaDataFile(),
+        DatabaseInput databaseInputForTarget = new DatabaseInput(answer.getSqlQueryTarget(), answer.getTargetDatabaseMetaDataFile(),
                 answer.getTargetDatabaseCredentialFile(), answer.getPluginPath(),
                 answer.getTargetDatabaseFile());
 
@@ -56,19 +56,24 @@ public class DBComparator implements Comparator{
 
     public static void main(String args[]){
         Answer answer = new Answer();
-            answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-base.cfg");
+        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-base.cfg");
         answer.setBaseDatabaseFile("D:/dev");
+        answer.setBaseKeyIndex("0");
+        answer.setTargetKeyIndex("0");
         answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-target.cfg");
         answer.setTargetDatabaseFile("D:/dev");
         answer.setPluginPath("D:/dev/drfa/src/main/resources/plugins");
-        answer.setSqlQueryBase("SELECT * FROM EMPLOYEE");
-        answer.setSqlQueryTarget("SELECT * FROM EMPLOYEE");
-        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/dbformat.fmt");
+        answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,DATE_FORMAT(date_of_joining,'%d/%m/%Y') as date_of_joining FROM EMPLOYEE");
+        answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, DATE_FORMAT(joining_date,'%d/%m/%Y') as joining_date FROM PERSON");
+        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-test.fmt");
+        answer.setBaseDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-base.fmt");
+        answer.setTargetDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-target.fmt");
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
         String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
         ReconciliationContext context = new ReconciliationContext();
+        context.setFileDelimiter("|");
         context.setColumnAttributes(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getColumnAttributes());
         DBComparator dbCompare = new DBComparator(context, answer);
         try {

@@ -51,7 +51,8 @@ public class CommandConsole implements Publisher{
     
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        commandConsole.manualRunProgram();
+        commandConsole.manualRunDBProgram();
+        //commandConsole.manualRunProgram();
         //commandConsole.askQuestions();
     }
 
@@ -70,6 +71,32 @@ public class CommandConsole implements Publisher{
         answer.setTypeOfReport("HTML");
         answer.setReportCategory("BOTH");
         answer.setReportOutputPath("D:/dev");
+        CommandConsole commandConsole = new CommandConsole();
+        String answerString = commandConsole.convertAnswerToString(answer);
+        LOG.info(String.format("Answer string to be published %s", answerString));
+        commandConsole.publisher(answerString,"queue://REC_ANSWER");
+    }
+
+    private void manualRunDBProgram() throws JMSException {
+        Answer answer = new Answer();
+        answer.setKeyIndex(0);
+        answer.setBaseKeyIndex("0");
+        answer.setTargetKeyIndex("0");
+        answer.setReconciliationType("DATABASE");
+        answer.setProcessId(1);
+        
+        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-base.cfg");
+        answer.setBaseDatabaseFile("D:/dev");
+        answer.setBaseDatabaseType("MYSQL");
+
+        answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-target.cfg");
+        answer.setTargetDatabaseCredentialFile("D:/dev");
+        answer.setTargetDatabaseType("MYSQL");
+
+        answer.setPluginPath("D:/dev/drfa/src/main/resources/plugins");
+
+        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-test.fmt");
+
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
