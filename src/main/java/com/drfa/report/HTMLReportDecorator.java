@@ -101,6 +101,9 @@ public class HTMLReportDecorator implements ReportDecorator {
     }
     
     private void applyOneSidedBreaks(Map<Integer,Map<String, String>> mapOfOneSidedBreaks,String threadName){
+        if(mapOfOneSidedBreaks == null || mapOfOneSidedBreaks.isEmpty()){
+            return;
+        }
         sb.append("<br/><br/>");
         int numberOfColumns = report.getColumnBreaksCount().size();
         sb.append("<table id=\"columnsummary\">");
@@ -140,17 +143,19 @@ public class HTMLReportDecorator implements ReportDecorator {
         int count = 0;
         for (String key : columnValues.keySet()) {
             List<Integer> columnValue = columnValues.get(key);
-            int nonMatchedRecords = columnValue.get(0);
-            int matchedRecords = columnValue.get(1);
-            if (count % 2 == 0) {
-                sb.append("<tr class='alt'>");
-            } else {
-                sb.append("<tr>");
+            if(columnValue != null) {
+                int nonMatchedRecords = columnValue.get(0);
+                int matchedRecords = columnValue.get(1);
+                if (count % 2 == 0) {
+                    sb.append("<tr class='alt'>");
+                } else {
+                    sb.append("<tr>");
+                }
+                sb.append("<td>").append(key).append("</td>");
+                sb.append("<td>").append(nonMatchedRecords).append("</td>");
+                sb.append("<td>").append(matchedRecords).append("</td>");
+                sb.append("</tr>");
             }
-            sb.append("<td>").append(key).append("</td>");
-            sb.append("<td>").append(nonMatchedRecords).append("</td>");
-            sb.append("<td>").append(matchedRecords).append("</td>");
-            sb.append("</tr>");
             count++;
         }
         sb.append("</table>");

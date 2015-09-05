@@ -30,19 +30,20 @@ public class ReportServer implements Listener{
         //This seems to be single threaded has to change to multi threaded
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
+        
         while (true) {
             System.out.println("Waiting for the message....");
             Message message = consumer.receive();
             if(message instanceof TextMessage) {
                 String messageBody = ((TextMessage)message).getText();
                 LOG.info(String.format("Received the message detail %s ", messageBody));
-                System.out.println(String.format("Received the message detail %s ", messageBody));
                 reportEnricher.enrich(messageBody);
                 if(messageBody.contains("MATCHED_RECORDS")){
                     break;
                 }
             }
         }
+        LOG.info(String.format("Break Report looks like %s", breakReport));
         reportEnricher.enrichBreakReportWithColumnDetails();
         generateReport(breakReport);
     }
@@ -50,8 +51,8 @@ public class ReportServer implements Listener{
     public void generateReport(BreakReport breakReport){
         long startTime = System.currentTimeMillis();
         String htmlReportPath = "D:/dev" + File.separator + "HTML-"+new Date().getTime()+".html";
-        LOG.info(String.format("Report written on path %s with type %s", htmlReportPath, "SUMMARY"));
-        ReportDecorator reportDecorator = new HTMLReportDecorator(breakReport, "SUMMARY");
+        LOG.info(String.format("Report written on path %s with type %s", htmlReportPath, "BOTH"));
+        ReportDecorator reportDecorator = new HTMLReportDecorator(breakReport, "BOTH");
         reportDecorator.decorateReport(htmlReportPath);
         long endTime = System.currentTimeMillis();
         LOG.info(String.format("Total time taken by reconciliation %s milliseconds", endTime-startTime));

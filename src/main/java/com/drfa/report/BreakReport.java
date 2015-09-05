@@ -103,6 +103,9 @@ public class BreakReport {
                 ", baseOneSidedBreaks=" + baseOneSidedBreaks +
                 ", targetOneSidedBreaks=" + targetOneSidedBreaks +
                 ", columnBreaksCount=" + columnBreaksCount +
+                ", baseOneSidedBreaksCollection=" + baseOneSidedBreaksCollection +
+                ", targetOneSidedBreaksCollection=" + targetOneSidedBreaksCollection +
+                ", mapOfBreaks=" + mapOfBreaks +
                 '}';
     }
 }

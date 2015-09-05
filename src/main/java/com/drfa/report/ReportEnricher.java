@@ -117,7 +117,6 @@ public class ReportEnricher implements Enricher {
             }
             mapOfBreaks.put(columnName,columnResults);
         }
-        System.out.println(mapOfBreaks);
         int rowCount;
         Map<Integer, Map<String, List<String>>> mapOfRowBreaks = report.getMapOfBreaks();
         if(mapOfRowBreaks == null || mapOfRowBreaks.isEmpty()){
@@ -125,9 +124,10 @@ public class ReportEnricher implements Enricher {
             mapOfRowBreaks = new HashMap<Integer, Map<String, List<String>>>();
             mapOfRowBreaks.put(new Integer(rowCount), mapOfBreaks);
         }else{
-            rowCount = mapOfBreaks.size()+1;
+            rowCount = mapOfRowBreaks.size()+1;
             mapOfRowBreaks.put(new Integer(rowCount), mapOfBreaks);
         }
+        LOG.info(String.format("Map of row breaks size %s",mapOfRowBreaks.size()));
         report.setMapOfBreaks(mapOfRowBreaks);
     }
 
