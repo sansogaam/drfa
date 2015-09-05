@@ -9,6 +9,6 @@ public class GenericExpression implements Expression {
 
     @Override
     public boolean compareValue(String baseValue,  String targetValue, ExpressionContext expressionContext) {
-        return false;
+        return baseValue.equalsIgnoreCase(targetValue);
     }
 }

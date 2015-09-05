@@ -50,6 +50,7 @@ public class MessageDecorator {
                 if(valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue,valueComparator.parseColumnExpression())){
                     compareValue = MATCHED;
                 }
+                //System.out.println(String.format("firstLineColumnValue %s secondLineColumnValue %s compareValue %s columnType %s columnRule %s",firstLineColumnValue, secondLineColumnValue, compareValue, columnAttribute.getColumnType(), columnAttribute.getColumnRule()));
                 columnValues.add(firstLineSplit[valueCounter]);
                 columnValues.add(secondLineSplit[valueCounter]);
                 columnValues.add(compareValue);
