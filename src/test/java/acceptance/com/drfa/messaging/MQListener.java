@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class MQListener implements MessageListener {
-    private static String messageQueueName = "testQueue";
-    private String messageBrokerUrl = "tcp://localhost:61616";
-    private Session session;
-    private boolean transacted = false;
 
     private CountDownLatch countDownLatch;
     private List<TextMessage> messages = new ArrayList<>();
@@ -21,15 +17,15 @@ public class MQListener implements MessageListener {
         this.countDownLatch = countDownLatch;
     }
 
-    public void startMsgListener() throws JMSException {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(messageBrokerUrl);
+    public void startMsgListener(String testQueue, String brokerURL) throws JMSException {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
         Connection connection = connectionFactory.createConnection();
         connection.start();
-        this.session = connection.createSession(this.transacted, Session.AUTO_ACKNOWLEDGE);
-        Destination adminQueue = this.session.createQueue(messageQueueName);
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        Destination adminQueue = session.createQueue(testQueue);
 
         //Set up a consumer to consume messages off of the admin queue
-        MessageConsumer consumer = this.session.createConsumer(adminQueue);
+        MessageConsumer consumer = session.createConsumer(adminQueue);
         consumer.setMessageListener(this);
     }
 

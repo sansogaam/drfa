@@ -13,6 +13,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BasicActiveMqProduceConsumerTest {
+    private String brokerURL = "tcp://localhost:61616";
+
 
     @Test
     public void shouldBeAbleToSendAndReceiveMessages() throws Exception {
@@ -20,10 +22,12 @@ public class BasicActiveMqProduceConsumerTest {
 
         CountDownLatch latch = new CountDownLatch(1);
         MQListener listener = new MQListener(latch);
-        listener.startMsgListener();
+
+        String testQueue = "testQueue";
+        listener.startMsgListener(testQueue, brokerURL);
 
         String msg = "Sample Text Message";
-        new MQProducer().sendMsg(msg);
+        new MQProducer().sendMsg(msg, testQueue, brokerURL);
 
         latch.await(10, TimeUnit.SECONDS);
 
