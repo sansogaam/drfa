@@ -1,7 +1,7 @@
 package acceptance.com.drfa.messaging;
 
 
-import com.drfa.jms.MQListener;
+import com.drfa.jms.ActiveMqListener;
 import com.drfa.util.ActiveMqRunner;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class BasicActiveMqProduceConsumerTest {
         BasicMessageListener listener = new BasicMessageListener(latch);
 
         String testQueue = "testQueue";
-        new MQListener(listener).startMsgListener(testQueue, brokerURL);
+        new ActiveMqListener(listener).startMsgListener(testQueue, brokerURL);
 
         String msg = "Sample Text Message";
         new MQProducer().sendMsg(msg, testQueue, brokerURL);
