@@ -1,6 +1,7 @@
 package acceptance.com.drfa.messaging;
 
 
+import com.drfa.jms.MQListener;
 import com.drfa.util.ActiveMqRunner;
 import org.junit.Test;
 
@@ -21,10 +22,10 @@ public class BasicActiveMqProduceConsumerTest {
         ActiveMqRunner.startBroker();
 
         CountDownLatch latch = new CountDownLatch(1);
-        MQListener listener = new MQListener(latch);
+        BasicMessageListener listener = new BasicMessageListener(latch);
 
         String testQueue = "testQueue";
-        listener.startMsgListener(testQueue, brokerURL);
+        new MQListener(listener).startMsgListener(testQueue, brokerURL);
 
         String msg = "Sample Text Message";
         new MQProducer().sendMsg(msg, testQueue, brokerURL);
