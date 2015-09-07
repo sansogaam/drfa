@@ -4,11 +4,18 @@ package com.drfa.engine.meta;
  * Created by Sanjiv on 7/4/2015.
  */
 public class ColumnAttribute {
+    
     public String columnName;
+
     public String columnType;
+
     public String columnMatching;
+
     public String columnRule;
 
+    public ColumnAttribute(){
+    }
+    
     public ColumnAttribute(String columnName, String columnType, String columnMatching, String columnRule) {
         this.columnName = columnName;
         this.columnType = columnType;

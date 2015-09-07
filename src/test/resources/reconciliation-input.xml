@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+    <columnattribute>
+        <columnName>C1</columnName>
+        <columnType>String</columnType>
+        <columnMatching>B-0|T-0</columnMatching>
+        <columnRule>SP-(B-NR|T-NR)-(R-NA)</columnRule>
+    </columnattribute>
+    <columnattribute>
+        <columnName>C2</columnName>
+        <columnType>Date</columnType>
+        <columnMatching>B-1|T-1</columnMatching>
+        <columnRule>DF-(B-dd-MM-yyyy|T-dd/MM/yyyy)-(R-NA)</columnRule>
+    </columnattribute>
+    <columnattribute>
+        <columnName>C3</columnName>
+        <columnType>Integer</columnType>
+        <columnMatching>B-2|T-2</columnMatching>
+        <columnRule>TA-(B-NR|T-NR)-(R-1)</columnRule>
+    </columnattribute>
+    <columnattribute>
+        <columnName>C4</columnName>
+        <columnType>Date</columnType>
+        <columnMatching>B-3|T-3</columnMatching>
+        <columnRule>DF-(B-dd-MM-yyyy|T-dd-MM-yyyy)-(R-NA)</columnRule>
+    </columnattribute>
+    <columnattribute>
+        <columnName>C5</columnName>
+        <columnType>String</columnType>
+        <columnMatching>B-4|T-4</columnMatching>
+        <columnRule>TP-(B-NR|T-NR)-(R-10)</columnRule>
+    </columnattribute>
+
+</list>
