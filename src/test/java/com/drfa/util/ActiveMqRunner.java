@@ -14,11 +14,12 @@ public class ActiveMqRunner {
     public static void startBroker() {
         try {
             broker = new BrokerService();
+            broker.addConnector("tcp://localhost:5672");
 
-            broker.addConnector("tcp://localhost:61616");
+
             broker.start();
         } catch (Exception e) {
-            System.out.println(String.format("Something wrong with the broker %s",e.getMessage()));
+            System.out.println(String.format("Something wrong with the broker %s", e.getMessage()));
         }
 
     }

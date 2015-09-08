@@ -1,4 +1,4 @@
-package acceptance.com.drfa.messaging;
+package com.drfa.jms;
 
 
 import javax.jms.Message;

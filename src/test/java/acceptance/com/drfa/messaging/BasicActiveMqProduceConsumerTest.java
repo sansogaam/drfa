@@ -2,7 +2,10 @@ package acceptance.com.drfa.messaging;
 
 
 import com.drfa.jms.ActiveMqListener;
+import com.drfa.jms.BasicMessageListener;
+import com.drfa.jms.MQProducer;
 import com.drfa.util.ActiveMqRunner;
+import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
 import javax.jms.TextMessage;
@@ -14,7 +17,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BasicActiveMqProduceConsumerTest {
-    private String brokerURL = "tcp://localhost:61616";
 
 
     @Test
@@ -25,10 +27,10 @@ public class BasicActiveMqProduceConsumerTest {
         BasicMessageListener listener = new BasicMessageListener(latch);
 
         String testQueue = "testQueue";
-        new ActiveMqListener(listener).startMsgListener(testQueue, brokerURL);
+        new ActiveMqListener(listener).startMsgListener(testQueue, DrfaProperties.BROKER_URL);
 
         String msg = "Sample Text Message";
-        new MQProducer().sendMsg(msg, testQueue, brokerURL);
+        new MQProducer().sendMsg(msg, testQueue, DrfaProperties.BROKER_URL);
 
         latch.await(10, TimeUnit.SECONDS);
 

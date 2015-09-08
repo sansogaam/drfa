@@ -1,33 +1,19 @@
 package com.drfa.jms;
 
-import org.apache.qpid.amqp_1_0.jms.impl.ConnectionFactoryImpl;
+import com.drfa.util.DrfaProperties;
+import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-/**
- * Created by Sanjiv on 8/1/2015.
- */
+
 public class JMSConnection {
     
     public static Session createSession() throws JMSException {
-        String user = env("ACTIVEMQ_USER", "admin");
-        String password = env("ACTIVEMQ_PASSWORD", "password");
-        String host = env("ACTIVEMQ_HOST", "localhost");
-        int port = Integer.parseInt(env("ACTIVEMQ_PORT", "5672"));
-        ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
-        Connection connection = factory.createConnection(user, password);
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DrfaProperties.BROKER_URL);
+        Connection connection = connectionFactory.createConnection();
         connection.start();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        return session;
+        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
-
-    private static String env(String key, String defaultValue) {
-        String rc = System.getenv(key);
-        if( rc== null )
-            return defaultValue;
-        return rc;
-    }
-
 }

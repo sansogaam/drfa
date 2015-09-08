@@ -1,38 +1,46 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.jms.JMSConnection;
-import com.drfa.jms.Listener;
+import com.drfa.jms.ActiveMqListener;
+import com.drfa.util.DrfaProperties;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
-import org.apache.qpid.amqp_1_0.jms.impl.QueueImpl;
 
-import javax.jms.*;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by Sanjiv on 8/1/2015.
- */
-public class ReconciliationServer implements Listener {
 
-    static Logger LOG = Logger.getLogger(ReconciliationServer.class);
+public class ReconciliationServer implements MessageListener {
+
+    private static Logger LOG = Logger.getLogger(ReconciliationServer.class);
+
+
+    public static void main(String args[]) {
+        try {
+            ReconciliationServer reconciliationServer = new ReconciliationServer();
+            new ActiveMqListener(reconciliationServer).startMsgListener("REC_ANSWER", DrfaProperties.BROKER_URL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
-    public void listener(String queueName) throws Exception{
-        Session session = JMSConnection.createSession();
-        Destination dest = new QueueImpl(queueName);
-        MessageConsumer consumer = session.createConsumer(dest);
-        LOG.info(String.format("Server Started successfully and listening on the queue %s", queueName));
-        System.out.println(String.format("Server Started successfully and listening on the queue %s", queueName));
-        while (true) {
-            System.out.println("Waiting for the message....");
-            Message message = consumer.receive();
-            if(message instanceof TextMessage) {
-                String messageBody = ((TextMessage)message).getText();
-                LOG.info(String.format("Received the message %s ", messageBody));
-                System.out.println(String.format("Received the message %s ", messageBody));
-                processMessage(messageBody);
+    public void onMessage(Message message) {
+        System.out.println("Got the message....");
+        if (message instanceof TextMessage) {
+            String messageBody = null;
+            try {
+                messageBody = ((TextMessage) message).getText();
+            } catch (JMSException e) {
+                e.printStackTrace();
             }
+            LOG.info(String.format("Received the message %s ", messageBody));
+            System.out.println(String.format("Received the message %s ", messageBody));
+            processMessage(messageBody);
         }
     }
 
@@ -48,21 +56,10 @@ public class ReconciliationServer implements Listener {
         }
     }
 
-    private Answer convertToAnswerObject(String xmlString){
+    private Answer convertToAnswerObject(String xmlString) {
         XStream xst = new XStream();
-        Answer answer = (Answer)xst.fromXML(xmlString);
+        Answer answer = (Answer) xst.fromXML(xmlString);
         LOG.info(String.format("Answer Object recieved %s", answer.toString()));
         return answer;
     }
-    public static void main(String args[]){
-        try{
-            ReconciliationServer reconciliationServer = new ReconciliationServer();
-            reconciliationServer.listener("queue://REC_ANSWER");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    
-    
 }

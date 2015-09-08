@@ -1,7 +1,6 @@
 package com.drfa.engine;
 
 import com.drfa.engine.meta.ColumnAttribute;
-import com.drfa.engine.meta.ColumnAttributes;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
 
