@@ -6,6 +6,7 @@ import com.drfa.engine.meta.MetaDataParser;
 import com.drfa.engine.file.CsvFileComparator;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -44,12 +45,12 @@ public class Engine {
         answer.setBaseKeyIndex("0");
         answer.setTargetKeyIndex("0");
         answer.setReconciliationType("FILE");
-        answer.setBaseFile("D:/dev/test.csv");
+        answer.setBaseFile(new File("src/test/resources/test.csv").getAbsolutePath());
         answer.setFileDelimiter("|");
-        answer.setTargetFile("D:/dev/test1.csv");
-        answer.setMetaDataFile("D:/dev/testing.fmt");
-        answer.setPluginPath("D:/dev");
-        answer.setReportOutputPath("D:/dev");
+        answer.setTargetFile(new File("src/test/resources/test1.csv").getAbsolutePath());
+        answer.setMetaDataFile(new File("src/test/resources/testing.fmt").getAbsolutePath());
+        answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
+        answer.setReportOutputPath(new File("src/test/resources").getAbsolutePath());
         Comparator comparator = new CsvFileComparator(context, answer);
         long startTime = System.currentTimeMillis();
         try {

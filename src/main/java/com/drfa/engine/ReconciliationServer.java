@@ -21,7 +21,7 @@ public class ReconciliationServer implements MessageListener {
     public static void main(String args[]) {
         try {
             ReconciliationServer reconciliationServer = new ReconciliationServer();
-            new ActiveMqListener(reconciliationServer).startMsgListener("REC_ANSWER", DrfaProperties.BROKER_URL);
+            new ActiveMqListener(reconciliationServer).startMsgListener("queue://REC_ANSWER", DrfaProperties.BROKER_URL);
         } catch (Exception e) {
             e.printStackTrace();
         }
