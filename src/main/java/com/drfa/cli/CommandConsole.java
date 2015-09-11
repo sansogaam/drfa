@@ -35,7 +35,7 @@ public class CommandConsole {
         LOG.info("Answers received.." + answer);
         String answerString = convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        publisher(answerString, "queue://REC_ANSWER");
+        publisher(answerString, DrfaProperties.REC_ANSWER);
     }
     public void publisher(String message, String queueName) throws JMSException {
         ActiveMqPublisher mqPublisher = new ActiveMqPublisher();
@@ -50,8 +50,8 @@ public class CommandConsole {
     
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        //commandConsole.manualRunProgram();
-        commandConsole.manualRunDBProgram();
+        commandConsole.manualRunProgram();
+        //commandConsole.manualRunDBProgram();
         //commandConsole.askQuestions();
     }
 
@@ -71,10 +71,13 @@ public class CommandConsole {
         answer.setTypeOfReport("HTML");
         answer.setReportCategory("BOTH");
         answer.setReportOutputPath(new File("src/test/resources").getAbsolutePath());
-        CommandConsole commandConsole = new CommandConsole();
-        String answerString = commandConsole.convertAnswerToString(answer);
+        publishMessage(answer);
+    }
+
+    public void publishMessage(Answer answer) throws JMSException {
+        String answerString = convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        commandConsole.publisher(answerString,"queue://REC_ANSWER");
+        publisher(answerString,DrfaProperties.REC_ANSWER);
     }
 
     private void manualRunDBProgram() throws JMSException {
@@ -114,7 +117,7 @@ public class CommandConsole {
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        commandConsole.publisher(answerString,"queue://REC_ANSWER");
+        commandConsole.publisher(answerString,DrfaProperties.REC_ANSWER);
     }
 
 }
