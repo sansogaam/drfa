@@ -77,7 +77,7 @@ public class ExecuteDBRead implements Runnable {
             lookup.seek();
 
             //display results, if there are any
-            LOG.info(String.format("Processing the results %s", threadName));
+            LOG.info(String.format("Processing the results %s on the Output File %s", threadName, outputFile));
 
             Path file = Paths.get(outputFile);
 

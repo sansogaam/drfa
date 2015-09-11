@@ -8,7 +8,10 @@ import org.apache.log4j.Logger;
 
 import javax.jms.JMSException;
 import java.io.File;
+import java.util.Date;
 
+import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
+import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -47,8 +50,8 @@ public class CommandConsole {
     
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        commandConsole.manualRunProgram();
-        //commandConsole.manualRunDBProgram();
+        //commandConsole.manualRunProgram();
+        commandConsole.manualRunDBProgram();
         //commandConsole.askQuestions();
     }
 
@@ -63,7 +66,7 @@ public class CommandConsole {
         answer.setBaseFile(new File("src/test/resources/test.csv").getAbsolutePath());
         answer.setFileDelimiter("|");
         answer.setTargetFile(new File("src/test/resources/test1.csv").getAbsolutePath());
-        answer.setMetaDataFile(new File("src/test/resources/rec-test.fmt").getAbsolutePath());
+        answer.setMetaDataFile(new File("src/test/resources/reconciliation-input.xml").getAbsolutePath());
         answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
         answer.setTypeOfReport("HTML");
         answer.setReportCategory("BOTH");
@@ -83,16 +86,29 @@ public class CommandConsole {
         answer.setProcessId(1);
         
         answer.setBaseDatabaseCredentialFile(new File("src/test/resources/mysql-base.cfg").getAbsolutePath());
-        answer.setBaseDatabaseFile("C:/Temp");
+        
+        answer.setBaseDatabaseFile("C:/tmp/");
+        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
+        answer.setBaseFile(baseOutputFile);
+        
+
         answer.setBaseDatabaseType("MYSQL");
+        answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,DATE_FORMAT(date_of_joining,'%d/%m/%Y') as date_of_joining FROM EMPLOYEE");
+        answer.setBaseDatabaseMetaDataFile(new File("src/test/resources/rec-db-base.fmt").getAbsolutePath());
 
         answer.setTargetDatabaseCredentialFile(new File("src/test/resources/mysql-target.cfg").getAbsolutePath());
-        answer.setTargetDatabaseCredentialFile("C:/Temp");
+
+        answer.setTargetDatabaseFile("C:/tmp/");
+        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
+        answer.setTargetFile(targetOutputFile);
+
         answer.setTargetDatabaseType("MYSQL");
+        answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, DATE_FORMAT(joining_date,'%d/%m/%Y') as joining_date FROM PERSON");
+        answer.setTargetDatabaseMetaDataFile(new File("src/test/resources/rec-db-target.fmt").getAbsolutePath());
 
         answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
 
-        answer.setMetaDataFile(new File("src/test/resources/rec-db-test.fmt").getAbsolutePath());
+        answer.setMetaDataFile(new File("src/test/resources/reconciliation-input.xml").getAbsolutePath());
 
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);

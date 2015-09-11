@@ -56,16 +56,16 @@ public class DBComparator implements Comparator{
 
     public static void main(String args[]){
         Answer answer = new Answer();
-        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-base.cfg");
+        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-base.cfg");
         answer.setBaseDatabaseFile("D:/dev");
         answer.setBaseKeyIndex("0");
         answer.setTargetKeyIndex("0");
-        answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/main/resources/mysql-target.cfg");
+        answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-target.cfg");
         answer.setTargetDatabaseFile("D:/dev");
         answer.setPluginPath("D:/dev/drfa/src/main/resources/plugins");
         answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,DATE_FORMAT(date_of_joining,'%d/%m/%Y') as date_of_joining FROM EMPLOYEE");
         answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, DATE_FORMAT(joining_date,'%d/%m/%Y') as joining_date FROM PERSON");
-        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-test.fmt");
+        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/reconciliation-input.xml");
         answer.setBaseDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-base.fmt");
         answer.setTargetDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-target.fmt");
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
