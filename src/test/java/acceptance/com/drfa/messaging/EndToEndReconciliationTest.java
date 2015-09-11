@@ -8,7 +8,7 @@ import com.drfa.engine.file.CsvFileComparator;
 import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.jms.ActiveMqListener;
 import com.drfa.jms.ActiveMqRunner;
-import com.drfa.report.ReportServer;
+import com.drfa.report.ReportListener;
 import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
@@ -32,8 +32,8 @@ public class EndToEndReconciliationTest {
         fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
 
-        ReportServer reportServer = new ReportServer();
-        new ActiveMqListener(reportServer).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
+        ReportListener reportListener = new ReportListener();
+        new ActiveMqListener(reportListener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
 
         Comparator comparator = new CsvFileComparator(context(), answer());
         comparator.compare();
