@@ -33,7 +33,7 @@ public class EndToEndReconciliationTest {
 
 
         ReportServer reportServer = new ReportServer();
-        new ActiveMqListener(reportServer).startMsgListener("queue://BREAK_MESSAGE", DrfaProperties.BROKER_URL);
+        new ActiveMqListener(reportServer).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
 
         Comparator comparator = new CsvFileComparator(context(), answer());
         comparator.compare();

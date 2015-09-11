@@ -1,18 +1,20 @@
 package com.drfa.engine.file;
 
+import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
 
-import static com.drfa.engine.EngineConstants.*;
+import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
+import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 
 public class MessageHandler {
-    private MessageProcessor messageProcessor;
     private static Logger LOG = Logger.getLogger(MessageHandler.class);
+    private MessageProcessor messageProcessor;
     private int matchedRecords = 0;
     private BreakEvent breakEvent;
-    private String queueName = "queue://BREAK_MESSAGE";
+    private String queueName = DrfaProperties.BREAK_MESSAGE_QUEUE;
     
     public MessageHandler(BreakEvent breakEvent, MessageProcessor messageProcessor){
         this.breakEvent = breakEvent;
