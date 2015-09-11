@@ -2,14 +2,12 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
-import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 public class MessageProcessor {
 
@@ -33,7 +31,7 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                breakEvent.publisher(processId+breakValue, "queue://BREAK_MESSAGE");
+                breakEvent.publisher(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
@@ -61,7 +59,7 @@ public class MessageProcessor {
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            breakEvent.publisher(fileType+"-" + breakValue, "queue://BREAK_MESSAGE");
+            breakEvent.publisher(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

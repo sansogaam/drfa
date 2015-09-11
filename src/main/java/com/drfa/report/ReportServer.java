@@ -27,7 +27,7 @@ public class ReportServer implements MessageListener {
     public static void main(String args[]) {
         try {
             ReportServer reportServer = new ReportServer();
-            new ActiveMqListener(reportServer).startMsgListener("queue://BREAK_MESSAGE", DrfaProperties.BROKER_URL);
+            new ActiveMqListener(reportServer).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
 
         } catch (Exception e) {
             e.printStackTrace();
