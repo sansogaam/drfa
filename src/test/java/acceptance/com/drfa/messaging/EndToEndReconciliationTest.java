@@ -11,6 +11,7 @@ import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.jms.ActiveMqListener;
 import com.drfa.jms.ActiveMqRunner;
 import com.drfa.jms.BasicMessageListener;
+import com.drfa.jms.ResultListener;
 import com.drfa.report.ReportListener;
 import com.drfa.util.DrfaProperties;
 import org.junit.Test;
@@ -46,11 +47,11 @@ public class EndToEndReconciliationTest {
 
         CountDownLatch latch = new CountDownLatch(14);
 
-        BasicMessageListener listener = new BasicMessageListener(latch);
-        new ActiveMqListener(listener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
+        ResultListener resultListener = new ResultListener(latch);
+        new ActiveMqListener(resultListener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
 
         latch.await();
-        List<TextMessage> messages = listener.getMessages();
+        List<String> messages = resultListener.getMessages();
         assertThat(messages.size(), is(14));
     }
 
