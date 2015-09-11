@@ -54,36 +54,4 @@ public class DBComparator implements Comparator{
         executorServiceCompare.shutdown();
         return compareReport.get();
     }
-
-    public static void main(String args[]){
-        Answer answer = new Answer();
-        answer.setBaseDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-base.cfg");
-        answer.setBaseDatabaseFile("D:/dev");
-        answer.setBaseKeyIndex("0");
-        answer.setTargetKeyIndex("0");
-        answer.setTargetDatabaseCredentialFile("D:/dev/drfa/src/test/resources/mysql-target.cfg");
-        answer.setTargetDatabaseFile("D:/dev");
-        answer.setPluginPath("D:/dev/drfa/src/main/resources/plugins");
-        answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,DATE_FORMAT(date_of_joining,'%d/%m/%Y') as date_of_joining FROM EMPLOYEE");
-        answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, DATE_FORMAT(joining_date,'%d/%m/%Y') as joining_date FROM PERSON");
-        answer.setMetaDataFile("D:/dev/drfa/src/test/resources/reconciliation-input.xml");
-        answer.setBaseDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-base.fmt");
-        answer.setTargetDatabaseMetaDataFile("D:/dev/drfa/src/test/resources/rec-db-target.fmt");
-        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
-        answer.setBaseFile(baseOutputFile);
-        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
-        answer.setTargetFile(targetOutputFile);
-        ReconciliationContext context = new ReconciliationContext();
-        context.setFileDelimiter("|");
-        context.setColumnAttributes(new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath()).getColumnAttributes());
-        DBComparator dbCompare = new DBComparator(context, answer);
-        try {
-            Boolean compareFlag = dbCompare.compare();
-            System.out.println("Comparing the results..." + compareFlag);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -37,42 +37,5 @@ public class Engine {
         comparator.compare();
     }
 
-    public static void main(String args[]){
-        System.out.println("This is a test of reconciliation...");
-        ReconciliationContext context = new ReconciliationContext();
-        context.setColumnAttributes(populateColumnNames());
-        Answer answer = new Answer();
-        answer.setKeyIndex(0);
-        answer.setBaseKeyIndex("0");
-        answer.setTargetKeyIndex("0");
-        answer.setReconciliationType("FILE");
-        answer.setBaseFile(new File("src/test/resources/test.csv").getAbsolutePath());
-        answer.setFileDelimiter("|");
-        answer.setTargetFile(new File("src/test/resources/test1.csv").getAbsolutePath());
-        answer.setMetaDataFile(new File("src/test/resources/testing.fmt").getAbsolutePath());
-        answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
-        answer.setReportOutputPath(new File("src/test/resources").getAbsolutePath());
-        Comparator comparator = new CsvFileComparator(context, answer);
-        long startTime = System.currentTimeMillis();
-        try {
-            comparator.compare();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        long endTime = System.currentTimeMillis();
-        System.out.println(String.format("Total time taken by comparator %s milliseconds", endTime-startTime));
-    }
-
-    public static List<ColumnAttribute> populateColumnNames(){
-        List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
-        columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", "SP-(B-NR|T-NR)-(R-NA)"));
-        columnAttributes.add(new ColumnAttribute("C2", "Date", "B-1|T-1", "DF-(B-dd-MM-yyyy|T-dd/MM/yyyy)-(R-NA)"));
-        columnAttributes.add(new ColumnAttribute("C3", "Integer", "B-2|T-2", "TA-(B-NR|T-NR)-(R-1)"));
-        columnAttributes.add(new ColumnAttribute("C4", "Date", "B-3|T-3", "DF-(B-dd-MM-yyyy|T-dd-MM-yyyy)-(R-NA)"));
-        columnAttributes.add(new ColumnAttribute("C5", "Integer", "B-4|T-4", "TP-(B-NR|T-NR)-(R-10)"));
-        return columnAttributes;
-    }
 
 }
