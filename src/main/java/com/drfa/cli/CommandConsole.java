@@ -25,9 +25,7 @@ public class CommandConsole {
     public void askQuestions() throws JMSException {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
-
         LOG.info("Type of reconciliation: " + typeOfReconciliation);
-
         QuestionFactory questionFactory = new QuestionFactory();
         Questions questions = questionFactory.getQuestion(typeOfReconciliation);
         Answer answer = questions.askQuestions();
@@ -50,15 +48,14 @@ public class CommandConsole {
     
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        commandConsole.manualRunProgram();
+        //commandConsole.manualRunProgram();
         //commandConsole.manualRunDBProgram();
-        //commandConsole.askQuestions();
+        commandConsole.askQuestions();
     }
 
     
     private void manualRunProgram() throws JMSException {
         Answer answer = new Answer();
-        answer.setKeyIndex(0);
         answer.setBaseKeyIndex("0");
         answer.setTargetKeyIndex("0");
         answer.setReconciliationType("FILE");
@@ -68,9 +65,6 @@ public class CommandConsole {
         answer.setTargetFile(new File("src/test/resources/test1.csv").getAbsolutePath());
         answer.setMetaDataFile(new File("src/test/resources/reconciliation-input.xml").getAbsolutePath());
         answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
-        answer.setTypeOfReport("HTML");
-        answer.setReportCategory("BOTH");
-        answer.setReportOutputPath(new File("src/test/resources").getAbsolutePath());
         publishMessage(answer);
     }
 
@@ -82,7 +76,7 @@ public class CommandConsole {
 
     private void manualRunDBProgram() throws JMSException {
         Answer answer = new Answer();
-        answer.setKeyIndex(0);
+
         answer.setBaseKeyIndex("0");
         answer.setTargetKeyIndex("0");
         answer.setReconciliationType("DATABASE");
@@ -90,7 +84,6 @@ public class CommandConsole {
         answer.setFileDelimiter("|");
         
         answer.setBaseDatabaseCredentialFile(new File("src/test/resources/mysql-base.cfg").getAbsolutePath());
-        
         answer.setBaseDatabaseFile("target/test-output/");
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);

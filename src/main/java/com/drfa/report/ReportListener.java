@@ -1,5 +1,7 @@
 package com.drfa.report;
 
+import com.drfa.jms.ActiveMqListener;
+import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import javax.jms.JMSException;
@@ -32,5 +34,13 @@ public class ReportListener implements MessageListener {
         }
     }
 
+    public static void main(String args[]){
+        ReportListener reportListener = new ReportListener();
+        try {
+            new ActiveMqListener(reportListener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

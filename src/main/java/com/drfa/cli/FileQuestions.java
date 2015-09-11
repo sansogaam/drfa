@@ -25,23 +25,18 @@ public class FileQuestions implements Questions {
         String fileDelimiter = new DisplayQuestion(new NoValidator()).displayQuestion("Please specify the file delimiter | or ,");
         answer.setFileDelimiter(fileDelimiter);
 
-        String pluginPath = new DisplayQuestion(new PluginValidator()).displayQuestion("Please provide the absolute path of the plugin, if not sure then type (PLUGINS): ");
-        answer.setPluginPath(pluginPath);
+        String processId = new DisplayQuestion(new NumberValidator()).displayQuestion("Please enter the unique process id: " );
+        answer.setProcessId(new Integer(processId));
 
-        String metaDataFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the meta data file: ");
+        String metaDataFilePath = new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of the rule file: ");
         answer.setMetaDataFile(metaDataFilePath);
 
-        String keyIndex = new DisplayQuestion(new NumberValidator()).displayQuestion("Please Enter Key Index in the file(0,1,2,..., n)");
-        answer.setKeyIndex(new Integer(keyIndex));
+        String baseKeyIndex = new DisplayQuestion(new NumberValidator()).displayQuestion("Please Enter Base Key Index in the file. Combination of column can be represented as(0-1,1-2). Number represent the index of the column in the file");
+        answer.setBaseKeyIndex(baseKeyIndex);
 
-        String typeOfReport = new DisplayQuestion(new ReportExtensionValidator()).displayQuestion("Type of Report (XLS, HTML)");
-        answer.setTypeOfReport(typeOfReport);
+        String targetKeyIndex = new DisplayQuestion(new NumberValidator()).displayQuestion("Please Enter Target Key Index in the file. Combination of column can be represented as(0-1,1-2). Number represent the index of the column in the file");
+        answer.setBaseKeyIndex(targetKeyIndex);
 
-        String reportCategory = new DisplayQuestion(new ReportDetailValidator()).displayQuestion("Please select the category of the report SUMMARY, DETAILED, BOTH");
-        answer.setReportCategory(reportCategory);
-
-        String reportOutputPath= new DisplayQuestion(new FileValidator()).displayQuestion("Please provide the absolute path of Report Output");
-        answer.setReportOutputPath(reportOutputPath);
         return answer;
     }
 
