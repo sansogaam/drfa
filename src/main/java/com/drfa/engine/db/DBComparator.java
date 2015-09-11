@@ -26,6 +26,7 @@ public class DBComparator implements Comparator{
 
     @Override
     public boolean compare() throws ExecutionException, InterruptedException {
+        context.setFileDelimiter(answer.getFileDelimiter());
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         AtomicLong aLong = new AtomicLong(0);
         ExecuteDBRead.initializeEngine(answer.getPluginPath());

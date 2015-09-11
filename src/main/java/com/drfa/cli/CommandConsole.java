@@ -84,10 +84,11 @@ public class CommandConsole {
         answer.setTargetKeyIndex("0");
         answer.setReconciliationType("DATABASE");
         answer.setProcessId(1);
+        answer.setFileDelimiter("|");
         
         answer.setBaseDatabaseCredentialFile(new File("src/test/resources/mysql-base.cfg").getAbsolutePath());
         
-        answer.setBaseDatabaseFile("C:/tmp/");
+        answer.setBaseDatabaseFile("target/test-output/");
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
         
@@ -98,7 +99,7 @@ public class CommandConsole {
 
         answer.setTargetDatabaseCredentialFile(new File("src/test/resources/mysql-target.cfg").getAbsolutePath());
 
-        answer.setTargetDatabaseFile("C:/tmp/");
+        answer.setTargetDatabaseFile("target/test-output/");
         String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
 
