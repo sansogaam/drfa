@@ -22,4 +22,12 @@ public class FileUtil {
         File outputDir = new File(dirName);
         return FileUtils.listFiles(outputDir, new WildcardFileFilter("*"), new WildcardFileFilter("*"));
     }
+
+    public void makeDirectoryIfNotExist(String dirName) {
+        File outputDir = new File(dirName);
+        if(!outputDir.exists()){
+            outputDir.mkdir();
+        }
+    }
+
 }

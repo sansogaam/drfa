@@ -20,12 +20,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EndToEndReconciliationTest {
+    public static final String TARGET_TEST_OUTPUT = "target/test-output/";
     private FileUtil fileUtil = new FileUtil();
 
     @Test()
     public void shouldBeAbleToSendAndReceiveMessages() throws Exception {
+        
         ActiveMqRunner.startBroker();
-        fileUtil.ensureNoReconciliationReportExists("target/test-output/");
+        fileUtil.makeDirectoryIfNotExist(TARGET_TEST_OUTPUT);
+                
+        fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
 
         ReportServer reportServer = new ReportServer();
@@ -35,7 +39,7 @@ public class EndToEndReconciliationTest {
         comparator.compare();
 
 
-        assertThat(fileUtil.getAllFiles("target/test-output/").size(), is(1));
+        assertThat(fileUtil.getAllFiles(TARGET_TEST_OUTPUT).size(), is(1));
 
     }
 
