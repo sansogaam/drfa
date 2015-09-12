@@ -6,7 +6,6 @@ import com.drfa.cli.CommandConsole;
 import com.drfa.engine.ReconciliationServer;
 import com.drfa.jms.ResultListener;
 import com.drfa.messaging.jms.ActiveMqListener;
-import com.drfa.messaging.jms.ActiveMqRunner;
 import org.junit.Test;
 
 import java.io.File;

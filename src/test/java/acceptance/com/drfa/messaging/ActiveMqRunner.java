@@ -1,4 +1,4 @@
-package com.drfa.messaging.jms;
+package acceptance.com.drfa.messaging;
 
 import org.apache.activemq.broker.BrokerService;
 
