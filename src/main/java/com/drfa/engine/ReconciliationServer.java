@@ -1,7 +1,7 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.jms.ActiveMqListener;
+import com.drfa.messaging.jms.ActiveMqListener;
 import com.drfa.util.DrfaProperties;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;

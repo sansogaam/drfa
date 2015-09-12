@@ -1,10 +1,10 @@
 package acceptance.com.drfa.messaging;
 
 
-import com.drfa.jms.ActiveMqListener;
-import com.drfa.jms.ActiveMqPublisher;
 import com.drfa.jms.BasicMessageListener;
-import com.drfa.jms.ActiveMqRunner;
+import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.messaging.jms.ActiveMqPublisher;
+import com.drfa.messaging.jms.ActiveMqRunner;
 import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 package com.drfa.cli;
 
-import com.drfa.jms.ActiveMqPublisher;
+import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.util.DrfaProperties;
 import com.drfa.validator.ReconciliationTypeValidator;
 import com.thoughtworks.xstream.XStream;
@@ -22,6 +22,13 @@ public class CommandConsole {
 
     static Logger LOG = Logger.getLogger(CommandConsole.class);
 
+    public static void main(String args[]) throws JMSException {
+        CommandConsole commandConsole = new CommandConsole();
+        //commandConsole.manualRunProgram();
+        //commandConsole.manualRunDBProgram();
+        commandConsole.askQuestions();
+    }
+
     public void askQuestions() throws JMSException {
         System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
@@ -35,6 +42,7 @@ public class CommandConsole {
         LOG.info(String.format("Answer string to be published %s", answerString));
         publisher(answerString, DrfaProperties.REC_ANSWER);
     }
+
     public void publisher(String message, String queueName) throws JMSException {
         ActiveMqPublisher mqPublisher = new ActiveMqPublisher();
         mqPublisher.sendMsg(message, queueName, DrfaProperties.BROKER_URL);
@@ -45,15 +53,7 @@ public class CommandConsole {
         String xmlString  = xst.toXML(answer);
         return xmlString;
     }
-    
-    public static void main(String args[]) throws JMSException {
-        CommandConsole commandConsole = new CommandConsole();
-        //commandConsole.manualRunProgram();
-        //commandConsole.manualRunDBProgram();
-        commandConsole.askQuestions();
-    }
 
-    
     private void manualRunProgram() throws JMSException {
         Answer answer = new Answer();
         answer.setBaseKeyIndex("0");

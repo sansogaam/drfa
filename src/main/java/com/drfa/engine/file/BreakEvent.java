@@ -1,6 +1,6 @@
 package com.drfa.engine.file;
 
-import com.drfa.jms.ActiveMqPublisher;
+import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.util.DrfaProperties;
 
 

@@ -1,4 +1,4 @@
-package com.drfa.jms;
+package com.drfa.messaging.jms;
 
 
 import org.apache.activemq.ActiveMQConnectionFactory;
