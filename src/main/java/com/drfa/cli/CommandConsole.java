@@ -45,7 +45,7 @@ public class CommandConsole {
 
     public void publisher(String message, String queueName) throws JMSException {
         ActiveMqPublisher mqPublisher = new ActiveMqPublisher();
-        mqPublisher.sendMsg(message, queueName, DrfaProperties.BROKER_URL);
+        mqPublisher.sendMsg(message, queueName);
     }
     
     public String convertAnswerToString(Answer answer){
