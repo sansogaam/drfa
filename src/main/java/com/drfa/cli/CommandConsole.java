@@ -1,6 +1,6 @@
 package com.drfa.cli;
 
-import com.drfa.messaging.jms.ActiveMqPublisher;
+import com.drfa.messaging.MessagePublisher;
 import com.drfa.util.DrfaProperties;
 import com.drfa.validator.ReconciliationTypeValidator;
 import com.thoughtworks.xstream.XStream;
@@ -30,7 +30,7 @@ public class CommandConsole {
     }
 
     public void askQuestions() throws JMSException {
-        System.out.println( ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
+        System.out.println(ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
         LOG.info("Type of reconciliation: " + typeOfReconciliation);
         QuestionFactory questionFactory = new QuestionFactory();
@@ -44,13 +44,12 @@ public class CommandConsole {
     }
 
     public void publisher(String message, String queueName) throws JMSException {
-        ActiveMqPublisher mqPublisher = new ActiveMqPublisher();
-        mqPublisher.sendMsg(message, queueName);
+        new MessagePublisher().sendMsg(message, queueName);
     }
-    
-    public String convertAnswerToString(Answer answer){
+
+    public String convertAnswerToString(Answer answer) {
         XStream xst = new XStream();
-        String xmlString  = xst.toXML(answer);
+        String xmlString = xst.toXML(answer);
         return xmlString;
     }
 
@@ -71,7 +70,7 @@ public class CommandConsole {
     public void publishMessage(Answer answer) throws JMSException {
         String answerString = convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        publisher(answerString,DrfaProperties.REC_ANSWER);
+        publisher(answerString, DrfaProperties.REC_ANSWER);
     }
 
     private void manualRunDBProgram() throws JMSException {
@@ -82,12 +81,12 @@ public class CommandConsole {
         answer.setReconciliationType("DATABASE");
         answer.setProcessId(1);
         answer.setFileDelimiter("|");
-        
+
         answer.setBaseDatabaseCredentialFile(new File("src/test/resources/mysql-base.cfg").getAbsolutePath());
         answer.setBaseDatabaseFile("target/test-output/");
-        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
+        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME + "-" + new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
-        
+
 
         answer.setBaseDatabaseType("MYSQL");
         answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,DATE_FORMAT(date_of_joining,'%d/%m/%Y') as date_of_joining FROM EMPLOYEE");
@@ -96,7 +95,7 @@ public class CommandConsole {
         answer.setTargetDatabaseCredentialFile(new File("src/test/resources/mysql-target.cfg").getAbsolutePath());
 
         answer.setTargetDatabaseFile("target/test-output/");
-        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME+"-"+ new Date().getTime() + ".csv";
+        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME + "-" + new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
 
         answer.setTargetDatabaseType("MYSQL");
@@ -110,7 +109,7 @@ public class CommandConsole {
         CommandConsole commandConsole = new CommandConsole();
         String answerString = commandConsole.convertAnswerToString(answer);
         LOG.info(String.format("Answer string to be published %s", answerString));
-        commandConsole.publisher(answerString,DrfaProperties.REC_ANSWER);
+        commandConsole.publisher(answerString, DrfaProperties.REC_ANSWER);
     }
 
 }

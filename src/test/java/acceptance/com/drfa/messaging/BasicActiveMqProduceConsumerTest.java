@@ -2,8 +2,8 @@ package acceptance.com.drfa.messaging;
 
 
 import com.drfa.jms.BasicMessageListener;
+import com.drfa.messaging.MessagePublisher;
 import com.drfa.messaging.jms.ActiveMqListener;
-import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.messaging.jms.ActiveMqRunner;
 import com.drfa.util.DrfaProperties;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class BasicActiveMqProduceConsumerTest {
         new ActiveMqListener(listener).startMsgListener(testQueue, DrfaProperties.BROKER_URL);
 
         String msg = "Sample Text Message";
-        new ActiveMqPublisher().sendMsg(msg, testQueue);
+        new MessagePublisher().sendMsg(msg, testQueue);
 
         latch.await(10, TimeUnit.SECONDS);
 
