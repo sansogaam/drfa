@@ -17,7 +17,6 @@ public class ReconciliationServer implements MessageListener {
 
     private static Logger LOG = Logger.getLogger(ReconciliationServer.class);
 
-
     public static void main(String args[]) {
         try {
             ReconciliationServer reconciliationServer = new ReconciliationServer();
@@ -27,10 +26,8 @@ public class ReconciliationServer implements MessageListener {
         }
     }
 
-
     @Override
     public void onMessage(Message message) {
-        System.out.println("Got the message....");
         if (message instanceof TextMessage) {
             String messageBody = null;
             try {
@@ -39,7 +36,6 @@ public class ReconciliationServer implements MessageListener {
                 e.printStackTrace();
             }
             LOG.info(String.format("Received the message %s ", messageBody));
-            System.out.println(String.format("Received the message %s ", messageBody));
             processMessage(messageBody);
         }
     }

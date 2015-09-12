@@ -12,10 +12,12 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static com.drfa.util.DrfaProperties.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 
 public class EndToEndReconciliationTest {
     public static final String TARGET_TEST_OUTPUT = "target/test-output/";
@@ -24,24 +26,30 @@ public class EndToEndReconciliationTest {
     @Test()
     public void shouldBeAbleToSendAndReceiveMessages() throws Exception {
         ActiveMqRunner.startBroker();
-                
+
         fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
         CommandConsole commandConsole = new CommandConsole();
         commandConsole.publishMessage(answer());
-        
+
         ReconciliationServer reconciliationServer = new ReconciliationServer();
         new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER, BROKER_URL);
-        
+
 
         CountDownLatch latch = new CountDownLatch(14);
 
         ResultListener resultListener = new ResultListener(latch);
         new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE, BROKER_URL);
 
-        latch.await();
+        latch.await(10, TimeUnit.SECONDS);
         List<String> messages = resultListener.getMessages();
         assertThat(messages.size(), is(14));
+
+        assertThat(messages, hasItem("PROCESS_ID:1-TARGET_TOTAL_RECORDS-9"));
+        assertThat(messages, hasItem("PROCESS_ID:1-BASE_TOTAL_RECORDS-9"));
+        assertThat(messages, hasItem("PROCESS_ID:1-MATCHED_RECORDS-9"));
+        assertThat(messages, hasItem("PROCESS_ID:1-BASE_ONE_SIDED_BREAK-0"));
+        assertThat(messages, hasItem("PROCESS_ID:1-TARGET_ONE_SIDED_BREAK-0"));
     }
 
     private Answer answer() {
