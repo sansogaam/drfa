@@ -3,26 +3,17 @@ package acceptance.com.drfa.messaging;
 
 import com.drfa.cli.Answer;
 import com.drfa.cli.CommandConsole;
-import com.drfa.engine.Comparator;
-import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.ReconciliationServer;
-import com.drfa.engine.file.CsvFileComparator;
-import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.jms.ActiveMqListener;
 import com.drfa.jms.ActiveMqRunner;
-import com.drfa.jms.BasicMessageListener;
 import com.drfa.jms.ResultListener;
-import com.drfa.report.ReportListener;
-import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
-import javax.jms.TextMessage;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
+import static com.drfa.util.DrfaProperties.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -32,9 +23,7 @@ public class EndToEndReconciliationTest {
 
     @Test()
     public void shouldBeAbleToSendAndReceiveMessages() throws Exception {
-        
         ActiveMqRunner.startBroker();
-        fileUtil.makeDirectoryIfNotExist(TARGET_TEST_OUTPUT);
                 
         fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
@@ -42,13 +31,13 @@ public class EndToEndReconciliationTest {
         commandConsole.publishMessage(answer());
         
         ReconciliationServer reconciliationServer = new ReconciliationServer();
-        new ActiveMqListener(reconciliationServer).startMsgListener(DrfaProperties.REC_ANSWER, DrfaProperties.BROKER_URL);
+        new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER, BROKER_URL);
         
 
         CountDownLatch latch = new CountDownLatch(14);
 
         ResultListener resultListener = new ResultListener(latch);
-        new ActiveMqListener(resultListener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
+        new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE, BROKER_URL);
 
         latch.await();
         List<String> messages = resultListener.getMessages();

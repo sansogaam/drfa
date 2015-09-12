@@ -11,6 +11,7 @@ public class FileUtil {
 
 
     public void ensureNoReconciliationReportExists(String dirName) {
+        makeDirectoryIfNotExist(dirName);
         File outputDir = new File(dirName);
         try {
             FileUtils.cleanDirectory(outputDir);
@@ -25,7 +26,7 @@ public class FileUtil {
 
     public void makeDirectoryIfNotExist(String dirName) {
         File outputDir = new File(dirName);
-        if(!outputDir.exists()){
+        if (!outputDir.exists()) {
             outputDir.mkdir();
         }
     }
