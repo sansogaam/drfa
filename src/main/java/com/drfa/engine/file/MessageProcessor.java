@@ -5,17 +5,14 @@ import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MessageProcessor {
 
-    static Logger LOG = Logger.getLogger(MessageProcessor.class);
+    private static Logger LOG = Logger.getLogger(MessageProcessor.class);
 
-    ReconciliationContext context;
-    volatile int rowCount = 1;
-    Map<Integer, Map<String, List<String>>> mapOfBreaks = new LinkedHashMap<Integer, Map<String, List<String>>>();
+    private ReconciliationContext context;
 
     public MessageProcessor(ReconciliationContext context) {
         this.context = context;
