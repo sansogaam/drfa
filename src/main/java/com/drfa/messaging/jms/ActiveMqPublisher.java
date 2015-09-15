@@ -11,14 +11,14 @@ import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 
 public class ActiveMqPublisher {
 
-    public void sendMsg(String msg, String testQueue) {
+    public void sendMsg(String msg, String queue) {
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
             Connection connection = connectionFactory.createConnection();
             connection.start();
 
             Session session = connection.createSession(false, AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue(testQueue);
+            Destination destination = session.createQueue(queue);
 
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(NON_PERSISTENT);
