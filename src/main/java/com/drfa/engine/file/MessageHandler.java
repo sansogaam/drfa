@@ -1,5 +1,6 @@
 package com.drfa.engine.file;
 
+import com.drfa.messaging.MessagePublisher;
 import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
@@ -13,12 +14,12 @@ public class MessageHandler {
     private static Logger LOG = Logger.getLogger(MessageHandler.class);
     private MessageProcessor messageProcessor;
     private int matchedRecords = 0;
-    private BreakEvent breakEvent;
     private String queueName = DrfaProperties.BREAK_MESSAGE_QUEUE;
-    
-    public MessageHandler(BreakEvent breakEvent, MessageProcessor messageProcessor){
-        this.breakEvent = breakEvent;
+    private MessagePublisher messagePublisher;
+
+    public MessageHandler(MessageProcessor messageProcessor, MessagePublisher messagePublisher) {
         this.messageProcessor = messageProcessor;
+        this.messagePublisher = messagePublisher;
     }
 
     public boolean handleMessage(String message) throws Exception {
@@ -30,7 +31,7 @@ public class MessageHandler {
             return processSummaryMessage(message);
         } else{
             matchedRecords ++;
-            messageProcessor.processMessage(breakEvent,messageWithoutProcessId, messageProcessId);
+            messageProcessor.processMessage(messagePublisher, messageWithoutProcessId, messageProcessId);
             return true;
         }
     }
@@ -51,10 +52,10 @@ public class MessageHandler {
         LOG.info(String.format("Processing the thread name %s", threadName));
         if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            breakEvent.publisher(processIdMessage+"BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.sendMsg(processIdMessage + "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            breakEvent.publisher(processIdMessage+"TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.sendMsg(processIdMessage + "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }
         return true;
     }
@@ -62,7 +63,7 @@ public class MessageHandler {
     private boolean processExitMessage(String message) throws Exception {
         LOG.info("Exit message recieved: " + message);
         String processIdMessage = extractProcessIdFromMessage(message);
-        breakEvent.publisher(processIdMessage+"MATCHED_RECORDS-" + matchedRecords, queueName);
+        messagePublisher.sendMsg(processIdMessage + "MATCHED_RECORDS-" + matchedRecords, queueName);
         return false;
     }
 
@@ -72,14 +73,14 @@ public class MessageHandler {
         for(String key: storageMap.keySet()) {
             String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,processId+"ONE-SIDED-BASE", value);
+                messageProcessor.processOneSidedMessage(messagePublisher, processId + "ONE-SIDED-BASE", value);
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(breakEvent,processId+"ONE-SIDED-TARGET",value);
+                messageProcessor.processOneSidedMessage(messagePublisher, processId + "ONE-SIDED-TARGET", value);
                 targetOneSidedBreak++;
             }
         }
-        breakEvent.publisher(processId+"BASE_ONE_SIDED_BREAK-"+ baseOneSidedBreak, queueName);
-        breakEvent.publisher(processId+"TARGET_ONE_SIDED_BREAK-"+ targetOneSidedBreak, queueName);
+        messagePublisher.sendMsg(processId + "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
+        messagePublisher.sendMsg(processId + "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
     }
 }

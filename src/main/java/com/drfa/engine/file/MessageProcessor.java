@@ -2,6 +2,7 @@ package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.messaging.MessagePublisher;
 import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
@@ -18,7 +19,7 @@ public class MessageProcessor {
         this.context = context;
     }
 
-    public void processMessage(BreakEvent breakEvent, String message, String processId) {
+    public void processMessage(MessagePublisher messagePublisher, String message, String processId) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
         List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
@@ -28,7 +29,7 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                breakEvent.publisher(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+                messagePublisher.sendMsg(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
@@ -49,14 +50,14 @@ public class MessageProcessor {
         return sb.toString();
     }
 
-    public Map<String, String> processOneSidedMessage(BreakEvent breakEvent, String fileType, String message) {
+    public Map<String, String> processOneSidedMessage(MessagePublisher messagePublisher, String fileType, String message) {
         List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
         MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, message, context.getFileDelimiter());
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            breakEvent.publisher(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+            messagePublisher.sendMsg(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

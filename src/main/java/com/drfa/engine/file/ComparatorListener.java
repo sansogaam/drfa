@@ -1,6 +1,7 @@
 package com.drfa.engine.file;
 
 import com.drfa.engine.ReconciliationContext;
+import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -11,10 +12,10 @@ import java.util.concurrent.Callable;
  * Created by Sanjiv on 2/20/2015.
  */
 public class ComparatorListener implements Callable<Boolean> {
+    static Logger LOG = Logger.getLogger(ComparatorListener.class);
     ReconciliationContext context;
     private BlockingQueue queue;
     private Map<String, String> storageMap;
-    static Logger LOG = Logger.getLogger(ComparatorListener.class);
 
     public ComparatorListener(ReconciliationContext context,BlockingQueue queue,
                               Map<String, String> storageMap){
@@ -25,9 +26,8 @@ public class ComparatorListener implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
-        BreakEvent breakEvent = new BreakEvent();
         MessageProcessor messageProcessor = new MessageProcessor(context);
-        MessageHandler messageHandler = new MessageHandler(breakEvent, messageProcessor);
+        MessageHandler messageHandler = new MessageHandler(messageProcessor, new MessagePublisher());
         LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
         String processId = null;
