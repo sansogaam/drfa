@@ -29,7 +29,7 @@ public class BasicActiveMqProduceConsumerTest {
         new ActiveMqListener(listener).startMsgListener(testQueue, DrfaProperties.BROKER_URL);
 
         String msg = "Sample Text Message";
-        new MessagePublisher().sendMsg(msg, testQueue);
+        new MessagePublisher().publish(msg, testQueue);
 
         latch.await(10, TimeUnit.SECONDS);
 

@@ -29,7 +29,7 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                messagePublisher.sendMsg(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+                messagePublisher.publish(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
@@ -57,7 +57,7 @@ public class MessageProcessor {
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            messagePublisher.sendMsg(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+            messagePublisher.publish(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

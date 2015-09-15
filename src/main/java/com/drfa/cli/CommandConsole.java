@@ -44,7 +44,7 @@ public class CommandConsole {
     }
 
     public void publisher(String message, String queueName) throws JMSException {
-        new MessagePublisher().sendMsg(message, queueName);
+        new MessagePublisher().publish(message, queueName);
     }
 
     public String convertAnswerToString(Answer answer) {

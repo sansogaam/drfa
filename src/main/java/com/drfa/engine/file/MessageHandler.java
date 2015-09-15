@@ -52,10 +52,10 @@ public class MessageHandler {
         LOG.info(String.format("Processing the thread name %s", threadName));
         if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.sendMsg(processIdMessage + "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publish(processIdMessage + "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.sendMsg(processIdMessage + "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publish(processIdMessage + "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }
         return true;
     }
@@ -63,7 +63,7 @@ public class MessageHandler {
     private boolean processExitMessage(String message) throws Exception {
         LOG.info("Exit message recieved: " + message);
         String processIdMessage = extractProcessIdFromMessage(message);
-        messagePublisher.sendMsg(processIdMessage + "MATCHED_RECORDS-" + matchedRecords, queueName);
+        messagePublisher.publish(processIdMessage + "MATCHED_RECORDS-" + matchedRecords, queueName);
         return false;
     }
 
@@ -80,7 +80,7 @@ public class MessageHandler {
                 targetOneSidedBreak++;
             }
         }
-        messagePublisher.sendMsg(processId + "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
-        messagePublisher.sendMsg(processId + "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
+        messagePublisher.publish(processId + "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
+        messagePublisher.publish(processId + "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
     }
 }
