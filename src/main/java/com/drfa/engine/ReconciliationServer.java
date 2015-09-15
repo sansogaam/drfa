@@ -1,7 +1,7 @@
 package com.drfa.engine;
 
 import com.drfa.cli.Answer;
-import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.messaging.Listener;
 import com.drfa.util.DrfaProperties;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
@@ -20,7 +20,7 @@ public class ReconciliationServer implements MessageListener {
     public static void main(String args[]) {
         try {
             ReconciliationServer reconciliationServer = new ReconciliationServer();
-            new ActiveMqListener(reconciliationServer).startMsgListener(DrfaProperties.REC_ANSWER, DrfaProperties.BROKER_URL);
+            new Listener().startMsgListener(reconciliationServer, DrfaProperties.REC_ANSWER);
         } catch (Exception e) {
             e.printStackTrace();
         }

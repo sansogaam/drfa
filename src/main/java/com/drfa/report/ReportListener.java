@@ -1,6 +1,6 @@
 package com.drfa.report;
 
-import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.messaging.Listener;
 import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
@@ -20,13 +20,9 @@ public class ReportListener implements MessageListener {
         this.reportGenerator = new ReportGenerator();
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws JMSException {
         ReportListener reportListener = new ReportListener();
-        try {
-            new ActiveMqListener(reportListener).startMsgListener(DrfaProperties.BREAK_MESSAGE_QUEUE, DrfaProperties.BROKER_URL);
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        new Listener().startMsgListener(reportListener, DrfaProperties.BREAK_MESSAGE_QUEUE);
     }
 
     @Override
