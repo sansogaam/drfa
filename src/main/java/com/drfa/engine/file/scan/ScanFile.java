@@ -4,7 +4,6 @@ import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +23,9 @@ public class ScanFile {
     public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
         String processPrefix = "PROCESS_ID:"+answer.getProcessId()+"-";
         ScanUtility scanUtility = new ScanUtility();
-        Scanner scanner = new Scanner(fetchTheRelevantFile(threadName, answer));
+        Scanner scanner = new Scanner(answer.fetchTheRelevantFile(threadName));
         String fileDelimiter = answer.getFileDelimiter();
-        String primaryKeyIndex = fetchPrimaryKeyIndex(threadName, answer);
+        String primaryKeyIndex = answer.fetchPrimaryKeyIndex(threadName);
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
             String originalLine = scanner.nextLine();
@@ -61,13 +60,7 @@ public class ScanFile {
         LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }
 
-    private String fetchPrimaryKeyIndex(String threadName, Answer answer) {
-        return threadName.equalsIgnoreCase("BASE")? answer.getBaseKeyIndex() : answer.getTargetKeyIndex();
-    }
 
-    private File fetchTheRelevantFile(String threadName, Answer answer) {
-        return threadName.equals("BASE") ? new File(answer.getBaseFile()) : new File(answer.getTargetFile());
-    }
 
 
     public String checkPrefixOfTheKey(String threadName){

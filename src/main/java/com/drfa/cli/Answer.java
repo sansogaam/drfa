@@ -2,9 +2,7 @@ package com.drfa.cli;
 
 import java.io.File;
 
-/**
- * Created by Sanjiv on 2/18/2015.
- */
+
 public class Answer {
 
     private int processId;
@@ -220,6 +218,14 @@ public class Answer {
 
     public void setTargetDatabaseMetaDataFile(String targetDatabaseMetaDataFile) {
         this.targetDatabaseMetaDataFile = targetDatabaseMetaDataFile;
+    }
+
+    public String fetchPrimaryKeyIndex(String threadName) {
+        return threadName.equalsIgnoreCase("BASE") ? baseKeyIndex : targetKeyIndex;
+    }
+
+    public File fetchTheRelevantFile(String threadName) {
+        return threadName.equals("BASE") ? new File(baseFile) : new File(targetFile);
     }
 
     @Override
