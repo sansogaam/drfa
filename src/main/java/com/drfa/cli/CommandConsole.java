@@ -49,8 +49,7 @@ public class CommandConsole {
 
     public String convertAnswerToString(Answer answer) {
         XStream xst = new XStream();
-        String xmlString = xst.toXML(answer);
-        return xmlString;
+        return xst.toXML(answer);
     }
 
     private void manualRunProgram() throws JMSException {

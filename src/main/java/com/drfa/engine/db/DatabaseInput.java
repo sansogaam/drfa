@@ -1,8 +1,5 @@
 package com.drfa.engine.db;
 
-/**
- * Created by Sanjiv on 2/16/2015.
- */
 public class DatabaseInput {
 
     private String sqlQuery;
@@ -31,14 +28,6 @@ public class DatabaseInput {
 
     public String getConnectionFile() {
         return connectionFile;
-    }
-
-    public String getPluginPath() {
-        return pluginPath;
-    }
-
-    public String getOutputPath() {
-        return outputPath;
     }
 
 }

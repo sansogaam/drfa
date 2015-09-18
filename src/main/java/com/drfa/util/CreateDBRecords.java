@@ -40,7 +40,6 @@ public class CreateDBRecords {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date()); // Now use today date.
         c.add(Calendar.DATE, numberOfDays); // Adding 5 days
-        String output = sdf.format(c.getTime());
-        return output;
+        return sdf.format(c.getTime());
     }
 }
