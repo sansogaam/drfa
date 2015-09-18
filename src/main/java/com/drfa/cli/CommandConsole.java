@@ -29,7 +29,7 @@ public class CommandConsole {
         commandConsole.askQuestions();
     }
 
-    public void askQuestions() throws JMSException {
+    public void askQuestions() {
         System.out.println(ansi().eraseScreen().fg(RED).a("Welcome to reconciliation tool"));
         String typeOfReconciliation = new DisplayQuestion(new ReconciliationTypeValidator()).displayQuestion("Enter the reconciliation type (FILE, DATABASE)");
         LOG.info("Type of reconciliation: " + typeOfReconciliation);

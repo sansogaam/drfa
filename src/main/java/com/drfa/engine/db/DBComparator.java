@@ -2,20 +2,15 @@ package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.Comparator;
-import com.drfa.engine.meta.MetaDataParser;
 import com.drfa.engine.ReconciliationContext;
 
-import java.io.File;
-import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
 import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
-/**
- * Created by Sanjiv on 2/21/2015.
- */
+
 public class DBComparator implements Comparator{
     ReconciliationContext context;
     Answer answer;

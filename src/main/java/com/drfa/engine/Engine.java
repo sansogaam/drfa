@@ -2,23 +2,16 @@ package com.drfa.engine;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
-import com.drfa.engine.meta.MetaDataParser;
-import com.drfa.engine.file.CsvFileComparator;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by Sanjiv on 2/10/2015.
- */
+
 public class Engine {
 
-    Answer answer;
-
     static Logger LOG = Logger.getLogger(Engine.class);
+    Answer answer;
 
     public Engine(Answer answer){
         this.answer = answer;

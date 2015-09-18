@@ -22,7 +22,7 @@ public class MessageHandler {
         this.messagePublisher = messagePublisher;
     }
 
-    public boolean handleMessage(String message) throws Exception {
+    public boolean handleMessage(String message) {
         String messageWithoutProcessId = extractMessageWithoutProcessId(message);
         String messageProcessId = extractProcessIdFromMessage(message);
         if ("Exit".equalsIgnoreCase(messageWithoutProcessId)) {

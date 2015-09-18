@@ -1,6 +1,5 @@
 package com.drfa.engine.db;
 
-import com.drfa.engine.EngineConstants;
 import org.apache.log4j.Logger;
 import org.jetel.connection.jdbc.DBConnectionImpl;
 import org.jetel.data.DataField;
@@ -12,7 +11,10 @@ import org.jetel.lookup.DBLookupTable;
 import org.jetel.metadata.DataRecordMetadata;
 import org.jetel.metadata.DataRecordMetadataXMLReaderWriter;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,13 +30,12 @@ import static com.drfa.engine.EngineConstants.START_PROCESSING;
  */
 public class ExecuteDBRead implements Runnable {
 
+    static Logger LOG = Logger.getLogger(ExecuteDBRead.class);
     DatabaseInput databaseInput;
     BlockingQueue queue;
     AtomicLong aLong;
     private String threadName;
     private String outputFile;
-
-    static Logger LOG = Logger.getLogger(ExecuteDBRead.class);
 
     public ExecuteDBRead(DatabaseInput databaseInput, BlockingQueue queue, AtomicLong aLong, String threadName, String outputFile) {
         this.databaseInput = databaseInput;
@@ -42,6 +43,14 @@ public class ExecuteDBRead implements Runnable {
         this.aLong = aLong;
         this.threadName = threadName;
         this.outputFile = outputFile;
+    }
+
+    public static void initializeEngine(String pluginPath) {
+        if (!EngineInitializer.isInitialized()) {
+            System.out.println("Initializing the engine for processing....");
+            EngineInitializer.initEngine(pluginPath, null, null);
+            EngineInitializer.forceActivateAllPlugins();
+        }
     }
 
     @Override
@@ -113,14 +122,6 @@ public class ExecuteDBRead implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static void initializeEngine(String pluginPath) {
-        if (!EngineInitializer.isInitialized()) {
-            System.out.println("Initializing the engine for processing....");
-            EngineInitializer.initEngine(pluginPath, null, null);
-            EngineInitializer.forceActivateAllPlugins();
         }
     }
 }

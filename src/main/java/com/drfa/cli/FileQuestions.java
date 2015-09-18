@@ -1,15 +1,10 @@
 package com.drfa.cli;
 
-import com.drfa.validator.*;
+import com.drfa.validator.FileValidator;
+import com.drfa.validator.NoValidator;
+import com.drfa.validator.NumberValidator;
 
-import java.util.Scanner;
 
-import static org.fusesource.jansi.Ansi.Color.YELLOW;
-import static org.fusesource.jansi.Ansi.ansi;
-
-/**
- * Created by Sanjiv on 2/18/2015.
- */
 public class FileQuestions implements Questions {
 
     @Override
