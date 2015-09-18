@@ -16,8 +16,7 @@ import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 public class ScanFile {
 
-    static Logger LOG = Logger.getLogger(ScanFile.class);
-    volatile int sharedVariable = 0;
+    private static Logger LOG = Logger.getLogger(ScanFile.class);
 
     public void scanFile(Map<String, String> storageMap, BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
         ScanUtility scanUtility = new ScanUtility();
@@ -45,13 +44,6 @@ public class ScanFile {
 
         queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
 
-        sharedVariable++;
-        if (sharedVariable == 2) {
-            new ScanHelper().flushTheStorageMap(storageMap, queue, answer.processPrefix());
-            LOG.info("Will publish the exit message in 500 milli-sec");
-            Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
-            queue.put(answer.processPrefix() + "Exit");
-        }
     }
 
 

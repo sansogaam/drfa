@@ -22,9 +22,9 @@ public class MessageProcessorTest {
         columnAttributes.add(new ColumnAttribute("C4", "String", "B-3|T-3", "SP-(B-NR|T-NR)-(R-NA)"));
         return columnAttributes;
     }
-    
+
     @Test
-    public void testProcessMessageForDeterminingTheBase() throws Exception{
+    public void testProcessMessageForDeterminingTheBase() throws Exception {
         String message = "BASE:T1|T2|T3|T4$T1|T2.1|T3|T4";
         MessagePublisher publisher = mock(MessagePublisher.class);
         ReconciliationContext context = mock(ReconciliationContext.class);
@@ -33,7 +33,11 @@ public class MessageProcessorTest {
         MessageProcessor messageProcessor = new MessageProcessor(context);
         messageProcessor.processMessage(publisher, message, "PROCESS_ID:786-");
         verify(publisher, times(1)).publish(anyString(), anyString());
-        verify(publisher, times(1)).publish(eq("PROCESS_ID:786-C3~T3#T3#MATCHED#$C4~T4#T4#MATCHED#$C1~T1#T1#MATCHED#$C2~T2#T2.1#NOT MATCHED#$"), anyString());
+        verify(publisher, times(1)).publish(startsWith("PROCESS_ID:786-"), anyString());
+        verify(publisher, times(1)).publish(contains("C3~T3#T3#MATCHED"), anyString());
+        verify(publisher, times(1)).publish(contains("C4~T4#T4#MATCHED"), anyString());
+        verify(publisher, times(1)).publish(contains("C1~T1#T1#MATCHED"), anyString());
+        verify(publisher, times(1)).publish(contains("C2~T2#T2.1#NOT MATCHED"), anyString());
     }
 
 }

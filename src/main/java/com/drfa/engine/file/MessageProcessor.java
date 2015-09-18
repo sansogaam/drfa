@@ -29,7 +29,8 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                messagePublisher.publish(processId + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+                String message1 = processId + breakValue;
+                messagePublisher.publish(message1, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
