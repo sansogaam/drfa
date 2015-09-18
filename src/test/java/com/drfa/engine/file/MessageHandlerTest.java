@@ -1,6 +1,6 @@
 package com.drfa.engine.file;
 
-import com.drfa.engine.ReconciliationContext;
+import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.messaging.MessagePublisher;
 import org.junit.Test;
@@ -78,10 +78,12 @@ public class MessageHandlerTest {
         storageMap.put("BASE:Exist2", "Exist5|Exist6|Exist7|Exist8");
         storageMap.put("TARGET:Exist1", "Exist1|Exist2|Exist3|Exist4");
         MessagePublisher publisher = mock(MessagePublisher.class);
-        ReconciliationContext context = mock(ReconciliationContext.class);
-        when(context.getColumnAttributes()).thenReturn(populateColumnNames());
-        when(context.getFileDelimiter()).thenReturn("|");
-        MessageProcessor processor = new MessageProcessor(context);
+
+        Answer answer = mock(Answer.class);
+        when(answer.getColumnAttribute()).thenReturn(populateColumnNames());
+        when(answer.getFileDelimiter()).thenReturn("|");
+
+        MessageProcessor processor = new MessageProcessor(answer);
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(5)).publish(anyString(), anyString());

@@ -1,35 +1,32 @@
 package com.drfa.engine.file;
 
-import com.drfa.engine.EngineConstants;
+import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.drfa.engine.EngineConstants.MATCHED;
 import static com.drfa.engine.EngineConstants.NOT_MATCHED;
 
-/**
- * Created by Sanjiv on 2/13/2015.
- */
 public class MessageDecorator {
 
-    List<ColumnAttribute> columnAttributes;
-    List<String> lines;
-    private String fileDelimiter;
+    private List<String> lines;
     private String oneSidedMessage;
+    private Answer answer;
 
 
-    public MessageDecorator(List<ColumnAttribute> columnAttributes, List<String> lines, String fileDelimiter) {
-        this.columnAttributes = columnAttributes;
+    public MessageDecorator(List<String> lines, Answer answer) {
         this.lines = lines;
-        this.fileDelimiter = fileDelimiter;
+        this.answer = answer;
     }
 
-    public MessageDecorator(List<ColumnAttribute> columnAttributes, String oneSidedMessage, String fileDelimiter) {
-        this.columnAttributes= columnAttributes;
+    public MessageDecorator(String oneSidedMessage, Answer answer) {
         this.oneSidedMessage = oneSidedMessage;
-        this.fileDelimiter = fileDelimiter;
+        this.answer = answer;
     }
 
     public Map<String, List<String>> decorateMessageWithBreak() {
@@ -37,17 +34,17 @@ public class MessageDecorator {
         String firstLine = lines.get(0);
         String secondLine = lines.get(1);
         if (!firstLine.equalsIgnoreCase(secondLine)) {
-            String[] firstLineSplit = firstLine.split(Pattern.quote(fileDelimiter));
-            String[] secondLineSplit = secondLine.split(Pattern.quote(fileDelimiter));
+            String[] firstLineSplit = firstLine.split(Pattern.quote(answer.getFileDelimiter()));
+            String[] secondLineSplit = secondLine.split(Pattern.quote(answer.getFileDelimiter()));
             int valueCounter = 0;
-            for (ColumnAttribute columnAttribute : columnAttributes) {
+            for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
                 String columnName = columnAttribute.getColumnName();
                 List<String> columnValues = new ArrayList<String>();
                 String firstLineColumnValue = firstLineSplit[valueCounter];
                 String secondLineColumnValue = secondLineSplit[valueCounter];
                 String compareValue = NOT_MATCHED;
-                ValueComparator valueComparator = new ValueComparator(columnAttribute.getColumnType(),columnAttribute.getColumnRule());
-                if(valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue,valueComparator.parseColumnExpression())){
+                ValueComparator valueComparator = new ValueComparator(columnAttribute.getColumnType(), columnAttribute.getColumnRule());
+                if (valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue, valueComparator.parseColumnExpression())) {
                     compareValue = MATCHED;
                 }
                 //System.out.println(String.format("firstLineColumnValue %s secondLineColumnValue %s compareValue %s columnType %s columnRule %s",firstLineColumnValue, secondLineColumnValue, compareValue, columnAttribute.getColumnType(), columnAttribute.getColumnRule()));
@@ -60,19 +57,18 @@ public class MessageDecorator {
         }
         return mapOfRowBreak;
     }
-    
-    public Map<String, String> decorateMessageWithOneSideBreak(){
+
+    public Map<String, String> decorateMessageWithOneSideBreak() {
         Map<String, String> mapOfOneSideBreaks = new HashMap<String, String>();
-        String[] lineSplit = oneSidedMessage.split(Pattern.quote(fileDelimiter));
-        int valueCounter=0;
-        for(ColumnAttribute columnAttribute: columnAttributes){
+        String[] lineSplit = oneSidedMessage.split(Pattern.quote(answer.getFileDelimiter()));
+        int valueCounter = 0;
+        for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
             String columnName = columnAttribute.getColumnName();
             mapOfOneSideBreaks.put(columnName, lineSplit[valueCounter]);
             valueCounter++;
         }
         return mapOfOneSideBreaks;
     }
-
 
 
 }

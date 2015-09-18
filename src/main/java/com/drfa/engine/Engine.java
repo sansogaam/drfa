@@ -22,9 +22,8 @@ public class Engine {
         long startTime = System.currentTimeMillis();
         List<ColumnAttribute> columnAttributes = answer.getColumnAttribute();
         LOG.info(String.format("Column Attributes parsed %s", columnAttributes));
-        ReconciliationContext context = new ReconciliationContext();
-        context.setColumnAttributes(columnAttributes);
-        Comparator comparator = new ComparatorFactory(context, answer).getComparator(answer.getReconciliationType());
+        ;
+        Comparator comparator = new ComparatorFactory(answer).getComparator(answer.getReconciliationType());
         comparator.compare();
     }
 

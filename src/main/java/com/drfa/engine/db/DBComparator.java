@@ -2,7 +2,6 @@ package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.Comparator;
-import com.drfa.engine.ReconciliationContext;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,16 +11,14 @@ import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 
 public class DBComparator implements Comparator{
-    ReconciliationContext context;
     Answer answer;
-    public DBComparator(ReconciliationContext context, Answer answer){
-        this.context = context;
+
+    public DBComparator(Answer answer) {
         this.answer = answer;
     }
 
     @Override
     public boolean compare() throws ExecutionException, InterruptedException {
-        context.setFileDelimiter(answer.getFileDelimiter());
         BlockingQueue queue = new ArrayBlockingQueue(1024);
         AtomicLong aLong = new AtomicLong(0);
         ExecuteDBRead.initializeEngine(answer.getPluginPath());
@@ -45,7 +42,7 @@ public class DBComparator implements Comparator{
         executorServiceTarget.shutdown();
 
         final ExecutorService executorServiceCompare = Executors.newSingleThreadExecutor();
-        Future<Boolean> compareReport = executorServiceCompare.submit(new DBMessageListener(context, queue, answer));
+        Future<Boolean> compareReport = executorServiceCompare.submit(new DBMessageListener(queue, answer));
         executorServiceCompare.shutdown();
         return compareReport.get();
     }

@@ -1,7 +1,6 @@
 package com.drfa.engine.file;
 
-import com.drfa.engine.ReconciliationContext;
-import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.cli.Answer;
 import com.drfa.messaging.MessagePublisher;
 import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
@@ -13,17 +12,16 @@ public class MessageProcessor {
 
     private static Logger LOG = Logger.getLogger(MessageProcessor.class);
 
-    private ReconciliationContext context;
+    private Answer answer;
 
-    public MessageProcessor(ReconciliationContext context) {
-        this.context = context;
+    public MessageProcessor(Answer answer) {
+        this.answer = answer;
     }
 
     public void processMessage(MessagePublisher messagePublisher, String message, String processId) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
-        List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
-        MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, splittedMessage, context.getFileDelimiter());
+        MessageDecorator messageDecorator = new MessageDecorator(splittedMessage, answer);
         Map<String, List<String>> mapOfRowBreaks = messageDecorator.decorateMessageWithBreak();
         if (!mapOfRowBreaks.isEmpty()) {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
@@ -52,8 +50,7 @@ public class MessageProcessor {
     }
 
     public void processOneSidedMessage(MessagePublisher messagePublisher, String fileType, String message) {
-        List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
-        MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, message, context.getFileDelimiter());
+        MessageDecorator messageDecorator = new MessageDecorator(message, answer);
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
