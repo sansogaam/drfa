@@ -14,13 +14,12 @@ import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
 import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 
-
 public class ScanFile {
 
     static Logger LOG = Logger.getLogger(ScanFile.class);
     volatile int sharedVariable = 0;
 
-    public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
+    public void scanFile(Map<String, String> storageMap, BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
         ScanUtility scanUtility = new ScanUtility();
         Scanner scanner = new Scanner(answer.fetchTheRelevantFile(threadName));
         String fileDelimiter = answer.getFileDelimiter();
@@ -28,40 +27,36 @@ public class ScanFile {
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
             String originalLine = scanner.nextLine();
-            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine,fileDelimiter);
+            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine, fileDelimiter);
             LOG.debug(String.format("Constructed primary key %s", constructedPrimaryKey));
             String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, threadName, originalLine, columnAttributes);
-            LOG.info(String.format("This line is for thread %s with content %s",threadName,toBeComparedLine));
-            String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName)+constructedPrimaryKey );
+            LOG.info(String.format("This line is for thread %s with content %s", threadName, toBeComparedLine));
+            String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
             if (doesKeyExist == null) {
-                storageMap.put(threadName+":" + constructedPrimaryKey , toBeComparedLine);
+                storageMap.put(threadName + ":" + constructedPrimaryKey, toBeComparedLine);
             } else {
                 String stringToCompare = answer.processPrefix() + threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
                 LOG.info(String.format("Comparing the line %s", stringToCompare));
                 queue.put(stringToCompare);
-                storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
+                storageMap.remove(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
             }
             totalNumberOfRecords++;
         }
-        
+
+        queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
+
         sharedVariable++;
         if (sharedVariable == 2) {
             new ScanHelper().flushTheStorageMap(storageMap, queue, answer.processPrefix());
-            queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
             LOG.info("Will publish the exit message in 500 milli-sec");
             Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
             queue.put(answer.processPrefix() + "Exit");
-        } else{
-            System.out.println(String.format("Ending of the thread %s with shared Counter %s ", threadName, sharedVariable));
-            queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
-            
         }
-        LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }
 
 
-    public String checkPrefixOfTheKey(String threadName){
-        return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME+":" : BASE_THREAD_NAME+":";
+    public String checkPrefixOfTheKey(String threadName) {
+        return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME + ":" : BASE_THREAD_NAME + ":";
     }
 
 
