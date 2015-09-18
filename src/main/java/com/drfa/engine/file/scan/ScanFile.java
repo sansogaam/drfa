@@ -1,4 +1,4 @@
-package com.drfa.engine.file;
+package com.drfa.engine.file.scan;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
@@ -15,15 +15,12 @@ import java.util.concurrent.BlockingQueue;
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
 import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
-/**
- * Created by Sanjiv on 2/12/2015.
- */
+
 
 public class ScanFile {
 
-    volatile int sharedVariable = 0;
-    
     static Logger LOG = Logger.getLogger(ScanFile.class);
+    volatile int sharedVariable = 0;
 
     public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
         String processPrefix = "PROCESS_ID:"+answer.getProcessId()+"-";

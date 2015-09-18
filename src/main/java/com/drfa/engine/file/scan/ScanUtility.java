@@ -1,4 +1,4 @@
-package com.drfa.engine.file;
+package com.drfa.engine.file.scan;
 
 import com.drfa.engine.meta.ColumnAttribute;
 import org.apache.log4j.Logger;
@@ -6,12 +6,10 @@ import org.apache.log4j.Logger;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by Sanjiv on 7/2/2015.
- */
+
 public class ScanUtility {
 
-    static Logger LOG = Logger.getLogger(ScanUtility.class);
+    private static Logger LOG = Logger.getLogger(ScanUtility.class);
 
     public String extractTheLineOfPrimaryKey(String primaryKeyIndex, String line, String fileDelimiter){
         String splitLine[] = line.split(Pattern.quote(fileDelimiter));

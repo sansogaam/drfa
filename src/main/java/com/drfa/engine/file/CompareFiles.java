@@ -2,6 +2,7 @@ package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.ReconciliationContext;
+import com.drfa.engine.file.scan.ScanFile;
 import org.apache.log4j.Logger;
 
 import java.util.Map;

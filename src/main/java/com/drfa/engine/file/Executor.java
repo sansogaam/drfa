@@ -1,6 +1,7 @@
 package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
+import com.drfa.engine.file.scan.ScanFile;
 import com.drfa.engine.meta.ColumnAttribute;
 
 import java.io.FileNotFoundException;
