@@ -46,10 +46,6 @@ public class Answer {
         this.reconciliationType = reconciliationType;
     }
 
-    public int getKeyIndex() {
-        return keyIndex;
-    }
-
     public void setKeyIndex(int keyIndex) {
         this.keyIndex = keyIndex;
     }
@@ -70,9 +66,6 @@ public class Answer {
         this.targetFile = targetFile;
     }
 
-    public String getBaseDatabaseType() {
-        return baseDatabaseType;
-    }
 
     public void setBaseDatabaseType(String baseDatabaseType) {
         this.baseDatabaseType = baseDatabaseType;
@@ -84,10 +77,6 @@ public class Answer {
 
     public void setBaseDatabaseFile(String baseDatabaseFile) {
         this.baseDatabaseFile = baseDatabaseFile;
-    }
-
-    public String getTargetDatabaseType() {
-        return targetDatabaseType;
     }
 
     public void setTargetDatabaseType(String targetDatabaseType) {
@@ -108,10 +97,6 @@ public class Answer {
 
     public void setMetaDataFile(String metaDataFile) {
         this.metaDataFile = metaDataFile;
-    }
-
-    public String getTypeOfReport() {
-        return typeOfReport;
     }
 
     public void setTypeOfReport(String typeOfReport) {
@@ -163,32 +148,18 @@ public class Answer {
         this.sqlQueryTarget = sqlQueryTarget;
     }
 
-    public String getReportCategory() {
-        return reportCategory;
-    }
 
     public void setReportCategory(String reportCategory) {
         this.reportCategory = reportCategory;
     }
 
-    public String getReportOutputPath() {
-        return reportOutputPath;
-    }
 
     public void setReportOutputPath(String reportOutputPath) {
         this.reportOutputPath = reportOutputPath;
     }
 
-    public String getTargetKeyIndex() {
-        return targetKeyIndex;
-    }
-
     public void setTargetKeyIndex(String targetKeyIndex) {
         this.targetKeyIndex = targetKeyIndex;
-    }
-
-    public String getBaseKeyIndex() {
-        return baseKeyIndex;
     }
 
     public void setBaseKeyIndex(String baseKeyIndex) {
