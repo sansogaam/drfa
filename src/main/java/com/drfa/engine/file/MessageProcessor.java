@@ -50,7 +50,7 @@ public class MessageProcessor {
         return sb.toString();
     }
 
-    public Map<String, String> processOneSidedMessage(MessagePublisher messagePublisher, String fileType, String message) {
+    public void processOneSidedMessage(MessagePublisher messagePublisher, String fileType, String message) {
         List<ColumnAttribute> columnAttributes = context.getColumnAttributes();
         MessageDecorator messageDecorator = new MessageDecorator(columnAttributes, message, context.getFileDelimiter());
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
@@ -62,7 +62,6 @@ public class MessageProcessor {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();
         }
-        return mapOfOneSidedBreaks;
     }
 
     private String convertOneSidedBreakResultIntoString(Map<String, String> mapOfOneSidedBreaks) {

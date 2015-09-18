@@ -43,7 +43,7 @@ public class CommandConsole {
         publisher(answerString, DrfaProperties.REC_ANSWER);
     }
 
-    public void publisher(String message, String queueName) throws JMSException {
+    public void publisher(String message, String queueName) {
         new MessagePublisher().publish(message, queueName);
     }
 

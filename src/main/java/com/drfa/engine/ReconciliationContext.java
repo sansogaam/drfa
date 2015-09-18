@@ -42,9 +42,6 @@ public class ReconciliationContext {
         return columnReconciliationRules;
     }
 
-    public void setColumnReconciliationRules(Map<String, String> columnReconciliationRules) {
-        this.columnReconciliationRules = columnReconciliationRules;
-    }
 
     public List<ColumnAttribute> getColumnAttributes() {
         return columnAttributes;

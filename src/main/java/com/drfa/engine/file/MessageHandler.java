@@ -44,7 +44,7 @@ public class MessageHandler {
         return message.substring(0, message.indexOf("-")+1);
     }
 
-    private boolean processSummaryMessage(String message) throws Exception {
+    private boolean processSummaryMessage(String message) {
         LOG.info(String.format("Received the summary message %s", message));
         String messageWithoutProcessId=extractMessageWithoutProcessId(message);
         String processIdMessage = extractProcessIdFromMessage(message);
@@ -60,14 +60,14 @@ public class MessageHandler {
         return true;
     }
 
-    private boolean processExitMessage(String message) throws Exception {
+    private boolean processExitMessage(String message) {
         LOG.info("Exit message recieved: " + message);
         String processIdMessage = extractProcessIdFromMessage(message);
         messagePublisher.publish(processIdMessage + "MATCHED_RECORDS-" + matchedRecords, queueName);
         return false;
     }
 
-    public void publishOneSidedBreak(final Map<String, String> storageMap, String processId) throws Exception {
+    public void publishOneSidedBreak(final Map<String, String> storageMap, String processId) {
         int baseOneSidedBreak = 0;
         int targetOneSidedBreak = 0;
         for(String key: storageMap.keySet()) {
