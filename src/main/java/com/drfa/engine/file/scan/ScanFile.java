@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -49,7 +48,7 @@ public class ScanFile {
         
         sharedVariable++;
         if (sharedVariable == 2) {
-            flushTheStorageMap(storageMap, queue,processPrefix);
+            new ScanHelper().flushTheStorageMap(storageMap, queue, processPrefix);
             queue.put(processPrefix+"SUMMARY:" + threadName + ":" + totalNumberOfRecords);
             LOG.info("Will publish the exit message in 500 milli-sec");
             Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
@@ -74,30 +73,6 @@ public class ScanFile {
     public String checkPrefixOfTheKey(String threadName){
         return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME+":" : BASE_THREAD_NAME+":";
     }
-    
-    public void flushTheStorageMap(Map<String, String> storageMap, BlockingQueue queue, String processPrefix) throws InterruptedException {
-        Map<String, String> temporaryMap = new HashMap<String, String>();
-        temporaryMap.putAll(storageMap);
-        for(String key: temporaryMap.keySet()){
-            if(key.startsWith(BASE_THREAD_NAME)){
-                String subStringKey = key.substring(key.indexOf(":")+1);
-                String columnKey = TARGET_THREAD_NAME+":" + subStringKey;
-                if(storageMap.containsKey(columnKey)){
-                    String message = processPrefix+BASE_THREAD_NAME+":" + temporaryMap.get(key) + "$" + temporaryMap.get(columnKey);
-                    queue.put(message);
-                    storageMap.remove(columnKey);
-                    storageMap.remove(key);
-                }
-            }else if(key.startsWith(TARGET_THREAD_NAME)){
-                String subStringKey = key.substring(key.indexOf(":")+1);
-                String columnKey = BASE_THREAD_NAME+":" + subStringKey;
-                if(storageMap.containsKey(columnKey)){
-                    String message = processPrefix+BASE_THREAD_NAME+":" + temporaryMap.get(columnKey) + "$" + temporaryMap.get(key);
-                    queue.put(message);
-                    storageMap.remove(columnKey);
-                    storageMap.remove(key);
-                }
-            }
-        }
-    }
+
+
 }
