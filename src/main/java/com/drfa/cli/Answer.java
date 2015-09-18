@@ -1,6 +1,10 @@
 package com.drfa.cli;
 
+import com.drfa.engine.ReconciliationInput;
+import com.drfa.engine.meta.ColumnAttribute;
+
 import java.io.File;
+import java.util.List;
 
 
 public class Answer {
@@ -91,8 +95,8 @@ public class Answer {
         this.targetDatabaseFile = targetDatabaseFile;
     }
 
-    public String getMetaDataFile() {
-        return metaDataFile;
+    public List<ColumnAttribute> getColumnAttribute() {
+        return new ReconciliationInput().initializeReconciliationInput(metaDataFile);
     }
 
     public void setMetaDataFile(String metaDataFile) {

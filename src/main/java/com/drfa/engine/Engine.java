@@ -20,9 +20,7 @@ public class Engine {
 
     public void reconcile() throws ExecutionException, InterruptedException {
         long startTime = System.currentTimeMillis();
-        //MetaDataParser dataParser = new MetaDataParser(answer.getMetaDataFile(), answer.getPluginPath());
-        ReconciliationInput reconciliationInput = new ReconciliationInput();
-        List<ColumnAttribute> columnAttributes = reconciliationInput.initializeReconciliationInput(answer.getMetaDataFile());
+        List<ColumnAttribute> columnAttributes = answer.getColumnAttribute();
         LOG.info(String.format("Column Attributes parsed %s", columnAttributes));
         ReconciliationContext context = new ReconciliationContext();
         context.setColumnAttributes(columnAttributes);
