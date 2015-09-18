@@ -166,11 +166,6 @@ public class Answer {
         this.baseKeyIndex = baseKeyIndex;
     }
 
-
-    public int getProcessId() {
-        return processId;
-    }
-
     public void setProcessId(int processId) {
         this.processId = processId;
     }
@@ -197,6 +192,10 @@ public class Answer {
 
     public File fetchTheRelevantFile(String threadName) {
         return threadName.equals("BASE") ? new File(baseFile) : new File(targetFile);
+    }
+
+    public String processPrefix() {
+        return "PROCESS_ID:" + processId + "-";
     }
 
     @Override

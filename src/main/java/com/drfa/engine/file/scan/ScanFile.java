@@ -21,7 +21,6 @@ public class ScanFile {
     volatile int sharedVariable = 0;
 
     public void scanFile(Map<String, String> storageMap,BlockingQueue queue, String threadName, Answer answer, List<ColumnAttribute> columnAttributes) throws FileNotFoundException, InterruptedException {
-        String processPrefix = "PROCESS_ID:"+answer.getProcessId()+"-";
         ScanUtility scanUtility = new ScanUtility();
         Scanner scanner = new Scanner(answer.fetchTheRelevantFile(threadName));
         String fileDelimiter = answer.getFileDelimiter();
@@ -37,7 +36,7 @@ public class ScanFile {
             if (doesKeyExist == null) {
                 storageMap.put(threadName+":" + constructedPrimaryKey , toBeComparedLine);
             } else {
-                String stringToCompare = processPrefix+threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
+                String stringToCompare = answer.processPrefix() + threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
                 LOG.info(String.format("Comparing the line %s", stringToCompare));
                 queue.put(stringToCompare);
                 storageMap.remove(checkPrefixOfTheKey(threadName)+ constructedPrimaryKey );
@@ -47,20 +46,18 @@ public class ScanFile {
         
         sharedVariable++;
         if (sharedVariable == 2) {
-            new ScanHelper().flushTheStorageMap(storageMap, queue, processPrefix);
-            queue.put(processPrefix+"SUMMARY:" + threadName + ":" + totalNumberOfRecords);
+            new ScanHelper().flushTheStorageMap(storageMap, queue, answer.processPrefix());
+            queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
             LOG.info("Will publish the exit message in 500 milli-sec");
             Thread.sleep(100); // TODO: This is the workaround and need to seriously think how we can optimize it for the smaller files.
-            queue.put(processPrefix+"Exit");
+            queue.put(answer.processPrefix() + "Exit");
         } else{
             System.out.println(String.format("Ending of the thread %s with shared Counter %s ", threadName, sharedVariable));
-            queue.put(processPrefix+"SUMMARY:" + threadName+":"+totalNumberOfRecords);
+            queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
             
         }
         LOG.info(String.format("Size of the file hash map storage for thread: %s  is %s", threadName, storageMap.size()));
     }
-
-
 
 
     public String checkPrefixOfTheKey(String threadName){
