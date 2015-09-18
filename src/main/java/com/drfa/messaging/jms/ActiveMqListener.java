@@ -1,6 +1,7 @@
 package com.drfa.messaging.jms;
 
 
+import com.drfa.util.DrfaProperties;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -13,8 +14,8 @@ public class ActiveMqListener implements MessageListener {
         this.messageListener = messageListener;
     }
 
-    public void startMsgListener(String queueName, String brokerURL) throws JMSException {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
+    public void startMsgListener(String queueName) throws JMSException {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DrfaProperties.BROKER_URL);
         Connection connection = connectionFactory.createConnection();
         connection.start();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

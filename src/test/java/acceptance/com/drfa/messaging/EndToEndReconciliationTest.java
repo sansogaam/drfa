@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.drfa.util.DrfaProperties.*;
+import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
+import static com.drfa.util.DrfaProperties.REC_ANSWER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -32,13 +33,13 @@ public class EndToEndReconciliationTest {
         commandConsole.publishMessage(answer());
 
         ReconciliationServer reconciliationServer = new ReconciliationServer();
-        new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER, BROKER_URL);
+        new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);
 
 
         CountDownLatch latch = new CountDownLatch(14);
 
         ResultListener resultListener = new ResultListener(latch);
-        new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE, BROKER_URL);
+        new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE);
 
         latch.await(10, TimeUnit.SECONDS);
         List<String> messages = resultListener.getMessages();
