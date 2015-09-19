@@ -1,6 +1,6 @@
 package com.drfa.report;
 
 
-public interface ReportDecorator {
+interface ReportDecorator {
     void decorateReport(String filePath);
 }

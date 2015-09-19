@@ -1,13 +1,14 @@
 package com.drfa.report;
 
 import com.drfa.messaging.Listener;
-import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+
+import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
 
 
 public class ReportListener implements MessageListener {
@@ -21,8 +22,7 @@ public class ReportListener implements MessageListener {
     }
 
     public static void main(String args[]) throws JMSException {
-        ReportListener reportListener = new ReportListener();
-        new Listener().startMsgListener(reportListener, DrfaProperties.BREAK_MESSAGE_QUEUE);
+        new Listener().startMsgListener(new ReportListener(), BREAK_MESSAGE_QUEUE);
     }
 
     @Override

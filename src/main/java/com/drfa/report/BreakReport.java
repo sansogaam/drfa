@@ -4,20 +4,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Sanjiv on 2/19/2015.
- */
-public class BreakReport {
+
+class BreakReport {
     private int baseTotalRecords;
     private int targetTotalRecords;
     private int matchedWithNumberOfKeys;
     private int baseOneSidedBreaks;
     private int targetOneSidedBreaks;
-    private Map<String,List<Integer>> columnBreaksCount;
-    private Map<Integer,Map<String, String>> baseOneSidedBreaksCollection;
-    private Map<Integer,Map<String, String>> targetOneSidedBreaksCollection;
+    private Map<String, List<Integer>> columnBreaksCount;
+    private Map<Integer, Map<String, String>> baseOneSidedBreaksCollection;
+    private Map<Integer, Map<String, String>> targetOneSidedBreaksCollection;
 
-    
 
     private Map<Integer, Map<String, List<String>>> mapOfBreaks = new LinkedHashMap<Integer, Map<String, List<String>>>();
 

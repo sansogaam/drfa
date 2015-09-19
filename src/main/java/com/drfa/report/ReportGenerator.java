@@ -5,8 +5,8 @@ import org.apache.log4j.Logger;
 
 import java.util.Date;
 
-public class ReportGenerator {
-    private static Logger LOG = Logger.getLogger(ReportListener.class);
+class ReportGenerator {
+    private static Logger LOG = Logger.getLogger(ReportGenerator.class);
     private BreakReport breakReport;
     private ReportEnricher reportEnricher;
 

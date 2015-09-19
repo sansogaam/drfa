@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * Created by Sanjiv on 8/15/2015.
- */
 
-public class ReportEnricher implements Enricher {
-    public BreakReport report;
+class ReportEnricher implements Enricher {
     static Logger LOG = Logger.getLogger(ReportEnricher.class);
+    public BreakReport report;
 
 
     public ReportEnricher(BreakReport report){

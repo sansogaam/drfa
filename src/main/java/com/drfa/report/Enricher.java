@@ -1,6 +1,6 @@
 package com.drfa.report;
 
 
-public interface Enricher {
+interface Enricher {
     void enrich(String message);
 }

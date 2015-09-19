@@ -11,13 +11,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Sanjiv on 2/28/2015.
- */
-public class HTMLReportDecorator implements ReportDecorator {
+
+class HTMLReportDecorator implements ReportDecorator {
+    StringBuffer sb = new StringBuffer();
     private BreakReport report;
     private String typeOfReport;
-    StringBuffer sb = new StringBuffer();
 
     public HTMLReportDecorator(BreakReport report, String typeOfReport) {
         this.report = report;
@@ -47,12 +45,12 @@ public class HTMLReportDecorator implements ReportDecorator {
     }
 
     private void applyBodyContent() {
-        if("SUMMARY".equalsIgnoreCase(typeOfReport)){
+        if ("SUMMARY".equalsIgnoreCase(typeOfReport)) {
             applySummaryReport();
             applyColumnSummaryReport();
-        }else if("DETAILED".equalsIgnoreCase(typeOfReport)) {
+        } else if ("DETAILED".equalsIgnoreCase(typeOfReport)) {
             applyColumnDetailedReport();
-        }else if("BOTH".equalsIgnoreCase(typeOfReport)){
+        } else if ("BOTH".equalsIgnoreCase(typeOfReport)) {
             applySummaryReport();
             applyColumnSummaryReport();
             applyColumnDetailedReport();
@@ -63,7 +61,7 @@ public class HTMLReportDecorator implements ReportDecorator {
         int numberOfColumns = report.getColumnBreaksCount().size();
         sb.append("<br/><br/>");
         sb.append("<table id=\"columnsummary\">");
-        sb.append("<tr><th colspan='").append(numberOfColumns *4).append("'> Column Wise Detailed Report</th></tr>");
+        sb.append("<tr><th colspan='").append(numberOfColumns * 4).append("'> Column Wise Detailed Report</th></tr>");
         sb.append("<tr>");
         for (String columnName : report.getColumnBreaksCount().keySet()) {
             sb.append("<th colspan='4'>").append(columnName).append("</th>");
@@ -74,7 +72,7 @@ public class HTMLReportDecorator implements ReportDecorator {
         for (Integer row : mapOfBreaks.keySet()) {
             if (count % 2 == 0) {
                 sb.append("<tr class='alt'>");
-            }else {
+            } else {
                 sb.append("<tr>");
             }
             Map<String, List<String>> mapOfColumnBreaks = mapOfBreaks.get(row);
@@ -85,9 +83,9 @@ public class HTMLReportDecorator implements ReportDecorator {
                     if (value != null && value.length() > 256) {
                         value = value.substring(0, 256) + "~More";
                     }
-                    if(EngineConstants.NOT_MATCHED.equalsIgnoreCase(value)){
+                    if (EngineConstants.NOT_MATCHED.equalsIgnoreCase(value)) {
                         sb.append("<td><font color='red'>").append(value).append("</font></td>");
-                    }else {
+                    } else {
                         sb.append("<td>").append(value).append("</td>");
                     }
                 }
@@ -99,29 +97,29 @@ public class HTMLReportDecorator implements ReportDecorator {
         applyOneSidedBreaks(report.getBaseOneSidedBreaksCollection(), EngineConstants.BASE_THREAD_NAME);
         applyOneSidedBreaks(report.getTargetOneSidedBreaksCollection(), EngineConstants.TARGET_THREAD_NAME);
     }
-    
-    private void applyOneSidedBreaks(Map<Integer,Map<String, String>> mapOfOneSidedBreaks,String threadName){
-        if(mapOfOneSidedBreaks == null || mapOfOneSidedBreaks.isEmpty()){
+
+    private void applyOneSidedBreaks(Map<Integer, Map<String, String>> mapOfOneSidedBreaks, String threadName) {
+        if (mapOfOneSidedBreaks == null || mapOfOneSidedBreaks.isEmpty()) {
             return;
         }
         sb.append("<br/><br/>");
         int numberOfColumns = report.getColumnBreaksCount().size();
         sb.append("<table id=\"columnsummary\">");
-        sb.append("<tr><th colspan='").append(numberOfColumns *2).append("'> One Side Detailed Report For: ").append(threadName).append("</th></tr>");
+        sb.append("<tr><th colspan='").append(numberOfColumns * 2).append("'> One Side Detailed Report For: ").append(threadName).append("</th></tr>");
         sb.append("<tr>");
         for (String columnName : report.getColumnBreaksCount().keySet()) {
             sb.append("<th colspan='2'>").append(columnName).append("</th>");
         }
         sb.append("</tr>");
-        int altCount =0;
-        for(Integer rowCount : mapOfOneSidedBreaks.keySet()){
-            if(altCount % 2 == 0) {
+        int altCount = 0;
+        for (Integer rowCount : mapOfOneSidedBreaks.keySet()) {
+            if (altCount % 2 == 0) {
                 sb.append("<tr class='alt'>");
-            }else{
+            } else {
                 sb.append("<tr>");
             }
             Map<String, String> mapOfBreaks = mapOfOneSidedBreaks.get(rowCount);
-            for(String columnName: mapOfBreaks.keySet()) {
+            for (String columnName : mapOfBreaks.keySet()) {
                 sb.append("<td>").append(columnName).append("</td>");
                 sb.append("<td>").append(mapOfBreaks.get(columnName)).append("</td>");
             }
@@ -129,7 +127,7 @@ public class HTMLReportDecorator implements ReportDecorator {
         }
         sb.append("</table>");
     }
-    
+
 
     private void applyColumnSummaryReport() {
         sb.append("<table id=\"columnsummary\">");
@@ -143,7 +141,7 @@ public class HTMLReportDecorator implements ReportDecorator {
         int count = 0;
         for (String key : columnValues.keySet()) {
             List<Integer> columnValue = columnValues.get(key);
-            if(columnValue != null) {
+            if (columnValue != null) {
                 int nonMatchedRecords = columnValue.get(0);
                 int matchedRecords = columnValue.get(1);
                 if (count % 2 == 0) {

@@ -6,10 +6,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-/**
- * Created by Sanjiv on 4/11/2015.
- */
-public class XLSReportDecorator implements ReportDecorator{
+
+class XLSReportDecorator implements ReportDecorator {
     
     BreakReport report;
     String typeOfReport;
@@ -17,11 +15,7 @@ public class XLSReportDecorator implements ReportDecorator{
         this.report = report;
         this.typeOfReport = typeOfReport;
     }
-    @Override
-    public void decorateReport(String filePath) {
-        
-    }
-    
+
     public static void main(String args[]){
         Workbook wb = new XSSFWorkbook(); //or new HSSFWorkbook();
 
@@ -80,5 +74,10 @@ public class XLSReportDecorator implements ReportDecorator{
         cellStyle.setAlignment(halign);
         cellStyle.setVerticalAlignment(valign);
         cell.setCellStyle(cellStyle);
+    }
+
+    @Override
+    public void decorateReport(String filePath) {
+
     }
 }
