@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 public class MessageDecoratorTest {
 
 
-    public static List<ColumnAttribute> populateColumnAttributes() {
+    private static List<ColumnAttribute> populateColumnAttributes() {
         List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
         columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", "SP-(B-NR|T-NR)-(R-NA)"));
         columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", "SP-(B-NR|T-NR)-(R-NA)"));
@@ -30,9 +30,8 @@ public class MessageDecoratorTest {
         List<String> lines = new ArrayList<String>();
         lines.add("T1|T2|T3|T4");
         lines.add("T1|T2|T3|T4");
-        List<ColumnAttribute> columnAttributes = populateColumnAttributes();
         Answer answer = mock(Answer.class);
-        when(answer.getColumnAttribute()).thenReturn(columnAttributes);
+        when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
         when(answer.getFileDelimiter()).thenReturn("|");
 
 
@@ -46,9 +45,8 @@ public class MessageDecoratorTest {
         List<String> lines = new ArrayList<String>();
         lines.add("T1|T2|T3|T4");
         lines.add("T1|T2|T3|T5");
-        List<ColumnAttribute> columnAttributes = populateColumnAttributes();
         Answer answer = mock(Answer.class);
-        when(answer.getColumnAttribute()).thenReturn(columnAttributes);
+        when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
         when(answer.getFileDelimiter()).thenReturn("|");
 
         MessageDecorator messageDecorator = new MessageDecorator(lines, answer);
@@ -63,10 +61,9 @@ public class MessageDecoratorTest {
     @Test
     public void testTheMessageDecoratorForOneSidedBreak() {
         String line = "T1|T2|T3|T4";
-        List<ColumnAttribute> columnAttributes = populateColumnAttributes();
 
         Answer answer = mock(Answer.class);
-        when(answer.getColumnAttribute()).thenReturn(columnAttributes);
+        when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
         when(answer.getFileDelimiter()).thenReturn("|");
 
         MessageDecorator messageDecorator = new MessageDecorator(line, answer);
