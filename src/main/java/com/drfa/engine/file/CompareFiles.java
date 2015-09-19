@@ -3,6 +3,7 @@ package com.drfa.engine.file;
 import com.drfa.cli.Answer;
 import com.drfa.engine.file.scan.ScanCompleteRunner;
 import com.drfa.engine.file.scan.ScanFile;
+import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -10,7 +11,12 @@ import java.util.concurrent.*;
 
 public class CompareFiles {
 
-    static Logger LOG = Logger.getLogger(CompareFiles.class);
+    private static Logger LOG = Logger.getLogger(CompareFiles.class);
+    private MessagePublisher messagePublisher;
+
+    public CompareFiles(MessagePublisher messagePublisher) {
+        this.messagePublisher = messagePublisher;
+    }
 
     public Boolean compare(Answer answer) throws ExecutionException, InterruptedException {
 
@@ -25,7 +31,7 @@ public class CompareFiles {
         executorServiceBase.shutdown();
 
         ExecutorService executorServiceComparator = Executors.newSingleThreadExecutor();
-        Future<Boolean> compareFlagFuture = executorServiceComparator.submit(new ComparatorListener(queue, storageMap, answer));
+        Future<Boolean> compareFlagFuture = executorServiceComparator.submit(new ComparatorListener(queue, storageMap, answer, messagePublisher));
         executorServiceComparator.shutdown();
         Boolean compareFlag = compareFlagFuture.get();
         LOG.info(String.format("Size of the file hash map storage is %s", storageMap.size()));

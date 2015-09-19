@@ -2,6 +2,7 @@ package com.drfa.engine;
 
 import com.drfa.cli.Answer;
 import com.drfa.messaging.Listener;
+import com.drfa.messaging.MessagePublisher;
 import com.drfa.util.DrfaProperties;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
@@ -42,7 +43,7 @@ public class ReconciliationServer implements MessageListener {
 
     private void processMessage(String messageBody) {
         Answer answer = convertToAnswerObject(messageBody);
-        Engine engine = new Engine(answer);
+        Engine engine = new Engine(answer, new MessagePublisher());
         try {
             engine.reconcile();
         } catch (ExecutionException e) {

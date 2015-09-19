@@ -2,6 +2,7 @@ package com.drfa.engine.db;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.Comparator;
+import com.drfa.messaging.MessagePublisher;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,10 +12,12 @@ import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
 
 
 public class DBComparator implements Comparator{
-    Answer answer;
+    private Answer answer;
+    private MessagePublisher messagePublisher;
 
-    public DBComparator(Answer answer) {
+    public DBComparator(Answer answer, MessagePublisher messagePublisher) {
         this.answer = answer;
+        this.messagePublisher = messagePublisher;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class DBComparator implements Comparator{
         executorServiceTarget.shutdown();
 
         final ExecutorService executorServiceCompare = Executors.newSingleThreadExecutor();
-        Future<Boolean> compareReport = executorServiceCompare.submit(new DBMessageListener(queue, answer));
+        Future<Boolean> compareReport = executorServiceCompare.submit(new DBMessageListener(queue, answer, messagePublisher));
         executorServiceCompare.shutdown();
         return compareReport.get();
     }

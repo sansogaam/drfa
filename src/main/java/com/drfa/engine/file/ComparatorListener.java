@@ -14,18 +14,21 @@ public class ComparatorListener implements Callable<Boolean> {
     private BlockingQueue queue;
     private Map<String, String> storageMap;
     private Answer answer;
+    private MessagePublisher messagePublisher;
 
     public ComparatorListener(BlockingQueue queue,
-                              Map<String, String> storageMap, Answer answer) {
+                              Map<String, String> storageMap, Answer answer, MessagePublisher messagePublisher) {
         this.queue = queue;
         this.storageMap = storageMap;
         this.answer = answer;
+        this.messagePublisher = messagePublisher;
+
     }
 
     @Override
     public Boolean call() throws Exception {
         MessageProcessor messageProcessor = new MessageProcessor(answer);
-        MessageHandler messageHandler = new MessageHandler(messageProcessor, new MessagePublisher());
+        MessageHandler messageHandler = new MessageHandler(messageProcessor, messagePublisher);
         LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
         String processId = null;
