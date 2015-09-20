@@ -15,12 +15,12 @@ public class ReportEnricherTest{
 
     @Test
     public void shouldTestMainMessageParser() throws Exception{
-        String mainMessage = "PROCESS_ID:786-C3~70#70#MATCHED#$C4~31-08-2015#31-08-2015#MATCHED#$C5~175#175#MATCHED#$C1~T7#T7#MATCHED#$C2~03-08-2015#03/08/2015#MATCHED#$";
+        String mainMessage = "C3~70#70#MATCHED#$C4~31-08-2015#31-08-2015#MATCHED#$C5~175#175#MATCHED#$C1~T7#T7#MATCHED#$C2~03-08-2015#03/08/2015#MATCHED#$";
         Map<String, List<String>> mapOfBreaks = expectedHashMap();
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
         reportEnricher.enrich(mainMessage);
-        mainMessage = "PROCESS_ID:786-C3~80#80#MATCHED#$C4~05-09-2015#05-09-2015#MATCHED#$C5~200#200#MATCHED#$C1~T8#T8#MATCHED#$C2~04-08-2015#04/08/2015#MATCHED#$";
+        mainMessage = "C3~80#80#MATCHED#$C4~05-09-2015#05-09-2015#MATCHED#$C5~200#200#MATCHED#$C1~T8#T8#MATCHED#$C2~04-08-2015#04/08/2015#MATCHED#$";
         reportEnricher.enrich(mainMessage);
         Map<Integer,Map<String, List<String>>> mapOfRowBreaks = breakReport.getMapOfBreaks();
         System.out.println(mapOfRowBreaks);
@@ -29,7 +29,7 @@ public class ReportEnricherTest{
     
     @Test
     public void shouldTestTotalNumberOfMatchedRecords() throws Exception{
-        String message ="PROCESS_ID:786-MATCHED_RECORDS-34";
+        String message = "MATCHED_RECORDS-34";
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
         reportEnricher.enrich(message);
@@ -38,7 +38,7 @@ public class ReportEnricherTest{
 
     @Test
     public void shouldTestTotalNumberOfBasedRecords() throws Exception{
-        String message ="PROCESS_ID:786-BASE_TOTAL_RECORDS-86";
+        String message = "BASE_TOTAL_RECORDS-86";
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
         reportEnricher.enrich(message);
@@ -47,7 +47,7 @@ public class ReportEnricherTest{
 
     @Test
     public void shouldTestTotalNumberOfTargetRecords() throws Exception{
-        String message ="PROCESS_ID:786-TARGET_TOTAL_RECORDS-967";
+        String message = "TARGET_TOTAL_RECORDS-967";
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
         reportEnricher.enrich(message);
@@ -56,7 +56,7 @@ public class ReportEnricherTest{
 
     @Test
     public void shouldTestBaseOneSidedBreak() throws Exception{
-        String message = "PROCESS_ID:786-ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$";
+        String message = "ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$";
         BreakReport breakReport = new BreakReport();
         ReportEnricher reportEnricher = new ReportEnricher(breakReport);
         reportEnricher.enrich(message);

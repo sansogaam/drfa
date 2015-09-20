@@ -52,10 +52,10 @@ public class MessageHandler {
         LOG.info(String.format("Processing the thread name %s", threadName));
         if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.publishResult(processIdMessage + "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publishResult(processIdMessage, "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.publishResult(processIdMessage + "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publishResult(processIdMessage, "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
         }
         return true;
     }
@@ -63,7 +63,7 @@ public class MessageHandler {
     private boolean processExitMessage(String message) {
         LOG.info("Exit message recieved: " + message);
         String processIdMessage = extractProcessIdFromMessage(message);
-        messagePublisher.publishResult(processIdMessage + "MATCHED_RECORDS-" + matchedRecords, queueName);
+        messagePublisher.publishResult(processIdMessage, "MATCHED_RECORDS-" + matchedRecords, queueName);
         return false;
     }
 
@@ -73,14 +73,14 @@ public class MessageHandler {
         for(String key: storageMap.keySet()) {
             String value = storageMap.get(key);
             if(key.startsWith(BASE_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(messagePublisher, processId + "ONE-SIDED-BASE", value);
+                messageProcessor.processOneSidedMessage(messagePublisher, processId, "ONE-SIDED-BASE", value);
                 baseOneSidedBreak++;
             }else if(key.startsWith(TARGET_THREAD_NAME)){
-                messageProcessor.processOneSidedMessage(messagePublisher, processId + "ONE-SIDED-TARGET", value);
+                messageProcessor.processOneSidedMessage(messagePublisher, processId, "ONE-SIDED-TARGET", value);
                 targetOneSidedBreak++;
             }
         }
-        messagePublisher.publishResult(processId + "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
-        messagePublisher.publishResult(processId + "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
+        messagePublisher.publishResult(processId, "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
+        messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
     }
 }

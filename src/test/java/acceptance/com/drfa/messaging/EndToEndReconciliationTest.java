@@ -6,6 +6,9 @@ import com.drfa.cli.CommandConsole;
 import com.drfa.engine.ReconciliationServer;
 import com.drfa.jms.ResultListener;
 import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.report.ResultMessageConstants;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,7 +20,6 @@ import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
 import static com.drfa.util.DrfaProperties.REC_ANSWER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 
 public class EndToEndReconciliationTest {
     public static final String TARGET_TEST_OUTPUT = "target/test-output/";
@@ -42,14 +44,14 @@ public class EndToEndReconciliationTest {
         new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE);
 
         latch.await(10, TimeUnit.SECONDS);
-        List<String> messages = resultListener.getMessages();
+        List<JSONObject> messages = resultListener.getMessages();
         assertThat(messages.size(), is(14));
 
-        assertThat(messages, hasItem("PROCESS_ID:1-TARGET_TOTAL_RECORDS-9"));
-        assertThat(messages, hasItem("PROCESS_ID:1-BASE_TOTAL_RECORDS-9"));
-        assertThat(messages, hasItem("PROCESS_ID:1-MATCHED_RECORDS-9"));
-        assertThat(messages, hasItem("PROCESS_ID:1-BASE_ONE_SIDED_BREAK-0"));
-        assertThat(messages, hasItem("PROCESS_ID:1-TARGET_ONE_SIDED_BREAK-0"));
+
+        for (JSONObject jsonObject : messages) {
+            assertThat(jsonObject.get(ResultMessageConstants.PROCESS_ID), Matchers.is("PROCESS_ID:1-"));
+        }
+
     }
 
     private Answer answer() {

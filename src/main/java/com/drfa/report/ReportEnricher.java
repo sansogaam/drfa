@@ -19,8 +19,7 @@ class ReportEnricher implements Enricher {
     }
     
     @Override
-    public void enrich(String message) {
-        String messageWithoutProcessId = extractMessageWithoutProcessId(message);
+    public void enrich(String messageWithoutProcessId) {
         if(messageWithoutProcessId.startsWith("MATCHED_RECORDS")){
             enrichMatchedNumberOfRecords(messageWithoutProcessId);
         }else if(messageWithoutProcessId.startsWith("BASE_TOTAL_RECORDS")){
@@ -38,10 +37,6 @@ class ReportEnricher implements Enricher {
         }else {
             enrichDetailMessageReport(messageWithoutProcessId);
         }
-    }
-
-    private String extractMessageWithoutProcessId(String message) {
-        return message.substring(message.indexOf("-")+1, message.length());
     }
 
     private void enrichOneSideBreakRecords(String message, String type) {

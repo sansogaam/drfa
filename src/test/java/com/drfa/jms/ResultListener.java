@@ -1,6 +1,8 @@
 package com.drfa.jms;
 
 
+import org.json.JSONObject;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -11,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class ResultListener implements MessageListener {
     private CountDownLatch countDownLatch;
-    private List<String> messages = new ArrayList<>();
+    private List<JSONObject> messages = new ArrayList<>();
 
     public ResultListener(CountDownLatch countDownLatch) {
         this.countDownLatch = countDownLatch;
@@ -22,7 +24,7 @@ public class ResultListener implements MessageListener {
         if (message instanceof TextMessage) {
             TextMessage txtMsg = (TextMessage) message;
             try {
-                messages.add(txtMsg.getText());
+                messages.add(new JSONObject(txtMsg.getText()));
             } catch (JMSException e) {
                 e.printStackTrace();
             }
@@ -31,7 +33,7 @@ public class ResultListener implements MessageListener {
     }
 
 
-    public List<String> getMessages() {
+    public List<JSONObject> getMessages() {
         return messages;
     }
 }

@@ -27,8 +27,7 @@ public class MessageProcessor {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
-                String message1 = processId + breakValue;
-                messagePublisher.publishResult(message1, DrfaProperties.BREAK_MESSAGE_QUEUE);
+                messagePublisher.publishResult(processId, breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
@@ -49,13 +48,13 @@ public class MessageProcessor {
         return sb.toString();
     }
 
-    public void processOneSidedMessage(MessagePublisher messagePublisher, String fileType, String message) {
+    public void processOneSidedMessage(MessagePublisher messagePublisher, String processId, String fileType, String message) {
         MessageDecorator messageDecorator = new MessageDecorator(message, answer);
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            messagePublisher.publishResult(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+            messagePublisher.publishResult(processId, fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

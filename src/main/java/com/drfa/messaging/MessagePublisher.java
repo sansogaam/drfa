@@ -17,4 +17,11 @@ public class MessagePublisher {
         new ActiveMqPublisher().sendMsg(jsonObject.toString(), queue);
     }
 
+    public void publishResult(String processId, String message, String queue) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ResultMessageConstants.PROCESS_ID, processId);
+        jsonObject.put(ResultMessageConstants.FULL_TEXT, message);
+        new ActiveMqPublisher().sendMsg(jsonObject.toString(), queue);
+    }
+
 }
