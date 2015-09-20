@@ -3,12 +3,14 @@ package acceptance.com.drfa.helper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Collection;
 
 public class FileUtil {
 
+    private static Logger LOG = Logger.getLogger(FileUtil.class);
 
     public void ensureNoFileExistsInDirectory(String dirName) {
         makeDirectoryIfNotExist(dirName);
@@ -31,7 +33,10 @@ public class FileUtil {
     public void makeDirectoryIfNotExist(String dirName) {
         File outputDir = new File(dirName);
         if (!outputDir.exists()) {
+            LOG.info(String.format("Creating directory %s", dirName));
             outputDir.mkdir();
+        }else{
+            LOG.info(String.format("Directory already exist %s", dirName));
         }
     }
 
