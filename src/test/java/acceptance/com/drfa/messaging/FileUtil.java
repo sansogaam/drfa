@@ -24,6 +24,10 @@ public class FileUtil {
         return FileUtils.listFiles(outputDir, new WildcardFileFilter("*"), new WildcardFileFilter("*"));
     }
 
+    public boolean fileExists(String dirName) {
+        return getAllFiles(dirName).size() > 1;
+    }
+
     public void makeDirectoryIfNotExist(String dirName) {
         File outputDir = new File(dirName);
         if (!outputDir.exists()) {
