@@ -38,7 +38,7 @@ public class EndToEndDatabaseReconciliationTest {
     static final String TARGET_DB = "targetDB";
     static Connection baseConnection;
     static Connection targetConnection;
-    private static final String DATABASE_TEST_OUTPUT = "target/test-db/";
+    private static final String DATABASE_TEST_OUTPUT = "target/test-db";
     private FileUtil fileUtil = new FileUtil();
 
     @BeforeClass
