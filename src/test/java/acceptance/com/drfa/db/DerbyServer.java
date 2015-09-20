@@ -45,7 +45,7 @@ public class DerbyServer {
 
     public static void printSQLException(SQLException e) {
         while (e != null) {
-            LOG.info("\n----- SQLException (Ignore for DB shutdown-----");
+            LOG.info("\n----- SQLException (Ignore for DB shutdown-----)");
             LOG.error("  SQL State:  " + e.getSQLState());
             LOG.error("  Error Code: " + e.getErrorCode());
             LOG.error("  Message:    " + e.getMessage());
