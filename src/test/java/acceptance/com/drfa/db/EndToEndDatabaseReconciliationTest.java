@@ -1,12 +1,34 @@
 package acceptance.com.drfa.db;
 
+import acceptance.com.drfa.helper.ActiveMqRunner;
 import acceptance.com.drfa.helper.DBSeeder;
 import acceptance.com.drfa.helper.DerbyServer;
+import com.drfa.cli.Answer;
+import com.drfa.cli.CommandConsole;
+import com.drfa.engine.ReconciliationServer;
+import com.drfa.jms.ResultListener;
+import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.report.ResultMessageConstants;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.jms.JMSException;
+import java.io.File;
 import java.sql.Connection;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
+import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
+import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
+import static com.drfa.util.DrfaProperties.REC_ANSWER;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by Sanjiv on 9/20/2015.
@@ -16,8 +38,9 @@ public class EndToEndDatabaseReconciliationTest {
     static final String TARGET_DB = "targetDB";
     static Connection baseConnection;
     static Connection targetConnection;
+
     @BeforeClass
-    public static void setUpTheDatabasesForComparision(){
+    public static void setUpTheDatabasesForComparision() {
         baseConnection = new DerbyServer().initialDerbyDatabase(BASE_DB);
         new DBSeeder(baseConnection).seedBaseDB();
         targetConnection = new DerbyServer().initialDerbyDatabase(TARGET_DB);
@@ -25,15 +48,68 @@ public class EndToEndDatabaseReconciliationTest {
     }
 
     @AfterClass
-    public static void shutDownTheDatabasesAfterComparision(){
+    public static void shutDownTheDatabasesAfterComparision() {
         new DBSeeder(baseConnection).tearBaseDB();
         new DBSeeder(targetConnection).tearTargetDB();
         new DerbyServer().shutDownDerbyDatabase(BASE_DB);
         new DerbyServer().shutDownDerbyDatabase(TARGET_DB);
     }
-    
-    @Test
-    public void shouldTestEndToEndDatabaseReconciliationTest(){
 
+    @Test
+    public void shouldTestEndToEndDatabaseReconciliationTest() throws Exception {
+        ActiveMqRunner.startBroker();
+
+        ReconciliationServer reconciliationServer = new ReconciliationServer();
+        new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);
+
+        CountDownLatch latch = new CountDownLatch(104);
+        ResultListener resultListener = new ResultListener(latch);
+        new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE);
+
+        CommandConsole commandConsole = new CommandConsole();
+        commandConsole.publishMessage(answer());
+        latch.await(10, TimeUnit.SECONDS);
+        List<JSONObject> messages = resultListener.getMessages();
+        assertThat(messages.size(), is(104));
+        for (JSONObject jsonObject : messages) {
+            assertThat(jsonObject.get(ResultMessageConstants.PROCESS_ID), Matchers.is("PROCESS_ID:1-"));
+        }
+
+    }
+
+
+    private Answer answer() {
+        Answer answer = new Answer();
+
+        answer.setBaseKeyIndex("0");
+        answer.setTargetKeyIndex("0");
+        answer.setReconciliationType("DATABASE");
+        answer.setProcessId(1);
+        answer.setFileDelimiter("|");
+
+        answer.setBaseDatabaseCredentialFile(new File("src/test/resources/derby-base.cfg").getAbsolutePath());
+        answer.setBaseDatabaseFile("target/test-output/");
+        String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME + "-" + new Date().getTime() + ".csv";
+        answer.setBaseFile(baseOutputFile);
+
+
+        answer.setBaseDatabaseType("DERBY");
+        answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,date_of_joining FROM EMPLOYEE");
+        answer.setBaseDatabaseMetaDataFile(new File("src/test/resources/rec-db-base.fmt").getAbsolutePath());
+
+        answer.setTargetDatabaseCredentialFile(new File("src/test/resources/derby-target.cfg").getAbsolutePath());
+
+        answer.setTargetDatabaseFile("target/test-output/");
+        String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME + "-" + new Date().getTime() + ".csv";
+        answer.setTargetFile(targetOutputFile);
+
+        answer.setTargetDatabaseType("DERBY");
+        answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, joining_date FROM PERSON");
+        answer.setTargetDatabaseMetaDataFile(new File("src/test/resources/rec-db-target.fmt").getAbsolutePath());
+
+        answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
+
+        answer.setMetaDataFile(new File("src/test/resources/reconciliation-input.xml").getAbsolutePath());
+        return answer;
     }
 }
