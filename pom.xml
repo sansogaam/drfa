@@ -144,6 +144,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.5-FINAL</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
+        </dependency>
         <!-- XStream Object -->
         <dependency>
             <groupId>xstream</groupId>
