@@ -31,10 +31,13 @@ public class FileUtil {
     }
 
     public void makeDirectoryIfNotExist(String dirName) {
+        boolean testFileExist = new File("/home/shippable/workspace/src/github.com/sansogaam/drfa/src/main/resources/plugins").exists();
+        System.out.println("Testing it exist " + testFileExist);
         File outputDir = new File(dirName);
         if (!outputDir.exists()) {
             LOG.info(String.format("Creating directory %s", dirName));
             outputDir.mkdir();
+            LOG.info(String.format("Directory created successfully %s with %s", dirName, outputDir.exists()));
         }else{
             LOG.info(String.format("Directory already exist %s", dirName));
         }

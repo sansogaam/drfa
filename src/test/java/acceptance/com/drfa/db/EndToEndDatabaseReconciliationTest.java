@@ -91,7 +91,7 @@ public class EndToEndDatabaseReconciliationTest {
         answer.setProcessId(1);
         answer.setFileDelimiter("|");
 
-        answer.setBaseDatabaseCredentialFile(new File("src/test/resources/derby-base.cfg").getAbsolutePath());
+        answer.setBaseDatabaseCredentialFile("src/test/resources/derby-base.cfg");
         answer.setBaseDatabaseFile(DATABASE_TEST_OUTPUT);
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME + "-" + new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
@@ -99,9 +99,9 @@ public class EndToEndDatabaseReconciliationTest {
 
         answer.setBaseDatabaseType("DERBY");
         answer.setSqlQueryBase("SELECT ID, first_name, last_name, email_address,date_of_joining FROM EMPLOYEE");
-        answer.setBaseDatabaseMetaDataFile(new File("src/test/resources/rec-db-base.fmt").getAbsolutePath());
+        answer.setBaseDatabaseMetaDataFile("src/test/resources/rec-db-base.fmt");
 
-        answer.setTargetDatabaseCredentialFile(new File("src/test/resources/derby-target.cfg").getAbsolutePath());
+        answer.setTargetDatabaseCredentialFile("src/test/resources/derby-target.cfg");
 
         answer.setTargetDatabaseFile(DATABASE_TEST_OUTPUT);
         String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME + "-" + new Date().getTime() + ".csv";
@@ -109,11 +109,11 @@ public class EndToEndDatabaseReconciliationTest {
 
         answer.setTargetDatabaseType("DERBY");
         answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, joining_date FROM PERSON");
-        answer.setTargetDatabaseMetaDataFile(new File("src/test/resources/rec-db-target.fmt").getAbsolutePath());
+        answer.setTargetDatabaseMetaDataFile("src/test/resources/rec-db-target.fmt");
 
-        answer.setPluginPath(new File("src/main/resources/plugins").getAbsolutePath());
+        answer.setPluginPath("src/main/resources/plugins");
 
-        answer.setMetaDataFile(new File("src/test/resources/reconciliation-input.xml").getAbsolutePath());
+        answer.setMetaDataFile("src/test/resources/reconciliation-input.xml");
         return answer;
     }
 }
