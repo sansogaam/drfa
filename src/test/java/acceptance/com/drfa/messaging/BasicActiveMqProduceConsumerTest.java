@@ -1,6 +1,7 @@
 package acceptance.com.drfa.messaging;
 
 
+import acceptance.com.drfa.helper.ActiveMqRunner;
 import com.drfa.jms.BasicMessageListener;
 import com.drfa.messaging.MessagePublisher;
 import com.drfa.messaging.jms.ActiveMqListener;

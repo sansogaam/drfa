@@ -1,5 +1,7 @@
 package acceptance.com.drfa.db;
 
+import acceptance.com.drfa.helper.DBSeeder;
+import acceptance.com.drfa.helper.DerbyServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,7 +11,7 @@ import java.sql.Connection;
 /**
  * Created by Sanjiv on 9/20/2015.
  */
-public class DatabaseReconciliationEndToEndTest {
+public class EndToEndDatabaseReconciliationTest {
     static final String BASE_DB = "baseDB";
     static final String TARGET_DB = "targetDB";
     static Connection baseConnection;

@@ -1,4 +1,4 @@
-package acceptance.com.drfa.messaging;
+package acceptance.com.drfa.helper;
 
 
 import org.apache.commons.io.FileUtils;

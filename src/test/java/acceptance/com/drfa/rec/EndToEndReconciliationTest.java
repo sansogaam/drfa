@@ -1,14 +1,19 @@
-package acceptance.com.drfa.messaging;
+package acceptance.com.drfa.rec;
 
 
+import acceptance.com.drfa.helper.ActiveMqRunner;
 import com.drfa.cli.Answer;
 import com.drfa.cli.CommandConsole;
 import com.drfa.engine.ReconciliationServer;
+import com.drfa.jms.ResultListener;
 import com.drfa.messaging.jms.ActiveMqListener;
-import com.drfa.report.ReportListener;
+import com.drfa.report.ResultMessageConstants;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -17,35 +22,30 @@ import static com.drfa.util.DrfaProperties.REC_ANSWER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class EndToEndReportGenerationTest {
-    private static final String TARGET_TEST_OUTPUT = "target/test-output/";
-    private FileUtil fileUtil = new FileUtil();
+public class EndToEndReconciliationTest {
 
     @Test()
-    public void shouldBeAbleToSendAndReceiveMessages() throws Exception {
+    public void shouldBeAbleToReconcileTwoFilesAndSendMessagesToProvidedListener() throws Exception {
         ActiveMqRunner.startBroker();
-        fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
         ReconciliationServer reconciliationServer = new ReconciliationServer();
         new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);
 
-        ReportListener reportServer = new ReportListener();
-        new ActiveMqListener(reportServer).startMsgListener(BREAK_MESSAGE_QUEUE);
+        CountDownLatch latch = new CountDownLatch(14);
+        ResultListener resultListener = new ResultListener(latch);
+        new ActiveMqListener(resultListener).startMsgListener(BREAK_MESSAGE_QUEUE);
 
         CommandConsole commandConsole = new CommandConsole();
         commandConsole.publishMessage(answer());
 
-        final CountDownLatch latch = new CountDownLatch(1);
-        new Thread(() -> {
-            if (fileUtil.fileExists("target/test-output/")) {
-                latch.countDown();
-            }
-        }).start();
-
         latch.await(10, TimeUnit.SECONDS);
+        List<JSONObject> messages = resultListener.getMessages();
+        assertThat(messages.size(), is(14));
 
 
-        assertThat(fileUtil.getAllFiles("target/test-output/").size(), is(1));
+        for (JSONObject jsonObject : messages) {
+            assertThat(jsonObject.get(ResultMessageConstants.PROCESS_ID), Matchers.is("PROCESS_ID:1-"));
+        }
 
     }
 
@@ -66,5 +66,4 @@ public class EndToEndReportGenerationTest {
         answer.setReportOutputPath(new File("src/test/resources").getAbsolutePath());
         return answer;
     }
-
 }
