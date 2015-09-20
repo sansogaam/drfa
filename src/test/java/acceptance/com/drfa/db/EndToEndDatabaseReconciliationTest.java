@@ -111,7 +111,7 @@ public class EndToEndDatabaseReconciliationTest {
         answer.setSqlQueryTarget("SELECT ID,name,address, email_detail, joining_date FROM PERSON");
         answer.setTargetDatabaseMetaDataFile("src/test/resources/rec-db-target.fmt");
 
-        answer.setPluginPath("src/main/resources/plugins1");
+        answer.setPluginPath("src/main/resources/plugins");
 
         answer.setMetaDataFile("src/test/resources/reconciliation-input.xml");
         return answer;
