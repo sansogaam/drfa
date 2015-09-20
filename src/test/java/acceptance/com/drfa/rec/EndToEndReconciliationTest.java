@@ -10,6 +10,8 @@ import com.drfa.messaging.jms.ActiveMqListener;
 import com.drfa.report.ResultMessageConstants;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -24,9 +26,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EndToEndReconciliationTest {
 
+    @BeforeClass
+    public static void setUpThePreliminaryTaskForTest(){
+        ActiveMqRunner.startBroker();
+    }
+
+    @AfterClass
+    public static void tearDownThePreliminaryTaskForTest(){
+        ActiveMqRunner.stopBroker();
+    }
+
     @Test()
     public void shouldBeAbleToReconcileTwoFilesAndSendMessagesToProvidedListener() throws Exception {
-        ActiveMqRunner.startBroker();
 
         ReconciliationServer reconciliationServer = new ReconciliationServer();
         new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);

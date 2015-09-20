@@ -10,7 +10,7 @@ import java.util.Collection;
 public class FileUtil {
 
 
-    public void ensureNoReconciliationReportExists(String dirName) {
+    public void ensureNoFileExistsInDirectory(String dirName) {
         makeDirectoryIfNotExist(dirName);
         File outputDir = new File(dirName);
         try {

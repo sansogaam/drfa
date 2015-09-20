@@ -3,6 +3,7 @@ package acceptance.com.drfa.db;
 import acceptance.com.drfa.helper.ActiveMqRunner;
 import acceptance.com.drfa.helper.DBSeeder;
 import acceptance.com.drfa.helper.DerbyServer;
+import acceptance.com.drfa.helper.FileUtil;
 import com.drfa.cli.Answer;
 import com.drfa.cli.CommandConsole;
 import com.drfa.engine.ReconciliationServer;
@@ -15,7 +16,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.jms.JMSException;
 import java.io.File;
 import java.sql.Connection;
 import java.util.Date;
@@ -38,27 +38,31 @@ public class EndToEndDatabaseReconciliationTest {
     static final String TARGET_DB = "targetDB";
     static Connection baseConnection;
     static Connection targetConnection;
+    private static final String DATABASE_TEST_OUTPUT = "target/test-db/";
+    private FileUtil fileUtil = new FileUtil();
 
     @BeforeClass
-    public static void setUpTheDatabasesForComparision() {
+    public static void setUpThePreliminaryTaskForTest(){
         baseConnection = new DerbyServer().initialDerbyDatabase(BASE_DB);
         new DBSeeder(baseConnection).seedBaseDB();
         targetConnection = new DerbyServer().initialDerbyDatabase(TARGET_DB);
         new DBSeeder(targetConnection).seedTargetDB();
+        ActiveMqRunner.startBroker();
     }
 
     @AfterClass
-    public static void shutDownTheDatabasesAfterComparision() {
+    public static void tearDownThePreliminaryTaskForTest(){
         new DBSeeder(baseConnection).tearBaseDB();
         new DBSeeder(targetConnection).tearTargetDB();
         new DerbyServer().shutDownDerbyDatabase(BASE_DB);
         new DerbyServer().shutDownDerbyDatabase(TARGET_DB);
+        ActiveMqRunner.stopBroker();
     }
 
     @Test
     public void shouldTestEndToEndDatabaseReconciliationTest() throws Exception {
-        ActiveMqRunner.startBroker();
-
+        
+        fileUtil.ensureNoFileExistsInDirectory(DATABASE_TEST_OUTPUT);
         ReconciliationServer reconciliationServer = new ReconciliationServer();
         new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);
 
@@ -88,7 +92,7 @@ public class EndToEndDatabaseReconciliationTest {
         answer.setFileDelimiter("|");
 
         answer.setBaseDatabaseCredentialFile(new File("src/test/resources/derby-base.cfg").getAbsolutePath());
-        answer.setBaseDatabaseFile("target/test-output/");
+        answer.setBaseDatabaseFile(DATABASE_TEST_OUTPUT);
         String baseOutputFile = answer.getBaseDatabaseFile() + File.separator + BASE_THREAD_NAME + "-" + new Date().getTime() + ".csv";
         answer.setBaseFile(baseOutputFile);
 
@@ -99,7 +103,7 @@ public class EndToEndDatabaseReconciliationTest {
 
         answer.setTargetDatabaseCredentialFile(new File("src/test/resources/derby-target.cfg").getAbsolutePath());
 
-        answer.setTargetDatabaseFile("target/test-output/");
+        answer.setTargetDatabaseFile(DATABASE_TEST_OUTPUT);
         String targetOutputFile = answer.getTargetDatabaseFile() + File.separator + TARGET_THREAD_NAME + "-" + new Date().getTime() + ".csv";
         answer.setTargetFile(targetOutputFile);
 

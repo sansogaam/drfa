@@ -8,6 +8,8 @@ import com.drfa.cli.CommandConsole;
 import com.drfa.engine.ReconciliationServer;
 import com.drfa.messaging.jms.ActiveMqListener;
 import com.drfa.report.ReportListener;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,11 +25,20 @@ public class EndToEndReportGenerationTest {
     private static final String TARGET_TEST_OUTPUT = "target/test-output/";
     private FileUtil fileUtil = new FileUtil();
 
+    @BeforeClass
+    public static void setUpThePreliminaryTaskForTest(){
+        ActiveMqRunner.startBroker();
+    }
+
+    @AfterClass
+    public static void tearDownThePreliminaryTaskForTest(){
+        ActiveMqRunner.stopBroker();
+    }
+
     @Test()
     public void shouldBeAbleToRecieveMessagesAndProduceTheDesiredReport() throws Exception {
-        ActiveMqRunner.startBroker();
-        fileUtil.ensureNoReconciliationReportExists(TARGET_TEST_OUTPUT);
 
+        fileUtil.ensureNoFileExistsInDirectory(TARGET_TEST_OUTPUT);
         ReconciliationServer reconciliationServer = new ReconciliationServer();
         new ActiveMqListener(reconciliationServer).startMsgListener(REC_ANSWER);
 
