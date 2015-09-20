@@ -36,7 +36,6 @@ class ReportEnricher implements Enricher {
         }else if(messageWithoutProcessId.startsWith("ONE-SIDED-TARGET")){
             enrichOneSideBreakRecords(messageWithoutProcessId, "TARGET");
         }else {
-            LOG.info(String.format("Message Without Process Id %s & With Process Id %s", messageWithoutProcessId, message));
             enrichDetailMessageReport(messageWithoutProcessId);
         }
     }

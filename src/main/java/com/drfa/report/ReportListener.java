@@ -2,6 +2,7 @@ package com.drfa.report;
 
 import com.drfa.messaging.Listener;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -35,7 +36,8 @@ public class ReportListener implements MessageListener {
                 e.printStackTrace();
             }
             LOG.info(String.format("Received the message %s ", messageBody));
-            reportGenerator.generateReport(messageBody);
+            JSONObject json = new JSONObject(messageBody);
+            reportGenerator.generateReport(json);
         }
     }
 

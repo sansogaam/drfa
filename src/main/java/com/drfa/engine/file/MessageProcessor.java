@@ -28,7 +28,7 @@ public class MessageProcessor {
             LOG.info(String.format("Converted Break Value %s", breakValue));
             try {
                 String message1 = processId + breakValue;
-                messagePublisher.publish(message1, DrfaProperties.BREAK_MESSAGE_QUEUE);
+                messagePublisher.publishResult(message1, DrfaProperties.BREAK_MESSAGE_QUEUE);
             } catch (Exception e) {
                 LOG.info(String.format("Exception processing the message %s", breakValue));
                 e.printStackTrace();
@@ -55,7 +55,7 @@ public class MessageProcessor {
         String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
         try {
             LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            messagePublisher.publish(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
+            messagePublisher.publishResult(fileType + "-" + breakValue, DrfaProperties.BREAK_MESSAGE_QUEUE);
         } catch (Exception e) {
             LOG.info(String.format("Exception processing the message %s", breakValue));
             e.printStackTrace();

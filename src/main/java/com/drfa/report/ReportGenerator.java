@@ -2,6 +2,7 @@ package com.drfa.report;
 
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -15,7 +16,8 @@ class ReportGenerator {
         this.reportEnricher = new ReportEnricher(breakReport);
     }
 
-    public void generateReport(String messageBody) {
+    public void generateReport(JSONObject json) {
+        String messageBody = (String) json.get(ResultMessageConstants.FULL_TEXT);
         reportEnricher.enrich(messageBody);
         if (messageBody.contains("MATCHED_RECORDS")) {
             reportEnricher.enrichBreakReportWithColumnDetails();
