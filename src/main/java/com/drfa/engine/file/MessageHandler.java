@@ -1,7 +1,6 @@
 package com.drfa.engine.file;
 
 import com.drfa.messaging.MessagePublisher;
-import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -14,7 +13,6 @@ public class MessageHandler {
     private static Logger LOG = Logger.getLogger(MessageHandler.class);
     private MessageProcessor messageProcessor;
     private int matchedRecords = 0;
-    private String queueName = DrfaProperties.BREAK_MESSAGE_QUEUE;
     private MessagePublisher messagePublisher;
 
     public MessageHandler(MessageProcessor messageProcessor, MessagePublisher messagePublisher) {
@@ -52,10 +50,10 @@ public class MessageHandler {
         LOG.info(String.format("Processing the thread name %s", threadName));
         if(BASE_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.publishResult(processIdMessage, "BASE_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publishResult(processIdMessage, "BASE_TOTAL_RECORDS-" + numberOfRecords);
         }else if(TARGET_THREAD_NAME.equalsIgnoreCase(threadName)){
             String numberOfRecords = message.substring(message.lastIndexOf(":")+1, message.length());
-            messagePublisher.publishResult(processIdMessage, "TARGET_TOTAL_RECORDS-" + numberOfRecords, queueName);
+            messagePublisher.publishResult(processIdMessage, "TARGET_TOTAL_RECORDS-" + numberOfRecords);
         }
         return true;
     }
@@ -63,7 +61,7 @@ public class MessageHandler {
     private boolean processExitMessage(String message) {
         LOG.info("Exit message recieved: " + message);
         String processIdMessage = extractProcessIdFromMessage(message);
-        messagePublisher.publishResult(processIdMessage, "MATCHED_RECORDS-" + matchedRecords, queueName);
+        messagePublisher.publishResult(processIdMessage, "MATCHED_RECORDS-" + matchedRecords);
         return false;
     }
 
@@ -80,7 +78,7 @@ public class MessageHandler {
                 targetOneSidedBreak++;
             }
         }
-        messagePublisher.publishResult(processId, "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak, queueName);
-        messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak, queueName);
+        messagePublisher.publishResult(processId, "BASE_ONE_SIDED_BREAK-" + baseOneSidedBreak);
+        messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak);
     }
 }

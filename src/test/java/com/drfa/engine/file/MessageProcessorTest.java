@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class MessageProcessorTest {
@@ -34,10 +33,10 @@ public class MessageProcessorTest {
 
         MessageProcessor messageProcessor = new MessageProcessor(answer);
         messageProcessor.processMessage(publisher, message, "PROCESS_ID:786-");
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C3~T3#T3#MATCHED"), anyString());
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C4~T4#T4#MATCHED"), anyString());
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C1~T1#T1#MATCHED"), anyString());
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C2~T2#T2.1#NOT MATCHED"), anyString());
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C3~T3#T3#MATCHED"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C4~T4#T4#MATCHED"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C1~T1#T1#MATCHED"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), contains("C2~T2#T2.1#NOT MATCHED"));
     }
 
 }
