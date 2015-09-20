@@ -48,8 +48,11 @@ public class ExecuteDBRead implements Runnable {
     public static void initializeEngine(String pluginPath) {
         if (!EngineInitializer.isInitialized()) {
             System.out.println("Initializing the engine for processing....");
+            LOG.info("Initializing the engine for processing....");
             EngineInitializer.initEngine(pluginPath, null, null);
             EngineInitializer.forceActivateAllPlugins();
+        }else{
+            LOG.info("Engine is already initialized...");
         }
     }
 
