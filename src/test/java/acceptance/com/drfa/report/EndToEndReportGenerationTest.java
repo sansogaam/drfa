@@ -50,9 +50,14 @@ public class EndToEndReportGenerationTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
         new Thread(() -> {
-            if (fileUtil.fileExists("target/test-output/")) {
-                latch.countDown();
+            while (!fileUtil.fileExists("target/test-output/")) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            latch.countDown();
         }).start();
 
         latch.await(10, TimeUnit.SECONDS);
