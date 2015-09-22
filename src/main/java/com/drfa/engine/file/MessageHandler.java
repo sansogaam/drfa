@@ -79,6 +79,6 @@ public class MessageHandler {
             }
         }
         messagePublisher.publishResult(processId, "BASE_ONE_SIDED_BREAK", baseOneSidedBreak + "");
-        messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK-" + targetOneSidedBreak);
+        messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK", targetOneSidedBreak + "");
     }
 }

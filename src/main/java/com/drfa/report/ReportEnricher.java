@@ -26,20 +26,19 @@ class ReportEnricher implements Enricher {
         if (json.has(TYPE)) {
             String records = (String) json.get(TYPE_NO_RECORDS);
             if ("MATCHED_RECORDS".equals(json.get(TYPE))) {
-                enrichMatchedNumberOfRecords(records);
+                report.setMatchedWithNumberOfKeys(new Integer(records));
             } else if ("BASE_TOTAL_RECORDS".equals(json.get(TYPE))) {
-                enrichBaseTotalRecords(records);
+                report.setBaseTotalRecords(new Integer(records));
             } else if ("TARGET_TOTAL_RECORDS".equals(json.get(TYPE))) {
-                enrichTargetTotalRecords(records);
+                report.setTargetTotalRecords(new Integer(records));
             } else if ("BASE_ONE_SIDED_BREAK".equals(json.get(TYPE))) {
-                enrichBaseOneSidedBreaksRecords(records);
+                report.setBaseOneSidedBreaks(new Integer(records));
+            } else if ("TARGET_ONE_SIDED_BREAK".equals(json.get(TYPE))) {
+                report.setTargetOneSidedBreaks(new Integer(records));
             }
-
         } else {
             String messageWithoutProcessId = (String) json.get(FULL_TEXT);
-            if (messageWithoutProcessId.startsWith("TARGET_ONE_SIDED_BREAK")) {
-                enrichTargetOneSideBreakRecords(messageWithoutProcessId);
-            } else if (messageWithoutProcessId.startsWith("ONE-SIDED-BASE")) {
+            if (messageWithoutProcessId.startsWith("ONE-SIDED-BASE")) {
                 enrichOneSideBreakRecords(messageWithoutProcessId, "BASE");
             } else if (messageWithoutProcessId.startsWith("ONE-SIDED-TARGET")) {
                 enrichOneSideBreakRecords(messageWithoutProcessId, "TARGET");
@@ -74,28 +73,6 @@ class ReportEnricher implements Enricher {
         } else {
             report.setTargetOneSidedBreaksCollection(mapOfOneSidedRowBreaks);
         }
-    }
-
-    private void enrichTargetOneSideBreakRecords(String message) {
-        String totalRecords = message.substring(message.lastIndexOf("-") + 1, message.length());
-        LOG.info(String.format("Total number of matched records as per key %s", totalRecords));
-        report.setTargetOneSidedBreaks(new Integer(totalRecords));
-    }
-
-    private void enrichBaseOneSidedBreaksRecords(String totalRecords) {
-        report.setBaseOneSidedBreaks(new Integer(totalRecords));
-    }
-
-    private void enrichTargetTotalRecords(String totalRecords) {
-        report.setTargetTotalRecords(new Integer(totalRecords));
-    }
-
-    private void enrichBaseTotalRecords(String totalRecords) {
-        report.setBaseTotalRecords(new Integer(totalRecords));
-    }
-
-    private void enrichMatchedNumberOfRecords(String totalMatchedRecords) {
-        report.setMatchedWithNumberOfKeys(new Integer(totalMatchedRecords));
     }
 
     private void enrichDetailMessageReport(String message) {

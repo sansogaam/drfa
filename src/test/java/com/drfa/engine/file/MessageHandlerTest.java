@@ -66,7 +66,7 @@ public class MessageHandlerTest {
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK-1"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class MessageHandlerTest {
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK-1"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE-C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"));
