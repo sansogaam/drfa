@@ -32,7 +32,7 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.handleMessage("PROCESS_ID:786-Exit");
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("MATCHED_RECORDS-0"));
+        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("MATCHED_RECORDS"), eq("0"));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class MessageHandlerTest {
         MessageHandler handler = new MessageHandler(processor, publisher);
         String message = "PROCESS_ID:786-SUMMARY:BASE:24";
         handler.handleMessage(message);
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("BASE_TOTAL_RECORDS-24"));
+        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("BASE_TOTAL_RECORDS"), eq("24"));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class MessageHandlerTest {
         MessageHandler handler = new MessageHandler(processor, publisher);
         String message = "PROCESS_ID:786-SUMMARY:TARGET:25";
         handler.handleMessage(message);
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_TOTAL_RECORDS-25"));
+        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_TOTAL_RECORDS"), eq("25"));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK-2"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK-1"));
     }
 
@@ -84,7 +84,7 @@ public class MessageHandlerTest {
         MessageProcessor processor = new MessageProcessor(answer);
         MessageHandler handler = new MessageHandler(processor, publisher);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK-2"));
+        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK-1"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));

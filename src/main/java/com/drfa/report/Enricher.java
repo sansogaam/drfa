@@ -1,6 +1,8 @@
 package com.drfa.report;
 
 
+import org.json.JSONObject;
+
 interface Enricher {
-    void enrich(String message);
+    void enrich(JSONObject json);
 }

@@ -20,4 +20,13 @@ public class MessagePublisher {
         new ActiveMqPublisher().sendMsg(jsonObject.toString(), BREAK_MESSAGE_QUEUE);
     }
 
+    public void publishResult(String processId, String type, String numberOfRecords) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ResultMessageConstants.PROCESS_ID, processId);
+        jsonObject.put(ResultMessageConstants.TYPE, type);
+        jsonObject.put(ResultMessageConstants.TYPE_NO_RECORDS, numberOfRecords);
+        new ActiveMqPublisher().sendMsg(jsonObject.toString(), BREAK_MESSAGE_QUEUE);
+    }
+
+
 }

@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import static com.drfa.report.ResultMessageConstants.TYPE;
+
 class ReportGenerator {
     private static Logger LOG = Logger.getLogger(ReportGenerator.class);
     private BreakReport breakReport;
@@ -17,9 +19,8 @@ class ReportGenerator {
     }
 
     public void generateReport(JSONObject json) {
-        String messageBody = (String) json.get(ResultMessageConstants.FULL_TEXT);
-        reportEnricher.enrich(messageBody);
-        if (messageBody.contains("MATCHED_RECORDS")) {
+        reportEnricher.enrich(json);
+        if (json.has(TYPE) && "MATCHED_RECORDS".equals(json.get(TYPE))) {
             reportEnricher.enrichBreakReportWithColumnDetails();
             generateReport();
         }

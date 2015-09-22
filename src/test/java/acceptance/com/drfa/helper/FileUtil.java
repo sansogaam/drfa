@@ -27,7 +27,7 @@ public class FileUtil {
     }
 
     public boolean fileExists(String dirName) {
-        return getAllFiles(dirName).size() > 1;
+        return getAllFiles(dirName).size() > 0;
     }
 
     public void makeDirectoryIfNotExist(String dirName) {
