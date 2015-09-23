@@ -35,29 +35,27 @@ class ReportEnricher implements Enricher {
                 report.setBaseOneSidedBreaks(new Integer(records));
             } else if ("TARGET_ONE_SIDED_BREAK".equals(json.get(TYPE))) {
                 report.setTargetOneSidedBreaks(new Integer(records));
+            } else if ("ONE-SIDED-BASE".equals(json.get(TYPE))) {
+                enrichOneSideBreakRecords(json);
+            } else if ("ONE-SIDED-TARGET".equals(json.get(TYPE))) {
+                enrichOneSideBreakRecords(json);
             }
         } else {
             String messageWithoutProcessId = (String) json.get(FULL_TEXT);
-            if (messageWithoutProcessId.startsWith("ONE-SIDED-BASE")) {
-                enrichOneSideBreakRecords(messageWithoutProcessId, "BASE");
-            } else if (messageWithoutProcessId.startsWith("ONE-SIDED-TARGET")) {
-                enrichOneSideBreakRecords(messageWithoutProcessId, "TARGET");
-            } else {
-                enrichDetailMessageReport(messageWithoutProcessId);
-            }
+            enrichDetailMessageReport(messageWithoutProcessId);
+
         }
 
     }
 
-    private void enrichOneSideBreakRecords(String message, String type) {
-        //C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$
-        String breakMessage = message.substring(message.lastIndexOf("-"), message.length());
-        String splitMessages[] = breakMessage.split(Pattern.quote("$"));
+    private void enrichOneSideBreakRecords(JSONObject json) {
+        JSONObject object = (JSONObject) json.get(ResultMessageConstants.ONE_SIDE_BREAKS);
         Map<String, String> mapOfColumnBreaks = new HashMap<String, String>();
-        for (String splitMessage : splitMessages) {
-            String columnSplitMessage[] = splitMessage.split(Pattern.quote("~"));
-            mapOfColumnBreaks.put(columnSplitMessage[0], columnSplitMessage[1]);
+
+        for (String key : object.keySet()) {
+            mapOfColumnBreaks.put(key, object.getString(key));
         }
+
         int rowCount;
         Map<Integer, Map<String, String>> mapOfOneSidedRowBreaks = report.getBaseOneSidedBreaksCollection();
         if (mapOfOneSidedRowBreaks == null || mapOfOneSidedRowBreaks.isEmpty()) {
@@ -68,7 +66,7 @@ class ReportEnricher implements Enricher {
             rowCount = mapOfColumnBreaks.size() + 1;
             mapOfOneSidedRowBreaks.put(new Integer(rowCount), mapOfColumnBreaks);
         }
-        if ("BASE".equalsIgnoreCase(type)) {
+        if ("ONE-SIDED-BASE".equals(json.get(TYPE))) {
             report.setBaseOneSidedBreaksCollection(mapOfOneSidedRowBreaks);
         } else {
             report.setTargetOneSidedBreaksCollection(mapOfOneSidedRowBreaks);

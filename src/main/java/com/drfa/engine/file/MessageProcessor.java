@@ -50,22 +50,7 @@ public class MessageProcessor {
     public void processOneSidedMessage(MessagePublisher messagePublisher, String processId, String fileType, String message) {
         MessageDecorator messageDecorator = new MessageDecorator(message, answer);
         Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
-        String breakValue = convertOneSidedBreakResultIntoString(mapOfOneSidedBreaks);
-        try {
-            LOG.info(String.format("ONE_SIDED_BREAK_FOR_%s: %s", fileType, breakValue));
-            messagePublisher.publishResult(processId, fileType + "-" + breakValue);
-        } catch (Exception e) {
-            LOG.info(String.format("Exception processing the message %s", breakValue));
-            e.printStackTrace();
-        }
-    }
+        messagePublisher.publishOneSideBreak(processId, fileType, mapOfOneSidedBreaks);
 
-    private String convertOneSidedBreakResultIntoString(Map<String, String> mapOfOneSidedBreaks) {
-        StringBuffer sb = new StringBuffer();
-        for (String columnName : mapOfOneSidedBreaks.keySet()) {
-            String columnValue = mapOfOneSidedBreaks.get(columnName);
-            sb.append(columnName).append("~").append(columnValue).append("$");
-        }
-        return sb.toString();
     }
 }

@@ -86,9 +86,8 @@ public class MessageHandlerTest {
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-TARGET-C3~Exist3$C4~Exist4$C1~Exist1$C2~Exist2$"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE-C3~Exist7$C4~Exist8$C1~Exist5$C2~Exist6$"));
+        verify(publisher, times(2)).publishOneSideBreak(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE"), any(Map.class));
+        verify(publisher, times(1)).publishOneSideBreak(eq("PROCESS_ID:786-"), eq("ONE-SIDED-TARGET"), any(Map.class));
     }
 
     private Map<Integer, Map<String, List<String>>> populateMapOfBreaks(){

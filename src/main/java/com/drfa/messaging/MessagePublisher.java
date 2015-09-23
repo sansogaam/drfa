@@ -5,6 +5,8 @@ import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.report.ResultMessageConstants;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
 
 public class MessagePublisher {
@@ -25,6 +27,15 @@ public class MessagePublisher {
         jsonObject.put(ResultMessageConstants.PROCESS_ID, processId);
         jsonObject.put(ResultMessageConstants.TYPE, type);
         jsonObject.put(ResultMessageConstants.TYPE_NO_RECORDS, numberOfRecords);
+        new ActiveMqPublisher().sendMsg(jsonObject.toString(), BREAK_MESSAGE_QUEUE);
+    }
+
+    public void publishOneSideBreak(String processId, String type, Map<String, String> mapOfOneSidedBreaks) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ResultMessageConstants.PROCESS_ID, processId);
+        jsonObject.put(ResultMessageConstants.TYPE, type);
+        jsonObject.put(ResultMessageConstants.TYPE_NO_RECORDS, mapOfOneSidedBreaks.size() + "");
+        jsonObject.put(ResultMessageConstants.ONE_SIDE_BREAKS, mapOfOneSidedBreaks);
         new ActiveMqPublisher().sendMsg(jsonObject.toString(), BREAK_MESSAGE_QUEUE);
     }
 
