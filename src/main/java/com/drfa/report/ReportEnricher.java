@@ -25,19 +25,18 @@ class ReportEnricher implements Enricher {
     public void enrich(JSONObject json) {
         if (json.has(TYPE)) {
             String records = (String) json.get(TYPE_NO_RECORDS);
-            if ("MATCHED_RECORDS".equals(json.get(TYPE))) {
+            String type = (String) json.get(TYPE);
+            if ("MATCHED_RECORDS".equals(type)) {
                 report.setMatchedWithNumberOfKeys(new Integer(records));
-            } else if ("BASE_TOTAL_RECORDS".equals(json.get(TYPE))) {
+            } else if ("BASE_TOTAL_RECORDS".equals(type)) {
                 report.setBaseTotalRecords(new Integer(records));
-            } else if ("TARGET_TOTAL_RECORDS".equals(json.get(TYPE))) {
+            } else if ("TARGET_TOTAL_RECORDS".equals(type)) {
                 report.setTargetTotalRecords(new Integer(records));
-            } else if ("BASE_ONE_SIDED_BREAK".equals(json.get(TYPE))) {
+            } else if ("BASE_ONE_SIDED_BREAK".equals(type)) {
                 report.setBaseOneSidedBreaks(new Integer(records));
-            } else if ("TARGET_ONE_SIDED_BREAK".equals(json.get(TYPE))) {
+            } else if ("TARGET_ONE_SIDED_BREAK".equals(type)) {
                 report.setTargetOneSidedBreaks(new Integer(records));
-            } else if ("ONE-SIDED-BASE".equals(json.get(TYPE))) {
-                enrichOneSideBreakRecords(json);
-            } else if ("ONE-SIDED-TARGET".equals(json.get(TYPE))) {
+            } else if ("ONE-SIDED-BASE".equals(type) || "ONE-SIDED-TARGET".equals(type)) {
                 enrichOneSideBreakRecords(json);
             }
         } else {
