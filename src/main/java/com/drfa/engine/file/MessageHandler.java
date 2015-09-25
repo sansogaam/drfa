@@ -1,9 +1,11 @@
 package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
+import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
@@ -32,9 +34,7 @@ public class MessageHandler {
             return processSummaryMessage(message);
         } else {
             matchedRecords++;
-
-            String msg = messageProcessor.processMessage(messageWithoutProcessId);
-            messagePublisher.publishResult(messageProcessId, msg);
+            messagePublisher.publishResult(messageProcessId, messageProcessor.processMessage(messageWithoutProcessId));
             return true;
         }
     }
@@ -88,8 +88,19 @@ public class MessageHandler {
     }
 
     private void publishOneSidedMessage(String processId, String message, MessagePublisher messagePublisher, String fileType) {
-        MessageDecorator messageDecorator = new MessageDecorator(message, answer);
-        Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
+        Map<String, String> mapOfOneSidedBreaks = decorateMessageWithOneSideBreak(message);
         messagePublisher.publishOneSideBreak(processId, fileType, mapOfOneSidedBreaks);
+    }
+
+    private Map<String, String> decorateMessageWithOneSideBreak(String message) {
+        Map<String, String> mapOfOneSideBreaks = new HashMap<String, String>();
+        String[] lineSplit = message.split(answer.quote());
+        int valueCounter = 0;
+        for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
+            String columnName = columnAttribute.getColumnName();
+            mapOfOneSideBreaks.put(columnName, lineSplit[valueCounter]);
+            valueCounter++;
+        }
+        return mapOfOneSideBreaks;
     }
 }

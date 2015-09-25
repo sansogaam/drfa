@@ -7,26 +7,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.drfa.engine.EngineConstants.MATCHED;
 import static com.drfa.engine.EngineConstants.NOT_MATCHED;
 
 public class MessageDecorator {
 
+    private final List<ColumnAttribute> columnAttributes;
     private List<String> lines;
-    private String oneSidedMessage;
-    private Answer answer;
+    private String quote;
 
 
     public MessageDecorator(List<String> lines, Answer answer) {
         this.lines = lines;
-        this.answer = answer;
-    }
-
-    public MessageDecorator(String oneSidedMessage, Answer answer) {
-        this.oneSidedMessage = oneSidedMessage;
-        this.answer = answer;
+        this.quote = answer.quote();
+        this.columnAttributes = answer.getColumnAttribute();
     }
 
     public Map<String, List<String>> decorateMessageWithBreak() {
@@ -34,10 +29,10 @@ public class MessageDecorator {
         String firstLine = lines.get(0);
         String secondLine = lines.get(1);
         if (!firstLine.equalsIgnoreCase(secondLine)) {
-            String[] firstLineSplit = firstLine.split(Pattern.quote(answer.getFileDelimiter()));
-            String[] secondLineSplit = secondLine.split(Pattern.quote(answer.getFileDelimiter()));
+            String[] firstLineSplit = firstLine.split(quote);
+            String[] secondLineSplit = secondLine.split(quote);
             int valueCounter = 0;
-            for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
+            for (ColumnAttribute columnAttribute : columnAttributes) {
                 String columnName = columnAttribute.getColumnName();
                 List<String> columnValues = new ArrayList<String>();
                 String firstLineColumnValue = firstLineSplit[valueCounter];
@@ -56,18 +51,6 @@ public class MessageDecorator {
             }
         }
         return mapOfRowBreak;
-    }
-
-    public Map<String, String> decorateMessageWithOneSideBreak() {
-        Map<String, String> mapOfOneSideBreaks = new HashMap<String, String>();
-        String[] lineSplit = oneSidedMessage.split(Pattern.quote(answer.getFileDelimiter()));
-        int valueCounter = 0;
-        for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
-            String columnName = columnAttribute.getColumnName();
-            mapOfOneSideBreaks.put(columnName, lineSplit[valueCounter]);
-            valueCounter++;
-        }
-        return mapOfOneSideBreaks;
     }
 
 

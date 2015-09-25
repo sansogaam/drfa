@@ -5,6 +5,7 @@ import com.drfa.engine.meta.ColumnAttribute;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class Answer {
@@ -40,6 +41,10 @@ public class Answer {
 
     public void setFileDelimiter(String fileDelimiter) {
         this.fileDelimiter = fileDelimiter;
+    }
+
+    public String quote() {
+        return Pattern.quote(getFileDelimiter());
     }
 
     public String getReconciliationType() {

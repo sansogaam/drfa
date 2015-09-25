@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,7 +23,8 @@ public class MessageProcessorTest {
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(populateColumnNames());
-        when(answer.getFileDelimiter()).thenReturn("|");
+        when(answer.quote()).thenReturn(Pattern.quote("|"));
+
 
         MessageProcessor messageProcessor = new MessageProcessor(answer);
         String msg = messageProcessor.processMessage(message);

@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -47,7 +48,7 @@ public class MessageDecoratorTest {
         lines.add("T1|T2|T3|T5");
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
-        when(answer.getFileDelimiter()).thenReturn("|");
+        when(answer.quote()).thenReturn(Pattern.quote("|"));
 
         MessageDecorator messageDecorator = new MessageDecorator(lines, answer);
         Map<String, List<String>> mapOfBreaks = messageDecorator.decorateMessageWithBreak();
@@ -58,19 +59,4 @@ public class MessageDecoratorTest {
         assertEquals("MATCHED", matchedColumn.get(2));
     }
 
-    @Test
-    public void testTheMessageDecoratorForOneSidedBreak() {
-        String line = "T1|T2|T3|T4";
-
-        Answer answer = mock(Answer.class);
-        when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
-        when(answer.getFileDelimiter()).thenReturn("|");
-
-        MessageDecorator messageDecorator = new MessageDecorator(line, answer);
-        Map<String, String> mapOfBreaks = messageDecorator.decorateMessageWithOneSideBreak();
-        assertEquals("T1", mapOfBreaks.get("C1"));
-        assertEquals("T2", mapOfBreaks.get("C2"));
-        assertEquals("T3", mapOfBreaks.get("C3"));
-        assertEquals("T4", mapOfBreaks.get("C4"));
-    }
 }

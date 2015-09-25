@@ -24,7 +24,7 @@ public class ScanUtility {
         String splitLine[] = line.split(Pattern.quote(fileDelimiter));
         for (ColumnAttribute columnAttribute : columnAttributes) {
             String columnMatching = columnAttribute.getColumnMatching();
-            String columnSplit[] = columnMatching.split(Pattern.quote("|"));
+            String columnSplit[] = columnMatching.split(Pattern.quote(fileDelimiter));
             int columnIndex = 0;
             if (threadName.equalsIgnoreCase("BASE")) {
                 String baseColumn = columnSplit[0];

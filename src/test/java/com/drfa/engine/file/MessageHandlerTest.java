@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -67,7 +68,7 @@ public class MessageHandlerTest {
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
-        when(answer.getFileDelimiter()).thenReturn("|");
+        when(answer.quote()).thenReturn(Pattern.quote("|"));
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
@@ -84,7 +85,7 @@ public class MessageHandlerTest {
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(populateColumnNames());
-        when(answer.getFileDelimiter()).thenReturn("|");
+        when(answer.quote()).thenReturn(Pattern.quote("|"));
 
         MessageProcessor processor = new MessageProcessor(answer);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
