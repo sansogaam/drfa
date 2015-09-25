@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,7 +22,7 @@ public class MessageProcessorTest {
         String message = "BASE:T1|T2|T3|T4$T1|T2.1|T3|T4";
 
         Answer answer = mock(Answer.class);
-        when(answer.getColumnAttribute()).thenReturn(populateColumnNames());
+        when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());
         when(answer.quote()).thenReturn(Pattern.quote("|"));
 
 
@@ -35,8 +35,23 @@ public class MessageProcessorTest {
         assertThat(msg, containsString("C2~T2#T2.1#NOT MATCHED"));
     }
 
-    private List<ColumnAttribute> populateColumnNames() {
-        List<ColumnAttribute> columnAttributes = new ArrayList<ColumnAttribute>();
+
+    @Test
+    public void testTheMapIsEmptyIfTheTargetAndBaseValueAreSame() {
+        String message = "BASE:T1|T2|T3|T4$T1|T2|T3|T4";
+
+        Answer answer = mock(Answer.class);
+        when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());
+        when(answer.getFileDelimiter()).thenReturn("|");
+
+
+        MessageProcessor messageProcessor = new MessageProcessor(answer);
+        String msg = messageProcessor.processMessage(message);
+        assertThat(msg, is(nullValue()));
+    }
+
+    private List<ColumnAttribute> getColumnAttributes() {
+        List<ColumnAttribute> columnAttributes = new ArrayList<>();
         columnAttributes.add(new ColumnAttribute("C1", "String", "B-0|T-0", "SP-(B-NR|T-NR)-(R-NA)"));
         columnAttributes.add(new ColumnAttribute("C2", "String", "B-1|T-1", "SP-(B-NR|T-NR)-(R-NA)"));
         columnAttributes.add(new ColumnAttribute("C3", "String", "B-2|T-2", "SP-(B-NR|T-NR)-(R-NA)"));
