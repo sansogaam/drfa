@@ -17,7 +17,7 @@ public class MessageProcessor {
         this.answer = answer;
     }
 
-    public void processMessage(MessagePublisher messagePublisher, String message, String processId) {
+    public String processMessage(String message) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
         MessageDecorator messageDecorator = new MessageDecorator(splittedMessage, answer);
@@ -25,13 +25,10 @@ public class MessageProcessor {
         if (!mapOfRowBreaks.isEmpty()) {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
             LOG.info(String.format("Converted Break Value %s", breakValue));
-            try {
-                messagePublisher.publishResult(processId, breakValue);
-            } catch (Exception e) {
-                LOG.info(String.format("Exception processing the message %s", breakValue));
-                e.printStackTrace();
-            }
+            return breakValue;
         }
+
+        return null;
     }
 
     private String covertCompareResultIntoString(Map<String, List<String>> mapOfRowBreaks) {

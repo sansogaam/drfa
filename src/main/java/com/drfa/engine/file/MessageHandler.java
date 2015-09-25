@@ -29,7 +29,9 @@ public class MessageHandler {
             return processSummaryMessage(message);
         } else {
             matchedRecords++;
-            messageProcessor.processMessage(messagePublisher, messageWithoutProcessId, messageProcessId);
+
+            String msg = messageProcessor.processMessage(messageWithoutProcessId);
+            messagePublisher.publishResult(messageProcessId, msg);
             return true;
         }
     }
