@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -31,9 +32,10 @@ public class MessageProcessorTest {
         Map<String, List<String>> msg = messageProcessor.processMessage(message);
 
         assertThat(msg.size(), is(4));
-//        assertThat(msg, containsString("C4~T4#T4#MATCHED"));
-//        assertThat(msg, containsString("C1~T1#T1#MATCHED"));
-//        assertThat(msg, containsString("C2~T2#T2.1#NOT MATCHED"));
+        assertThat(msg.get("C1"), hasItems("T1", "MATCHED"));
+        assertThat(msg.get("C2"), hasItems("T2", "T2.1", "NOT MATCHED"));
+        assertThat(msg.get("C3"), hasItems("T3", "MATCHED"));
+        assertThat(msg.get("C4"), hasItems("T4", "MATCHED"));
     }
 
 
