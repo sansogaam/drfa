@@ -114,32 +114,4 @@ public class MessageHandlerTest {
         }
         return mapOfBreaks;
     }
-
-    private Map<Integer, Map<String, List<String>>> populateMapOfBreakswithMatchAndUnMatch(){
-        Map<Integer, Map<String, List<String>>> mapOfBreaks = new HashMap<Integer, Map<String, List<String>>>();
-        for(int j = 0; j<10; j++){
-            Map<String, List<String>> mapOfRowBreaks = new HashMap<String, List<String>>();
-            for (int i = 0; i < 10; i++) {
-                List<String> column1 = new ArrayList<String>();
-                column1.add("T" + i);
-                column1.add("T" + (i + 1));
-                if(i%3 == 0){
-                    if(j%2 == 0) {
-                        column1.add("MATCHED");
-                    }else{
-                        column1.add("NOT MATCHED");
-                    }
-                }else {
-                    if(j%2 == 0) {
-                        column1.add("MATCHED");
-                    }else {
-                        column1.add("NOT MATCHED");
-                    }
-                }
-                mapOfRowBreaks.put("C" + i, column1);
-            }
-            mapOfBreaks.put(new Integer(j), mapOfRowBreaks);
-        }
-        return mapOfBreaks;
-    }
 }
