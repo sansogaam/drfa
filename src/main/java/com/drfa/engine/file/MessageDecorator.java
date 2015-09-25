@@ -1,6 +1,5 @@
 package com.drfa.engine.file;
 
-import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
 
 import java.util.ArrayList;
@@ -18,10 +17,10 @@ public class MessageDecorator {
     private String quote;
 
 
-    public MessageDecorator(List<String> lines, Answer answer) {
+    public MessageDecorator(List<String> lines, String quote, List<ColumnAttribute> columnAttribute) {
         this.lines = lines;
-        this.quote = answer.quote();
-        this.columnAttributes = answer.getColumnAttribute();
+        this.quote = quote;
+        this.columnAttributes = columnAttribute;
     }
 
     public Map<String, List<String>> decorateMessageWithBreak() {

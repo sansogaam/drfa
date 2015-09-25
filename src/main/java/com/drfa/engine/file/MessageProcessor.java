@@ -19,7 +19,7 @@ public class MessageProcessor {
     public String processMessage(String message) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
-        MessageDecorator messageDecorator = new MessageDecorator(splittedMessage, answer);
+        MessageDecorator messageDecorator = new MessageDecorator(splittedMessage, answer.quote(), answer.getColumnAttribute());
         Map<String, List<String>> mapOfRowBreaks = messageDecorator.decorateMessageWithBreak();
         if (!mapOfRowBreaks.isEmpty()) {
             String breakValue = covertCompareResultIntoString(mapOfRowBreaks);

@@ -36,7 +36,7 @@ public class MessageDecoratorTest {
         when(answer.getFileDelimiter()).thenReturn("|");
 
 
-        MessageDecorator messageDecorator = new MessageDecorator(lines, answer);
+        MessageDecorator messageDecorator = new MessageDecorator(lines, answer.quote(), answer.getColumnAttribute());
         Map<String, List<String>> mapOfBreaks = messageDecorator.decorateMessageWithBreak();
         assertEquals(0, mapOfBreaks.size());
     }
@@ -50,7 +50,7 @@ public class MessageDecoratorTest {
         when(answer.getColumnAttribute()).thenReturn(populateColumnAttributes());
         when(answer.quote()).thenReturn(Pattern.quote("|"));
 
-        MessageDecorator messageDecorator = new MessageDecorator(lines, answer);
+        MessageDecorator messageDecorator = new MessageDecorator(lines, answer.quote(), answer.getColumnAttribute());
         Map<String, List<String>> mapOfBreaks = messageDecorator.decorateMessageWithBreak();
         assertEquals(4, mapOfBreaks.size());
         List<String> breakColumn = mapOfBreaks.get("C4");
