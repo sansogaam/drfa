@@ -1,6 +1,7 @@
 package com.drfa.report;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,11 +41,38 @@ class ReportEnricher implements Enricher {
                 enrichOneSideBreakRecords(json);
             }
         } else {
-            String messageWithoutProcessId = (String) json.get(FULL_TEXT);
+            Map<String, List<String>> rowBreaks = new HashMap<String, List<String>>();
+            JSONObject jsonObject = (JSONObject) json.get(ROW_BREAKS);
+            for (String s : jsonObject.keySet()) {
+                JSONArray jsonArray = (JSONArray) jsonObject.get(s);
+                ArrayList<String> list = new ArrayList<String>();
+                if (jsonArray != null) {
+                    int len = jsonArray.length();
+                    for (int i = 0; i < len; i++) {
+                        list.add(jsonArray.get(i).toString());
+                    }
+                }
+                rowBreaks.put(s, list);
+            }
+
+            String messageWithoutProcessId = covertCompareResultIntoString(rowBreaks);
             enrichDetailMessageReport(messageWithoutProcessId);
 
         }
 
+    }
+
+    private String covertCompareResultIntoString(Map<String, List<String>> mapOfRowBreaks) {
+        StringBuffer sb = new StringBuffer();
+        for (String columnName : mapOfRowBreaks.keySet()) {
+            List<String> columnValues = mapOfRowBreaks.get(columnName);
+            sb.append(columnName).append("~");
+            for (String columnValue : columnValues) {
+                sb.append(columnValue).append("#");
+            }
+            sb.append("$");
+        }
+        return sb.toString();
     }
 
     private void enrichOneSideBreakRecords(JSONObject json) {

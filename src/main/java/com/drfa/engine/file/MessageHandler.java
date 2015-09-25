@@ -6,6 +6,7 @@ import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
@@ -34,7 +35,8 @@ public class MessageHandler {
             return processSummaryMessage(message);
         } else {
             matchedRecords++;
-            messagePublisher.publishResult(messageProcessId, messageProcessor.processMessage(messageWithoutProcessId));
+            Map<String, List<String>> mapOfRowBreaks = messageProcessor.processMessage(messageWithoutProcessId);
+            messagePublisher.publishResult(messageProcessId, mapOfRowBreaks);
             return true;
         }
     }

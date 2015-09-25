@@ -5,6 +5,7 @@ import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.report.ResultMessageConstants;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.drfa.util.DrfaProperties.BREAK_MESSAGE_QUEUE;
@@ -15,10 +16,10 @@ public class MessagePublisher {
         new ActiveMqPublisher().sendMsg(message, queue);
     }
 
-    public void publishResult(String processId, String message) {
+    public void publishResult(String processId, Map<String, List<String>> rowBreaks) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(ResultMessageConstants.PROCESS_ID, processId);
-        jsonObject.put(ResultMessageConstants.FULL_TEXT, message);
+        jsonObject.put(ResultMessageConstants.ROW_BREAKS, rowBreaks);
         new ActiveMqPublisher().sendMsg(jsonObject.toString(), BREAK_MESSAGE_QUEUE);
     }
 

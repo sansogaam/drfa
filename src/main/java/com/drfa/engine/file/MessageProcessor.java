@@ -22,16 +22,11 @@ public class MessageProcessor {
         this.answer = answer;
     }
 
-    public String processMessage(String message) {
+    public Map<String, List<String>> processMessage(String message) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
         Map<String, List<String>> mapOfRowBreaks = decorateMessageWithBreak(splittedMessage, answer.quote(), answer.getColumnAttribute());
-        if (!mapOfRowBreaks.isEmpty()) {
-            String breakValue = covertCompareResultIntoString(mapOfRowBreaks);
-            LOG.info(String.format("Converted Break Value %s", breakValue));
-            return breakValue;
-        }
-        return null;
+        return mapOfRowBreaks;
     }
 
     private Map<String, List<String>> decorateMessageWithBreak(List<String> lines, String quote, List<ColumnAttribute> columnAttributes) {
@@ -61,18 +56,5 @@ public class MessageProcessor {
             }
         }
         return mapOfRowBreak;
-    }
-
-    private String covertCompareResultIntoString(Map<String, List<String>> mapOfRowBreaks) {
-        StringBuffer sb = new StringBuffer();
-        for (String columnName : mapOfRowBreaks.keySet()) {
-            List<String> columnValues = mapOfRowBreaks.get(columnName);
-            sb.append(columnName).append("~");
-            for (String columnValue : columnValues) {
-                sb.append(columnValue).append("#");
-            }
-            sb.append("$");
-        }
-        return sb.toString();
     }
 }
