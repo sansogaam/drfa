@@ -30,7 +30,8 @@ public class MessageHandlerTest {
     public void testMessageHandlerForExitMessage() throws Exception{
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(processor, publisher);
+        Answer answer = mock(Answer.class);
+        MessageHandler handler = new MessageHandler(processor, publisher, answer);
         handler.handleMessage("PROCESS_ID:786-Exit");
         verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("MATCHED_RECORDS"), eq("0"));
     }
@@ -39,7 +40,8 @@ public class MessageHandlerTest {
     public void testMessageHandlerForSummaryMessageOfBase() throws Exception {
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(processor, publisher);
+        Answer answer = mock(Answer.class);
+        MessageHandler handler = new MessageHandler(processor, publisher, answer);
         String message = "PROCESS_ID:786-SUMMARY:BASE:24";
         handler.handleMessage(message);
         verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("BASE_TOTAL_RECORDS"), eq("24"));
@@ -49,7 +51,8 @@ public class MessageHandlerTest {
     public void testMessageHandlerForSummaryMessageOfTarget() throws Exception{
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(processor, publisher);
+        Answer answer = mock(Answer.class);
+        MessageHandler handler = new MessageHandler(processor, publisher, answer);
         String message = "PROCESS_ID:786-SUMMARY:TARGET:25";
         handler.handleMessage(message);
         verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_TOTAL_RECORDS"), eq("25"));
@@ -63,7 +66,9 @@ public class MessageHandlerTest {
         storageMap.put("TARGET:C1", "Exist");
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
-        MessageHandler handler = new MessageHandler(processor, publisher);
+        Answer answer = mock(Answer.class);
+        when(answer.getFileDelimiter()).thenReturn("|");
+        MessageHandler handler = new MessageHandler(processor, publisher, answer);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
@@ -82,7 +87,7 @@ public class MessageHandlerTest {
         when(answer.getFileDelimiter()).thenReturn("|");
 
         MessageProcessor processor = new MessageProcessor(answer);
-        MessageHandler handler = new MessageHandler(processor, publisher);
+        MessageHandler handler = new MessageHandler(processor, publisher, answer);
         handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
         verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));

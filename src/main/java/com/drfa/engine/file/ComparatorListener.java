@@ -28,7 +28,7 @@ public class ComparatorListener implements Callable<Boolean> {
     @Override
     public Boolean call() throws Exception {
         MessageProcessor messageProcessor = new MessageProcessor(answer);
-        MessageHandler messageHandler = new MessageHandler(messageProcessor, messagePublisher);
+        MessageHandler messageHandler = new MessageHandler(messageProcessor, messagePublisher, answer);
         LOG.info("Matching the keys between the hash-map and storing it in one common place");
         boolean continueConsumingMessage = true;
         String processId = null;

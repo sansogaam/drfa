@@ -1,5 +1,6 @@
 package com.drfa.engine.file;
 
+import com.drfa.cli.Answer;
 import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
@@ -14,10 +15,12 @@ public class MessageHandler {
     private MessageProcessor messageProcessor;
     private int matchedRecords = 0;
     private MessagePublisher messagePublisher;
+    private Answer answer;
 
-    public MessageHandler(MessageProcessor messageProcessor, MessagePublisher messagePublisher) {
+    public MessageHandler(MessageProcessor messageProcessor, MessagePublisher messagePublisher, Answer answer) {
         this.messageProcessor = messageProcessor;
         this.messagePublisher = messagePublisher;
+        this.answer = answer;
     }
 
     public boolean handleMessage(String message) {
@@ -73,14 +76,20 @@ public class MessageHandler {
         for (String key : storageMap.keySet()) {
             String value = storageMap.get(key);
             if (key.startsWith(BASE_THREAD_NAME)) {
-                messageProcessor.processOneSidedMessage(messagePublisher, processId, "ONE-SIDED-BASE", value);
+                publishOneSidedMessage(processId, value, messagePublisher, "ONE-SIDED-BASE");
                 baseOneSidedBreak++;
             } else if (key.startsWith(TARGET_THREAD_NAME)) {
-                messageProcessor.processOneSidedMessage(messagePublisher, processId, "ONE-SIDED-TARGET", value);
+                publishOneSidedMessage(processId, value, messagePublisher, "ONE-SIDED-TARGET");
                 targetOneSidedBreak++;
             }
         }
         messagePublisher.publishResult(processId, "BASE_ONE_SIDED_BREAK", baseOneSidedBreak + "");
         messagePublisher.publishResult(processId, "TARGET_ONE_SIDED_BREAK", targetOneSidedBreak + "");
+    }
+
+    private void publishOneSidedMessage(String processId, String message, MessagePublisher messagePublisher, String fileType) {
+        MessageDecorator messageDecorator = new MessageDecorator(message, answer);
+        Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
+        messagePublisher.publishOneSideBreak(processId, fileType, mapOfOneSidedBreaks);
     }
 }

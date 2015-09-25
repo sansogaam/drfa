@@ -1,7 +1,6 @@
 package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
-import com.drfa.messaging.MessagePublisher;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -42,12 +41,5 @@ public class MessageProcessor {
             sb.append("$");
         }
         return sb.toString();
-    }
-
-    public void processOneSidedMessage(MessagePublisher messagePublisher, String processId, String fileType, String message) {
-        MessageDecorator messageDecorator = new MessageDecorator(message, answer);
-        Map<String, String> mapOfOneSidedBreaks = messageDecorator.decorateMessageWithOneSideBreak();
-        messagePublisher.publishOneSideBreak(processId, fileType, mapOfOneSidedBreaks);
-
     }
 }
