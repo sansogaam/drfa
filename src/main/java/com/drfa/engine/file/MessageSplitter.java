@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by Sanjiv on 2/13/2015.
- */
+
 public class MessageSplitter {
 
-    String message;
+    private String message;
     public MessageSplitter(String message){
         this.message = message;
     }

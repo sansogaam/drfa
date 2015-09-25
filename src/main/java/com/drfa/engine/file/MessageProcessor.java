@@ -2,7 +2,6 @@ package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +13,6 @@ import static com.drfa.engine.EngineConstants.NOT_MATCHED;
 
 public class MessageProcessor {
 
-    private static Logger LOG = Logger.getLogger(MessageProcessor.class);
-
     private Answer answer;
 
     public MessageProcessor(Answer answer) {
@@ -25,33 +22,27 @@ public class MessageProcessor {
     public Map<String, List<String>> processMessage(String message) {
         MessageSplitter messageSplitter = new MessageSplitter(message);
         List<String> splittedMessage = messageSplitter.splitMessage();
-        Map<String, List<String>> mapOfRowBreaks = decorateMessageWithBreak(splittedMessage, answer.quote(), answer.getColumnAttribute());
-        return mapOfRowBreaks;
-    }
-
-    private Map<String, List<String>> decorateMessageWithBreak(List<String> lines, String quote, List<ColumnAttribute> columnAttributes) {
         Map<String, List<String>> mapOfRowBreak = new HashMap<String, List<String>>();
-        String firstLine = lines.get(0);
-        String secondLine = lines.get(1);
+        String firstLine = splittedMessage.get(0);
+        String secondLine = splittedMessage.get(1);
         if (!firstLine.equalsIgnoreCase(secondLine)) {
-            String[] firstLineSplit = firstLine.split(quote);
-            String[] secondLineSplit = secondLine.split(quote);
+            String[] firstLineSplit = firstLine.split(answer.quote());
+            String[] secondLineSplit = secondLine.split(answer.quote());
             int valueCounter = 0;
-            for (ColumnAttribute columnAttribute : columnAttributes) {
-                String columnName = columnAttribute.getColumnName();
-                List<String> columnValues = new ArrayList<String>();
+            for (ColumnAttribute columnAttribute : answer.getColumnAttribute()) {
                 String firstLineColumnValue = firstLineSplit[valueCounter];
                 String secondLineColumnValue = secondLineSplit[valueCounter];
                 String compareValue = NOT_MATCHED;
                 ValueComparator valueComparator = new ValueComparator(columnAttribute.getColumnType(), columnAttribute.getColumnRule());
-                if (valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue, valueComparator.parseColumnExpression())) {
+                if (valueComparator.compareValue(firstLineColumnValue, secondLineColumnValue)) {
                     compareValue = MATCHED;
                 }
-                //System.out.println(String.format("firstLineColumnValue %s secondLineColumnValue %s compareValue %s columnType %s columnRule %s",firstLineColumnValue, secondLineColumnValue, compareValue, columnAttribute.getColumnType(), columnAttribute.getColumnRule()));
+
+                List<String> columnValues = new ArrayList<String>();
                 columnValues.add(firstLineSplit[valueCounter]);
                 columnValues.add(secondLineSplit[valueCounter]);
                 columnValues.add(compareValue);
-                mapOfRowBreak.put(columnName, columnValues);
+                mapOfRowBreak.put(columnAttribute.getColumnName(), columnValues);
                 valueCounter++;
             }
         }
