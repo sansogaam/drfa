@@ -19,6 +19,7 @@ public class Engine {
         this.answer = answer;
         this.messagePublisher = messagePublisher;
     }
+    
 
     public void reconcile() throws ExecutionException, InterruptedException {
         long startTime = System.currentTimeMillis();
