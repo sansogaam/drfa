@@ -24,9 +24,9 @@ public class CommandConsole {
 
     public static void main(String args[]) throws JMSException {
         CommandConsole commandConsole = new CommandConsole();
-        //commandConsole.manualRunProgram();
+        commandConsole.manualRunProgram();
         //commandConsole.manualRunDBProgram();
-        commandConsole.askQuestions();
+        //commandConsole.askQuestions();
     }
 
     public void askQuestions() {

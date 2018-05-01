@@ -32,9 +32,19 @@ public class Answer {
     private String fileDelimiter ="|";
     private String baseKeyIndex;
     private String targetKeyIndex;
+    private String resultPublishingServer="ACTIVE-MQ";
+
     private int keyIndex;
 
-    
+
+    public String getResultPublishingServer() {
+        return resultPublishingServer;
+    }
+
+    public void setResultPublishingServer(String resultPublishingServer) {
+        this.resultPublishingServer = resultPublishingServer;
+    }
+
     public String getFileDelimiter() {
         return fileDelimiter != null ? fileDelimiter : "|";
     }

@@ -1,5 +1,6 @@
 package com.drfa.messaging.jms;
 
+import com.drfa.messaging.Publisher;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -9,7 +10,7 @@ import static javax.jms.DeliveryMode.NON_PERSISTENT;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 
 
-public class ActiveMqPublisher {
+public class ActiveMqPublisher implements Publisher{
 
     public void sendMsg(String msg, String queue) {
         try {
@@ -33,5 +34,10 @@ public class ActiveMqPublisher {
             System.out.println("Caught: " + e);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void publish(String message, String queue) {
+        sendMsg(message,queue);
     }
 }

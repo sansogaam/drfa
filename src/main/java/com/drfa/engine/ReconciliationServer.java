@@ -3,6 +3,9 @@ package com.drfa.engine;
 import com.drfa.cli.Answer;
 import com.drfa.messaging.Listener;
 import com.drfa.messaging.MessagePublisher;
+import com.drfa.messaging.Publisher;
+import com.drfa.messaging.jms.ActiveMqPublisher;
+import com.drfa.messaging.kafka.KafkaPublisher;
 import com.drfa.util.DrfaProperties;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
@@ -43,7 +46,7 @@ public class ReconciliationServer implements MessageListener {
 
     private void processMessage(String messageBody) {
         Answer answer = convertToAnswerObject(messageBody);
-        Engine engine = new Engine(answer, new MessagePublisher());
+        Engine engine = new Engine(answer, new MessagePublisher(determinResultPublisher(answer)));
         try {
             engine.reconcile();
         } catch (ExecutionException e) {
@@ -51,6 +54,17 @@ public class ReconciliationServer implements MessageListener {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private Publisher determinResultPublisher(Answer answer){
+        if(answer.getResultPublishingServer().equalsIgnoreCase("ACTIVE-MQ")){
+            return new ActiveMqPublisher();
+        }else{
+            return new KafkaPublisher();
+        }
+    }
+    public Publisher checkTheBreakMessagingServer(){
+        return null;
     }
 
     private Answer convertToAnswerObject(String xmlString) {
