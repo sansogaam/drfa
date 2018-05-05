@@ -3,6 +3,7 @@ package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class MessageProcessorTest {
 
     @Test
     public void testProcessMessageForDeterminingTheBase() throws Exception {
-        String message = "BASE:T1|T2|T3|T4$T1|T2.1|T3|T4";
+        String message = "BASE:T1|T2|T3|T4"+ DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2.1|T3|T4";
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());
@@ -41,7 +42,7 @@ public class MessageProcessorTest {
 
     @Test
     public void testTheMapIsEmptyIfTheTargetAndBaseValueAreSame() {
-        String message = "BASE:T1|T2|T3|T4$T1|T2|T3|T4";
+        String message = "BASE:T1|T2|T3|T4"+DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2|T3|T4";
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());

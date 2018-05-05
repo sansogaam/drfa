@@ -8,6 +8,7 @@ import com.drfa.engine.ReconciliationServer;
 import com.drfa.jms.ResultListener;
 import com.drfa.messaging.jms.ActiveMqListener;
 import com.drfa.report.ResultMessageConstants;
+import com.drfa.util.DrfaProperties;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -55,7 +56,7 @@ public class EndToEndReconciliationTest {
 
 
         for (JSONObject jsonObject : messages) {
-            assertThat(jsonObject.get(ResultMessageConstants.PROCESS_ID), Matchers.is("PROCESS_ID:1-"));
+            assertThat(jsonObject.get(ResultMessageConstants.PROCESS_ID), Matchers.is(DrfaProperties.PROCESS_PREFIX+"1-"));
         }
 
     }

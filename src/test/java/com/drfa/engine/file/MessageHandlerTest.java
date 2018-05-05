@@ -3,6 +3,8 @@ package com.drfa.engine.file;
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
 import com.drfa.messaging.MessagePublisher;
+import com.drfa.report.ResultMessageConstants;
+import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,8 +35,8 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        handler.handleMessage("PROCESS_ID:786-Exit");
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("MATCHED_RECORDS"), eq("0"));
+        handler.handleMessage(DrfaProperties.PROCESS_PREFIX+"786-Exit");
+        verify(publisher).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.MATCHED_RECORDS), eq("0"));
     }
 
     @Test
@@ -43,9 +45,9 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        String message = "PROCESS_ID:786-SUMMARY:BASE:24";
+        String message = DrfaProperties.PROCESS_PREFIX+"786-SUMMARY:BASE:24";
         handler.handleMessage(message);
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("BASE_TOTAL_RECORDS"), eq("24"));
+        verify(publisher).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.BASE_TOTAL_RECORDS), eq("24"));
     }
 
     @Test
@@ -54,7 +56,7 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        String message = "PROCESS_ID:786-SUMMARY:TARGET:25";
+        String message = DrfaProperties.PROCESS_PREFIX+"786-"+DrfaProperties.SUMMARY_PREFIX+DrfaProperties.TARGET_PREFIX+"25";
         handler.handleMessage(message);
         verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_TOTAL_RECORDS"), eq("25"));
     }
@@ -105,9 +107,9 @@ public class MessageHandlerTest {
                 column1.add("T" + i);
                 column1.add("T" + (i + 1));
                 if(i%3 == 0){
-                    column1.add("MATCHED");
+                    column1.add(ResultMessageConstants.MATCHED);
                 }else {
-                    column1.add("NOT MATCHED");
+                    column1.add(ResultMessageConstants.NOT_MATCHED);
                 }
                 mapOfRowBreaks.put("C" + i, column1);
             }

@@ -2,6 +2,7 @@ package com.drfa.cli;
 
 import com.drfa.engine.ReconciliationInput;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.util.DrfaProperties;
 
 import java.io.File;
 import java.util.List;
@@ -214,7 +215,7 @@ public class Answer {
     }
 
     public String processPrefix() {
-        return "PROCESS_ID:" + processId + "-";
+        return DrfaProperties.PROCESS_PREFIX + processId + "-";
     }
 
     @Override

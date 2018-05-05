@@ -2,6 +2,7 @@ package com.drfa.engine.file.scan;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
@@ -32,9 +33,9 @@ public class ScanFile {
             LOG.info(String.format("This line is for thread %s with content %s", threadName, toBeComparedLine));
             String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
             if (doesKeyExist == null) {
-                storageMap.put(threadName + ":" + constructedPrimaryKey, toBeComparedLine);
+                storageMap.put(threadName + DrfaProperties.THREAD_NAMES_JOINER + constructedPrimaryKey, toBeComparedLine);
             } else {
-                String stringToCompare = answer.processPrefix() + threadName + ":" + toBeComparedLine + "$" + doesKeyExist;
+                String stringToCompare = answer.processPrefix() + threadName + DrfaProperties.THREAD_NAMES_JOINER + toBeComparedLine + DrfaProperties.BASE_AND_TARGET_JOINER + doesKeyExist;
                 LOG.info(String.format("Comparing the line %s", stringToCompare));
                 queue.put(stringToCompare);
                 storageMap.remove(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
@@ -42,13 +43,13 @@ public class ScanFile {
             totalNumberOfRecords++;
         }
 
-        queue.put(answer.processPrefix() + "SUMMARY:" + threadName + ":" + totalNumberOfRecords);
+        queue.put(answer.processPrefix() + "SUMMARY:" + threadName + DrfaProperties.THREAD_NAMES_JOINER + totalNumberOfRecords);
 
     }
 
 
     public String checkPrefixOfTheKey(String threadName) {
-        return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME + ":" : BASE_THREAD_NAME + ":";
+        return "BASE".equalsIgnoreCase(threadName) ? TARGET_THREAD_NAME + DrfaProperties.THREAD_NAMES_JOINER : BASE_THREAD_NAME + DrfaProperties.THREAD_NAMES_JOINER;
     }
 
 

@@ -1,5 +1,6 @@
 package com.drfa.report;
 
+import com.drfa.util.DrfaProperties;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,17 +28,17 @@ class ReportEnricher implements Enricher {
         if (json.has(TYPE)) {
             String records = (String) json.get(TYPE_NO_RECORDS);
             String type = (String) json.get(TYPE);
-            if ("MATCHED_RECORDS".equals(type)) {
+            if (ResultMessageConstants.MATCHED_RECORDS.equals(type)) {
                 report.setMatchedWithNumberOfKeys(new Integer(records));
-            } else if ("BASE_TOTAL_RECORDS".equals(type)) {
+            } else if (ResultMessageConstants.BASE_TOTAL_RECORDS.equals(type)) {
                 report.setBaseTotalRecords(new Integer(records));
-            } else if ("TARGET_TOTAL_RECORDS".equals(type)) {
+            } else if (ResultMessageConstants.TARGET_TOTAL_RECORDS.equals(type)) {
                 report.setTargetTotalRecords(new Integer(records));
-            } else if ("BASE_ONE_SIDED_BREAK".equals(type)) {
+            } else if (ResultMessageConstants.BASE_ONE_SIDED_BREAK.equals(type)) {
                 report.setBaseOneSidedBreaks(new Integer(records));
-            } else if ("TARGET_ONE_SIDED_BREAK".equals(type)) {
+            } else if (ResultMessageConstants.TARGET_ONE_SIDED_BREAK.equals(type)) {
                 report.setTargetOneSidedBreaks(new Integer(records));
-            } else if ("ONE-SIDED-BASE".equals(type) || "ONE-SIDED-TARGET".equals(type)) {
+            } else if (ResultMessageConstants.ONE_SIDED_BASE.equals(type) || ResultMessageConstants.ONE_SIDED_TARGET.equals(type)) {
                 enrichOneSideBreakRecords(json);
             }
         } else {
@@ -66,11 +67,11 @@ class ReportEnricher implements Enricher {
         StringBuffer sb = new StringBuffer();
         for (String columnName : mapOfRowBreaks.keySet()) {
             List<String> columnValues = mapOfRowBreaks.get(columnName);
-            sb.append(columnName).append("~");
+            sb.append(columnName).append(DrfaProperties.BASE_AND_TARGET_COLUMN_NAME_APPENDER);
             for (String columnValue : columnValues) {
-                sb.append(columnValue).append("#");
+                sb.append(columnValue).append(DrfaProperties.BASE_AND_TARGET_COLUMN_VALUE_APPENDER);
             }
-            sb.append("$");
+            sb.append(DrfaProperties.BASE_AND_TARGET_TWO_COLUMNS_JOINER);
         }
         return sb.toString();
     }
@@ -102,11 +103,11 @@ class ReportEnricher implements Enricher {
 
     private void enrichDetailMessageReport(String message) {
         Map<String, List<String>> mapOfBreaks = new HashMap<String, List<String>>();
-        String splitMessages[] = message.split(Pattern.quote("$"));
+        String splitMessages[] = message.split(Pattern.quote(DrfaProperties.BASE_AND_TARGET_TWO_COLUMNS_JOINER));
         for (String splitMessage : splitMessages) {
-            String columnSplitMessage[] = splitMessage.split(Pattern.quote("~"));
+            String columnSplitMessage[] = splitMessage.split(Pattern.quote(DrfaProperties.BASE_AND_TARGET_COLUMN_NAME_APPENDER));
             String columnName = columnSplitMessage[0];
-            String columnValues[] = columnSplitMessage[1].split(Pattern.quote("#"));
+            String columnValues[] = columnSplitMessage[1].split(Pattern.quote(DrfaProperties.BASE_AND_TARGET_COLUMN_VALUE_APPENDER));
             List<String> columnResults = new ArrayList<String>();
             for (String columnValue : columnValues) {
                 columnResults.add(columnValue);
@@ -135,7 +136,7 @@ class ReportEnricher implements Enricher {
             for (String columnName : columnBreakes.keySet()) {
                 List<String> values = columnBreakes.get(columnName);
                 List<Integer> listNumberOfBreaks = mapOfColumnBreaks.get(columnName);
-                if (values.get(2).equalsIgnoreCase("NOT_MATCHED")) {
+                if (values.get(2).equalsIgnoreCase(ResultMessageConstants.NOT_MATCHED)) {
                     if (listNumberOfBreaks == null) {
                         listNumberOfBreaks = new ArrayList<Integer>();
                         listNumberOfBreaks.add(0, new Integer(1));
@@ -145,7 +146,7 @@ class ReportEnricher implements Enricher {
                         listNumberOfBreaks.remove(0);
                         listNumberOfBreaks.add(0, existingValue);
                     }
-                } else if (values.get(2).equalsIgnoreCase("MATCHED")) {
+                } else if (values.get(2).equalsIgnoreCase(ResultMessageConstants.MATCHED)) {
                     if (listNumberOfBreaks == null) {
                         listNumberOfBreaks = new ArrayList<Integer>();
                         listNumberOfBreaks.add(0, new Integer(0));

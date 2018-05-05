@@ -1,5 +1,7 @@
 package com.drfa.engine.file;
 
+import com.drfa.util.DrfaProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,7 +16,7 @@ public class MessageSplitter {
 
     public List<String> splitMessage(){
         List<String> splittedList = new ArrayList<String>();
-        String splitTheMessage[] = message.split(Pattern.quote("$"));
+        String splitTheMessage[] = message.split(Pattern.quote(DrfaProperties.BASE_AND_TARGET_JOINER));
         String firstLine = splitTheMessage[0];
         String secondLine = splitTheMessage[1];
         boolean isFromBaseFile = isItFromBaseFile(firstLine);
@@ -31,7 +33,7 @@ public class MessageSplitter {
     }
 
     private boolean isItFromBaseFile(String firstLine){
-        return firstLine.startsWith("BASE:");
+        return firstLine.startsWith(DrfaProperties.BASE_PREFIX);
     }
 
 }
