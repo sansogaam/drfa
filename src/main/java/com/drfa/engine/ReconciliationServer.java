@@ -58,9 +58,9 @@ public class ReconciliationServer implements MessageListener {
 
     private Publisher determinResultPublisher(Answer answer){
         if(answer.getResultPublishingServer().equalsIgnoreCase("ACTIVE-MQ")){
-            return new ActiveMqPublisher();
+            return new ActiveMqPublisher(DrfaProperties.BREAK_MESSAGE_QUEUE);
         }else{
-            return new KafkaPublisher();
+            return new KafkaPublisher(DrfaProperties.BREAK_MESSAGE_TOPIC);
         }
     }
 

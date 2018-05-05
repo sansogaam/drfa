@@ -1,6 +1,7 @@
 package com.drfa.cli;
 
 import com.drfa.messaging.MessagePublisher;
+import com.drfa.messaging.jms.ActiveMqPublisher;
 import com.drfa.util.DrfaProperties;
 import com.drfa.validator.ReconciliationTypeValidator;
 import com.thoughtworks.xstream.XStream;
@@ -44,7 +45,7 @@ public class CommandConsole {
     }
 
     public void publisher(String message, String queueName) {
-        new MessagePublisher().publish(message, queueName);
+        new MessagePublisher(new ActiveMqPublisher(DrfaProperties.REC_ANSWER)).publish(message);
     }
 
     public String convertAnswerToString(Answer answer) {

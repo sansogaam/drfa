@@ -5,6 +5,7 @@ import acceptance.com.drfa.helper.ActiveMqRunner;
 import com.drfa.jms.BasicMessageListener;
 import com.drfa.messaging.MessagePublisher;
 import com.drfa.messaging.jms.ActiveMqListener;
+import com.drfa.messaging.jms.ActiveMqPublisher;
 import org.junit.Test;
 
 import javax.jms.TextMessage;
@@ -29,7 +30,7 @@ public class BasicActiveMqProduceConsumerTest {
         new ActiveMqListener(listener).startMsgListener(testQueue);
 
         String msg = "Sample Text Message";
-        new MessagePublisher().publish(msg, testQueue);
+        new MessagePublisher(new ActiveMqPublisher(testQueue)).publish(msg);
 
         latch.await(10, TimeUnit.SECONDS);
 

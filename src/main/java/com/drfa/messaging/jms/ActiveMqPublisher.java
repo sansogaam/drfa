@@ -12,14 +12,20 @@ import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 
 public class ActiveMqPublisher implements Publisher{
 
-    public void sendMsg(String msg, String queue) {
+    private String queueName;
+
+    public ActiveMqPublisher(String queueName){
+        this.queueName = queueName;
+    }
+
+    private void sendMsg(String msg) {
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
             Connection connection = connectionFactory.createConnection();
             connection.start();
 
             Session session = connection.createSession(false, AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue(queue);
+            Destination destination = session.createQueue(this.queueName);
 
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(NON_PERSISTENT);
@@ -37,7 +43,7 @@ public class ActiveMqPublisher implements Publisher{
     }
 
     @Override
-    public void publish(String message, String queue) {
-        sendMsg(message,queue);
+    public void publish(String message) {
+        sendMsg(message);
     }
 }

@@ -36,8 +36,7 @@ public class MessageHandler {
         } else {
             matchedRecords++;
             Map<String, List<String>> mapOfRowBreaks = messageProcessor.processMessage(messageWithoutProcessId);
-            //messagePublisher.publishResult(messageProcessId, mapOfRowBreaks);
-            messagePublisher.publishKafkaResult(messageProcessId, mapOfRowBreaks);
+            messagePublisher.publishResult(messageProcessId, mapOfRowBreaks);
             return true;
         }
     }

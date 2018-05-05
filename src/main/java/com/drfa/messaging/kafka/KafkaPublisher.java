@@ -9,11 +9,14 @@ import java.util.Properties;
 
 public class KafkaPublisher implements Publisher{
 
-    private final static String TOPIC = "reconciliation-topic";
+
     private final static String BOOTSTRAP_SERVERS ="localhost:9092,localhost:9093,localhost:9094";
     long index=0;
     Producer<Long, String> producer;
-    public KafkaPublisher(){
+    private String topicName;
+
+    public KafkaPublisher(String topicName){
+        this.topicName = topicName;
         producer = createProducer();
     }
     private static Producer<Long, String> createProducer() {
@@ -26,17 +29,17 @@ public class KafkaPublisher implements Publisher{
     }
 
     @Override
-    public void publish(String message,String topic){
+    public void publish(String message){
         try{
-            publishMessage(message, topic);
+            publishMessage(message);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    public void publishMessage(String message,String topic) throws Exception {
+    private void publishMessage(String message) throws Exception {
         long time = System.currentTimeMillis();
-        ProducerRecord<Long, String> record =new ProducerRecord<>(topic, index,message);
+        ProducerRecord<Long, String> record =new ProducerRecord<>(this.topicName , index,message);
         RecordMetadata metadata = producer.send(record).get();
         long elapsedTime = System.currentTimeMillis() - time;
         System.out.printf("sent record(key=%s value=%s) " +"meta(partition=%d, offset=%d) time=%d\n",
