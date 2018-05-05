@@ -10,7 +10,7 @@ public interface ResultMessageConstants {
 
     //Reports matching
 
-    String NOT_MATCHED = "NOT_MATCHED";
+    String NOT_MATCHED = "NOT MATCHED";
     String MATCHED = "MATCHED";
     String MATCHED_RECORDS="MATCHED_RECORDS";
     String BASE_TOTAL_RECORDS = "BASE_TOTAL_RECORDS";

@@ -3,6 +3,7 @@ package com.drfa.engine.file;
 
 import com.drfa.cli.Answer;
 import com.drfa.engine.meta.ColumnAttribute;
+import com.drfa.report.ResultMessageConstants;
 import com.drfa.util.DrfaProperties;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class MessageProcessorTest {
 
     @Test
     public void testProcessMessageForDeterminingTheBase() throws Exception {
-        String message = "BASE:T1|T2|T3|T4"+ DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2.1|T3|T4";
+        String message = DrfaProperties.BASE_PREFIX+"T1|T2|T3|T4"+ DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2.1|T3|T4";
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());
@@ -33,16 +34,16 @@ public class MessageProcessorTest {
         Map<String, List<String>> msg = messageProcessor.processMessage(message);
 
         assertThat(msg.size(), is(4));
-        assertThat(msg.get("C1"), hasItems("T1", "MATCHED"));
-        assertThat(msg.get("C2"), hasItems("T2", "T2.1", "NOT MATCHED"));
-        assertThat(msg.get("C3"), hasItems("T3", "MATCHED"));
-        assertThat(msg.get("C4"), hasItems("T4", "MATCHED"));
+        assertThat(msg.get("C1"), hasItems("T1", ResultMessageConstants.MATCHED));
+        assertThat(msg.get("C2"), hasItems("T2", "T2.1", ResultMessageConstants.NOT_MATCHED));
+        assertThat(msg.get("C3"), hasItems("T3", ResultMessageConstants.MATCHED));
+        assertThat(msg.get("C4"), hasItems("T4", ResultMessageConstants.MATCHED));
     }
 
 
     @Test
     public void testTheMapIsEmptyIfTheTargetAndBaseValueAreSame() {
-        String message = "BASE:T1|T2|T3|T4"+DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2|T3|T4";
+        String message = DrfaProperties.BASE_PREFIX+"T1|T2|T3|T4"+DrfaProperties.BASE_AND_TARGET_JOINER+"T1|T2|T3|T4";
 
         Answer answer = mock(Answer.class);
         when(answer.getColumnAttribute()).thenReturn(getColumnAttributes());

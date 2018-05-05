@@ -33,7 +33,7 @@ public class MessageHandler {
         String messageProcessId = extractProcessIdFromMessage(message);
         if ("Exit".equalsIgnoreCase(messageWithoutProcessId)) {
             return processExitMessage(message);
-        } else if (messageWithoutProcessId.startsWith("SUMMARY:")) {
+        } else if (messageWithoutProcessId.startsWith(DrfaProperties.SUMMARY_PREFIX)) {
             return processSummaryMessage(message);
         } else {
             matchedRecords++;

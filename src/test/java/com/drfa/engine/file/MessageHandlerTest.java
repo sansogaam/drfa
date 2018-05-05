@@ -45,7 +45,7 @@ public class MessageHandlerTest {
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        String message = DrfaProperties.PROCESS_PREFIX+"786-SUMMARY:BASE:24";
+        String message = DrfaProperties.PROCESS_PREFIX+"786-"+DrfaProperties.SUMMARY_PREFIX+DrfaProperties.BASE_PREFIX+"24";
         handler.handleMessage(message);
         verify(publisher).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.BASE_TOTAL_RECORDS), eq("24"));
     }
@@ -58,31 +58,31 @@ public class MessageHandlerTest {
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
         String message = DrfaProperties.PROCESS_PREFIX+"786-"+DrfaProperties.SUMMARY_PREFIX+DrfaProperties.TARGET_PREFIX+"25";
         handler.handleMessage(message);
-        verify(publisher).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_TOTAL_RECORDS"), eq("25"));
+        verify(publisher).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.TARGET_TOTAL_RECORDS), eq("25"));
     }
 
     @Test
     public void testEnrichBreakReportForOneSidedBreak()throws  Exception{
         Map<String, String> storageMap = new HashMap<String, String>();
-        storageMap.put("BASE:C1", "Exist");
-        storageMap.put("BASE:C2", "Exist");
-        storageMap.put("TARGET:C1", "Exist");
+        storageMap.put(DrfaProperties.BASE_PREFIX+"C1", "Exist");
+        storageMap.put(DrfaProperties.BASE_PREFIX+"C2", "Exist");
+        storageMap.put(DrfaProperties.TARGET_PREFIX+"C1", "Exist");
         MessagePublisher publisher = mock(MessagePublisher.class);
         MessageProcessor processor = mock(MessageProcessor.class);
         Answer answer = mock(Answer.class);
         when(answer.quote()).thenReturn(Pattern.quote("|"));
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
+        handler.publishOneSidedBreak(storageMap, DrfaProperties.PROCESS_PREFIX+"786-");
+        verify(publisher, times(1)).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.BASE_ONE_SIDED_BREAK), eq("2"));
+        verify(publisher, times(1)).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.TARGET_ONE_SIDED_BREAK), eq("1"));
     }
 
     @Test
     public void testEnrichBreakReportForOneSidedBreakWithDetails()throws  Exception{
         Map<String, String> storageMap = new HashMap<String, String>();
-        storageMap.put("BASE:Exist1", "Exist1|Exist2|Exist3|Exist4");
-        storageMap.put("BASE:Exist2", "Exist5|Exist6|Exist7|Exist8");
-        storageMap.put("TARGET:Exist1", "Exist1|Exist2|Exist3|Exist4");
+        storageMap.put(DrfaProperties.BASE_PREFIX+"Exist1", "Exist1|Exist2|Exist3|Exist4");
+        storageMap.put(DrfaProperties.BASE_PREFIX+"Exist2", "Exist5|Exist6|Exist7|Exist8");
+        storageMap.put(DrfaProperties.TARGET_PREFIX+"Exist1", "Exist1|Exist2|Exist3|Exist4");
         MessagePublisher publisher = mock(MessagePublisher.class);
 
         Answer answer = mock(Answer.class);
@@ -91,11 +91,11 @@ public class MessageHandlerTest {
 
         MessageProcessor processor = new MessageProcessor(answer);
         MessageHandler handler = new MessageHandler(processor, publisher, answer);
-        handler.publishOneSidedBreak(storageMap, "PROCESS_ID:786-");
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("BASE_ONE_SIDED_BREAK"), eq("2"));
-        verify(publisher, times(1)).publishResult(eq("PROCESS_ID:786-"), eq("TARGET_ONE_SIDED_BREAK"), eq("1"));
-        verify(publisher, times(2)).publishOneSideBreak(eq("PROCESS_ID:786-"), eq("ONE-SIDED-BASE"), any(Map.class));
-        verify(publisher, times(1)).publishOneSideBreak(eq("PROCESS_ID:786-"), eq("ONE-SIDED-TARGET"), any(Map.class));
+        handler.publishOneSidedBreak(storageMap, DrfaProperties.PROCESS_PREFIX+"786-");
+        verify(publisher, times(1)).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.BASE_ONE_SIDED_BREAK), eq("2"));
+        verify(publisher, times(1)).publishResult(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.TARGET_ONE_SIDED_BREAK), eq("1"));
+        verify(publisher, times(2)).publishOneSideBreak(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.ONE_SIDED_BASE), any(Map.class));
+        verify(publisher, times(1)).publishOneSideBreak(eq(DrfaProperties.PROCESS_PREFIX+"786-"), eq(ResultMessageConstants.ONE_SIDED_TARGET), any(Map.class));
     }
 
     private Map<Integer, Map<String, List<String>>> populateMapOfBreaks(){

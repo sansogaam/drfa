@@ -4,3 +4,4 @@ lib/
 *.iml
 *.log
 dist/
+*.zip

@@ -43,7 +43,7 @@ public class ScanFile {
             totalNumberOfRecords++;
         }
 
-        queue.put(answer.processPrefix() + "SUMMARY:" + threadName + DrfaProperties.THREAD_NAMES_JOINER + totalNumberOfRecords);
+        queue.put(answer.processPrefix() + DrfaProperties.SUMMARY_PREFIX+ threadName + DrfaProperties.THREAD_NAMES_JOINER + totalNumberOfRecords);
 
     }
 
