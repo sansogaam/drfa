@@ -63,9 +63,7 @@ public class ReconciliationServer implements MessageListener {
             return new KafkaPublisher();
         }
     }
-    public Publisher checkTheBreakMessagingServer(){
-        return null;
-    }
+
 
     private Answer convertToAnswerObject(String xmlString) {
         XStream xst = new XStream();
