@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 import static com.drfa.engine.EngineConstants.BASE_THREAD_NAME;
 import static com.drfa.engine.EngineConstants.TARGET_THREAD_NAME;
@@ -27,24 +28,34 @@ public class ScanFile {
         int totalNumberOfRecords = 0;
         while (scanner.hasNextLine()) {
             String originalLine = scanner.nextLine();
-            String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine, fileDelimiter);
-            LOG.debug(String.format("Constructed primary key %s", constructedPrimaryKey));
-            String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, threadName, originalLine, columnAttributes);
-            LOG.info(String.format("This line is for thread %s with content %s", threadName, toBeComparedLine));
-            String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
-            if (doesKeyExist == null) {
-                storageMap.put(threadName + DrfaProperties.THREAD_NAMES_JOINER + constructedPrimaryKey, toBeComparedLine);
-            } else {
-                String stringToCompare = answer.processPrefix() + threadName + DrfaProperties.THREAD_NAMES_JOINER + toBeComparedLine + DrfaProperties.BASE_AND_TARGET_JOINER + doesKeyExist;
-                LOG.info(String.format("Comparing the line %s", stringToCompare));
-                queue.put(stringToCompare);
-                storageMap.remove(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
+            boolean processLine = checkLineIsProper(fileDelimiter, originalLine, columnAttributes.size());
+            if(processLine) {
+                String constructedPrimaryKey = scanUtility.extractTheLineOfPrimaryKey(primaryKeyIndex, originalLine, fileDelimiter);
+                LOG.debug(String.format("Constructed primary key %s", constructedPrimaryKey));
+                String toBeComparedLine = scanUtility.constructToBeComparedLineFromTheOriginalLine(fileDelimiter, threadName, originalLine, columnAttributes);
+                LOG.info(String.format("This line is for thread %s with content %s", threadName, toBeComparedLine));
+                String doesKeyExist = storageMap.get(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
+                if (doesKeyExist == null) {
+                    storageMap.put(threadName + DrfaProperties.THREAD_NAMES_JOINER + constructedPrimaryKey, toBeComparedLine);
+                } else {
+                    String stringToCompare = answer.processPrefix() + threadName + DrfaProperties.THREAD_NAMES_JOINER + toBeComparedLine + DrfaProperties.BASE_AND_TARGET_JOINER + doesKeyExist;
+                    LOG.info(String.format("Comparing the line %s", stringToCompare));
+                    queue.put(stringToCompare);
+                    storageMap.remove(checkPrefixOfTheKey(threadName) + constructedPrimaryKey);
+                }
+                totalNumberOfRecords++;
+            }else{
+                LOG.info(String.format("Ignoring the line %s", originalLine));
             }
-            totalNumberOfRecords++;
         }
 
         queue.put(answer.processPrefix() + DrfaProperties.SUMMARY_PREFIX+ threadName + DrfaProperties.THREAD_NAMES_JOINER + totalNumberOfRecords);
 
+    }
+
+    private boolean checkLineIsProper(String fileDelimiter, String originalLine, int attributeSize) {
+        String splittedLine[] = originalLine.split(Pattern.quote(fileDelimiter));
+        return splittedLine.length >= attributeSize;
     }
 
 

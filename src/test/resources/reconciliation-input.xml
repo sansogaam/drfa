@@ -26,9 +26,15 @@
     </columnattribute>
     <columnattribute>
         <columnName>C5</columnName>
-        <columnType>String</columnType>
+        <columnType>Integer</columnType>
         <columnMatching>B-4|T-4</columnMatching>
         <columnRule>TP-(B-NR|T-NR)-(R-10)</columnRule>
+    </columnattribute>
+    <columnattribute>
+        <columnName>C6</columnName>
+        <columnType>String</columnType>
+        <columnMatching>B-5|T-5</columnMatching>
+        <columnRule>SP-(B-NR|T-NR)-(R-NA)</columnRule>
     </columnattribute>
 
 </list>
